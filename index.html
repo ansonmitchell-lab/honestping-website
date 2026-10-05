@@ -71,8 +71,12 @@
             that maybe it’s just you? HonestPing is a Windows app that tells you, in plain language,
             whether your internet is actually working right now, with evidence you can trust.
           </p>
+          <p class="hero-gaming-hook">
+            <a href="#gamers">Your ping is the difference between life and death</a>
+          </p>
           <div class="hero-actions">
             <a class="btn btn-primary btn-lg" href="#waitlist">Join the waitlist</a>
+            <a class="btn btn-ghost btn-lg" href="#gamers">For gamers</a>
           </div>
           <p class="hero-note">Free Windows download coming soon · No public installer yet</p>
         </div>
@@ -99,6 +103,112 @@
             <p>Example path<br>Last 15 minutes</p>
           </div>
           <p class="gauge-demo-caption">Live demo · Example reading</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- For gamers: page centerpiece after hero -->
+    <section class="section gamers-band" id="gamers" aria-labelledby="gamers-heading">
+      <div class="wrap">
+        <div class="gamers-panel">
+          <div class="gamers-head">
+            <div class="gamers-label-row">
+              <span class="section-label">For gamers</span>
+            </div>
+            <h2 class="gamers-title" id="gamers-heading">Your ping is the difference between life and death</h2>
+            <p class="gamers-intro">
+              One bad spike and you’re on the floor. That kid across the map didn’t outplay you.
+              Your connection did. HonestPing keeps the truth on your screen while you fight,
+              so lag doesn’t get to steal the round again.
+            </p>
+          </div>
+
+          <div class="gamers-showcase">
+            <div class="gamers-points">
+              <article class="gamers-card">
+                <span class="plan-tag">Free plan</span>
+                <h3>Know if you’re dead before they do</h3>
+                <p>
+                  Free plan puts a plain status in the ring: Healthy or Degraded.
+                  One glance mid-fight. No menus. No excuses when the trash talk starts.
+                </p>
+              </article>
+              <article class="gamers-card">
+                <span class="plan-tag plan-tag-pro">Pro plan</span>
+                <h3>See the number that costs you the round</h3>
+                <p>
+                  Pro plan puts live ping in the center of the ring, with jitter and packet loss beside it.
+                  When ranked is on the line, you see the spike that just killed you.
+                </p>
+              </article>
+              <article class="gamers-card gamers-card-wide">
+                <span class="status warn">While you play</span>
+                <h3>Stop guessing. Start knowing.</h3>
+                <p>
+                  Keep it on a second screen. When the round feels unfair, you’ll know if it was you,
+                  your path, or something else. Fear of lag turns into evidence.
+                </p>
+              </article>
+            </div>
+
+            <figure class="gamers-visual" aria-label="Example HonestPing dial comparison for gamers: Free plan shows Healthy in the ring center, Pro plan shows sample ping with jitter and packet loss. Animated abstract controller and keys. No game or brand marks.">
+              <div class="gamers-hud" aria-hidden="true">
+                <span class="hud-sweep"></span>
+                <svg class="gamers-controller" viewBox="0 0 120 72" focusable="false">
+                  <path class="ctrl-body" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                    d="M28 44c-8 0-16-6-16-16 0-12 8-20 20-20h56c12 0 20 8 20 20 0 10-8 16-16 16h-8l-8 12H44l-8-12h-8z"/>
+                  <circle class="ctrl-stick" cx="40" cy="30" r="4" fill="currentColor"/>
+                  <circle class="ctrl-btn b1" cx="80" cy="28" r="2.8" fill="currentColor"/>
+                  <circle class="ctrl-btn b2" cx="88" cy="34" r="2.8" fill="currentColor"/>
+                  <circle class="ctrl-btn b3" cx="80" cy="40" r="2.8" fill="currentColor"/>
+                  <circle class="ctrl-btn b4" cx="72" cy="34" r="2.8" fill="currentColor"/>
+                  <rect class="ctrl-pad" x="52" y="28" width="16" height="4" rx="2" fill="currentColor" opacity="0.55"/>
+                </svg>
+                <div class="gamers-keys">
+                  <span class="gkey k1"></span>
+                  <span class="gkey k2"></span>
+                  <span class="gkey k3"></span>
+                  <span class="gkey k4"></span>
+                </div>
+                <span class="gamers-dot d1"></span>
+                <span class="gamers-dot d2"></span>
+                <span class="gamers-dot d3"></span>
+                <span class="gamers-dot d4"></span>
+              </div>
+
+              <div class="gamers-dials">
+                <div class="gamer-dial-card">
+                  <span class="gamer-tier">Free plan</span>
+                  <div class="gamer-dial">
+                    <div class="hp-dial-rim gamer-ring">
+                      <div class="hp-dial-face">
+                        <div class="hp-dial-value gamer-status">Healthy</div>
+                        <span class="gauge-label">Path quality</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="gamer-dial-note">Status in the ring</p>
+                </div>
+                <div class="gamer-dial-card pro">
+                  <span class="gamer-tier">Pro plan</span>
+                  <div class="gamer-dial">
+                    <div class="hp-dial-rim gamer-ring">
+                      <div class="hp-dial-face">
+                        <div class="hp-dial-value"><span>28</span><small class="gauge-unit">ms</small></div>
+                        <span class="gauge-label">Live ping</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="gamer-mini-metrics">
+                    <span>Jitter <strong>3</strong><small>ms</small></span>
+                    <span>Loss <strong>0</strong><small>%</small></span>
+                  </div>
+                </div>
+              </div>
+              <figcaption class="gamers-caption">Sample comparison · Example UI</figcaption>
+            </figure>
+          </div>
         </div>
       </div>
     </section>
@@ -182,102 +292,6 @@
         </div>
       </div>
     </section>
-    <!-- DRAFT: emotional gamers rewrite. Do not deploy until Anson approves -->
-    <section class="section gamers-band" id="gamers" aria-labelledby="gamers-heading">
-      <div class="wrap">
-        <div class="gamers-panel">
-          <div class="gamers-head">
-            <div class="gamers-label-row">
-              <span class="section-label">For gamers</span>
-            </div>
-            <h2 class="gamers-title" id="gamers-heading">Your ping is the difference between life and death</h2>
-            <p class="gamers-intro">
-              One bad spike and you’re on the floor. That kid across the map didn’t outplay you.
-              Your connection did. HonestPing keeps the truth on your screen while you fight,
-              so lag doesn’t get to steal the round again.
-            </p>
-          </div>
-
-          <div class="gamers-showcase">
-            <div class="gamers-points">
-              <article class="gamers-card">
-                <span class="plan-tag">Free plan</span>
-                <h3>Know if you’re dead before they do</h3>
-                <p>
-                  Free plan puts a plain word in the ring: Healthy or Degraded.
-                  One glance mid-fight. No menus. No excuses when the trash talk starts.
-                </p>
-              </article>
-              <article class="gamers-card">
-                <span class="plan-tag plan-tag-pro">Pro plan</span>
-                <h3>See the number that costs you the round</h3>
-                <p>
-                  Pro plan puts live ping in the center of the ring, with jitter and packet loss beside it.
-                  When ranked is on the line, you see the spike that just killed you.
-                </p>
-              </article>
-              <article class="gamers-card gamers-card-wide">
-                <span class="status warn">While you play</span>
-                <h3>Stop guessing. Start knowing.</h3>
-                <p>
-                  Keep it on a second screen. When the round feels unfair, you’ll know if it was you,
-                  your path, or something else. Fear of lag turns into evidence.
-                </p>
-              </article>
-            </div>
-
-            <figure class="gamers-visual" aria-label="Abstract HonestPing dial comparison for gamers: Free plan shows the word Healthy in the ring center, Pro plan shows 28 milliseconds, with jitter and packet loss. Decorative controller silhouette. No game or brand marks.">
-              <div class="gamers-hud" aria-hidden="true">
-                <svg class="gamers-controller" viewBox="0 0 120 72" focusable="false">
-                  <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
-                    d="M28 44c-8 0-16-6-16-16 0-12 8-20 20-20h56c12 0 20 8 20 20 0 10-8 16-16 16h-8l-8 12H44l-8-12h-8z"/>
-                  <circle cx="40" cy="30" r="4" fill="currentColor"/>
-                  <circle cx="80" cy="28" r="2.5" fill="currentColor"/>
-                  <circle cx="88" cy="34" r="2.5" fill="currentColor"/>
-                  <circle cx="80" cy="40" r="2.5" fill="currentColor"/>
-                  <circle cx="72" cy="34" r="2.5" fill="currentColor"/>
-                  <rect x="52" y="28" width="16" height="4" rx="2" fill="currentColor" opacity="0.55"/>
-                </svg>
-                <span class="gamers-dot d1"></span>
-                <span class="gamers-dot d2"></span>
-                <span class="gamers-dot d3"></span>
-              </div>
-
-              <div class="gamers-dials">
-                <div class="gamer-dial-card">
-                  <span class="gamer-tier">Free plan</span>
-                  <div class="gamer-dial">
-                    <div class="hp-dial-rim gamer-ring">
-                      <div class="hp-dial-face">
-                        <div class="hp-dial-value gamer-word">Healthy</div>
-                        <span class="gauge-label">Path quality</span>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="gamer-dial-note">Word in the center</p>
-                </div>
-                <div class="gamer-dial-card pro">
-                  <span class="gamer-tier">Pro plan</span>
-                  <div class="gamer-dial">
-                    <div class="hp-dial-rim gamer-ring">
-                      <div class="hp-dial-face">
-                        <div class="hp-dial-value"><span>28</span><small class="gauge-unit">ms</small></div>
-                        <span class="gauge-label">Live ping</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="gamer-mini-metrics">
-                    <span>Jitter <strong>3</strong><small>ms</small></span>
-                    <span>Loss <strong>0</strong><small>%</small></span>
-                  </div>
-                </div>
-              </div>
-              <figcaption class="gamers-caption">Example dials. Abstract UI only.</figcaption>
-            </figure>
-          </div>
-        </div>
-      </div>
-    </section>
     <section class="section wfh-band" id="wfh" aria-labelledby="wfh-heading">
       <div class="wrap">
         <div class="wfh-panel">
@@ -320,7 +334,7 @@
               </article>
             </div>
 
-            <figure class="wfh-visual" aria-label="Abstract work-from-home network visual: unlabeled call tiles, a simple audio waveform, and a path diagram with hops. No video-call brand marks.">
+            <figure class="wfh-visual" aria-label="Abstract work-from-home network visual: unlabeled call tiles, a waveform, and an animated Trace-style hop demo from your PC through router and ISP toward a destination. Example only. No video-call brand marks.">
               <div class="wfh-call-row" aria-hidden="true">
                 <div class="wfh-tile"><span></span><i></i></div>
                 <div class="wfh-tile active"><span></span><i></i></div>
@@ -331,27 +345,11 @@
                 <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                   d="M4 18h8l4-10 6 20 6-16 6 12 6-8 6 14 6-18 6 10 6-4 6 8 6-12 6 16 6-10 6 6 6-2 8 0"/>
               </svg>
-              <div class="wfh-path" aria-hidden="true">
-                <div class="wfh-hop good">
-                  <span class="wfh-hop-dot"></span>
-                  <strong>You</strong>
-                  <small>OK</small>
-                </div>
-                <span class="wfh-path-line"></span>
-                <div class="wfh-hop warn">
-                  <span class="wfh-hop-dot"></span>
-                  <strong>Hop 3</strong>
-                  <small>Slow</small>
-                </div>
-                <span class="wfh-path-line"></span>
-                <div class="wfh-hop good">
-                  <span class="wfh-hop-dot"></span>
-                  <strong>Target</strong>
-                  <small>OK</small>
-                </div>
+              <div class="wfh-trace" data-trace-demo>
+                <div class="trace-track" data-trace-track aria-hidden="true"></div>
+                <p class="wfh-visual-status" data-trace-status><span class="status">Tracing path…</span></p>
               </div>
-              <p class="wfh-visual-status"><span class="status warn">Path looks rough past your router</span></p>
-              <figcaption class="wfh-caption">Abstract call tiles, waveform, and Trace-style path. No meeting-app brands.</figcaption>
+              <figcaption class="wfh-caption">Example Trace · Abstract path only</figcaption>
             </figure>
           </div>
         </div>
@@ -616,6 +614,17 @@
     </section>
 
     <!-- WAITLIST -->
+    <section class="section punch-band" id="punch" aria-labelledby="punch-heading">
+      <div class="wrap">
+        <div class="punch-panel">
+          <h2 class="punch-line" id="punch-heading">One disputed internet bill can pay for your entire app.</h2>
+          <p class="punch-sub">
+            <a href="#isp">See how HonestPing checks whether you’re getting what you pay for</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="waitlist" aria-labelledby="waitlist-heading">
       <div class="wrap">
         <div class="card waitlist-panel">
@@ -658,5 +667,6 @@
 
   <script src="waitlist.js" defer></script>
   <script src="gauge.js" defer></script>
+  <script src="trace-demo.js" defer></script>
 </body>
 </html>

@@ -1069,7 +1069,7 @@ input:focus-visible {
   font-weight: 600;
 }
 .gamer-dial .hp-dial-value small { font-size: 14px; }
-.gamer-dial .hp-dial-value.gamer-word {
+.gamer-dial .hp-dial-value.gamer-status {
   display: block;
   font-size: 18px;
   letter-spacing: -0.3px;
@@ -1113,11 +1113,181 @@ input:focus-visible {
   .gamers-dials { grid-template-columns: 1fr; }
   .gamer-dial-card { --dial: 148px; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .gamers-card { transition: none; }
+/* Hero gaming hook → centerpiece */
+.hero-gaming-hook {
+  margin: 0 0 16px;
+  max-width: 28ch;
+}
+.hero-gaming-hook a {
+  font-size: clamp(18px, 2.4vw, 22px);
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  line-height: 1.25;
+  color: var(--hp-brand);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--hp-brand) 45%, transparent);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.hero-gaming-hook a:hover {
+  color: var(--hp-cyan);
+  border-color: color-mix(in srgb, var(--hp-cyan) 55%, transparent);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--hp-text);
+  box-shadow: inset 0 0 0 1px var(--hp-line);
+}
+.btn-ghost:hover {
+  background: var(--hp-subtle);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--hp-cyan) 40%, var(--hp-line));
 }
 
-/* For work / WFH (DRAFT): featured band after gamers, before value */
+/* Gamers as page centerpiece */
+.gamers-band {
+  padding-top: clamp(36px, 6vw, 64px);
+}
+.gamers-title {
+  font-size: clamp(28px, 4.8vw, 44px);
+  letter-spacing: -1.1px;
+  line-height: 1.12;
+  max-width: 16ch;
+}
+.gamers-panel {
+  box-shadow: 0 0 0 1px #00e6a628, 0 22px 56px rgba(0, 0, 0, 0.36), 0 0 64px #00e6a614;
+}
+
+/* Animated HUD */
+.gamers-hud {
+  position: relative;
+  width: 100%;
+  max-width: 260px;
+  height: 88px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #5a7a8c;
+  overflow: hidden;
+}
+.hud-sweep {
+  position: absolute;
+  inset: 0 auto 0 -40%;
+  width: 36%;
+  background: linear-gradient(90deg, transparent, rgba(5, 209, 232, 0.18), transparent);
+  pointer-events: none;
+  animation: hud-sweep 3.6s ease-in-out infinite;
+}
+.gamers-controller {
+  width: 118px;
+  height: auto;
+  opacity: 0.7;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 10px rgba(0, 230, 166, 0.12));
+}
+.ctrl-btn {
+  opacity: 0.35;
+  transform-origin: center;
+  animation: ctrl-btn-pulse 2.4s ease-in-out infinite;
+}
+.ctrl-btn.b1 { animation-delay: 0s; }
+.ctrl-btn.b2 { animation-delay: 0.35s; }
+.ctrl-btn.b3 { animation-delay: 0.7s; }
+.ctrl-btn.b4 { animation-delay: 1.05s; }
+.ctrl-stick {
+  animation: ctrl-stick-nudge 2.8s ease-in-out infinite;
+}
+.gamers-keys {
+  display: flex;
+  gap: 6px;
+  z-index: 1;
+}
+.gkey {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: var(--hp-subtle);
+  box-shadow: inset 0 0 0 1px var(--hp-line);
+  animation: key-lit 2.2s ease-in-out infinite;
+}
+.gkey.k1 { animation-delay: 0s; }
+.gkey.k2 { animation-delay: 0.28s; }
+.gkey.k3 { animation-delay: 0.56s; }
+.gkey.k4 { animation-delay: 0.84s; }
+
+.gamers-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--hp-brand);
+  box-shadow: 0 0 8px #00e6a688;
+  opacity: 0.7;
+  animation: ping-dot 1.8s ease-in-out infinite;
+}
+.gamers-dot.d1 { left: 10%; top: 16%; }
+.gamers-dot.d2 { right: 12%; top: 22%; background: var(--hp-cyan); box-shadow: 0 0 8px #05d1e888; animation-delay: 0.35s; }
+.gamers-dot.d3 { left: 46%; bottom: 6%; width: 4px; height: 4px; opacity: 0.45; animation-delay: 0.7s; }
+.gamers-dot.d4 { left: 72%; bottom: 18%; width: 5px; height: 5px; animation-delay: 1.05s; background: var(--hp-brand); }
+
+@keyframes hud-sweep {
+  0% { transform: translateX(0); opacity: 0; }
+  15% { opacity: 1; }
+  55% { opacity: 0.85; }
+  100% { transform: translateX(320%); opacity: 0; }
+}
+@keyframes ctrl-btn-pulse {
+  0%, 70%, 100% { opacity: 0.3; fill: currentColor; }
+  35% { opacity: 1; fill: #00e6a6; }
+}
+@keyframes ctrl-stick-nudge {
+  0%, 100% { transform: translate(0, 0); }
+  40% { transform: translate(1.2px, -1px); }
+  70% { transform: translate(-1px, 0.8px); }
+}
+@keyframes key-lit {
+  0%, 75%, 100% {
+    background: var(--hp-subtle);
+    box-shadow: inset 0 0 0 1px var(--hp-line), 0 0 0 transparent;
+  }
+  40% {
+    background: color-mix(in srgb, var(--hp-brand) 35%, var(--hp-subtle));
+    box-shadow: inset 0 0 0 1px #00e6a688, 0 0 10px #00e6a644;
+  }
+}
+@keyframes ping-dot {
+  0%, 100% { transform: scale(0.85); opacity: 0.35; }
+  45% { transform: scale(1.25); opacity: 1; }
+}
+
+.gamers-caption {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--hp-muted);
+  opacity: 0.9;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gamers-card { transition: none; }
+  .hud-sweep,
+  .ctrl-btn,
+  .ctrl-stick,
+  .gkey,
+  .gamers-dot {
+    animation: none !important;
+  }
+  .ctrl-btn { opacity: 0.55; }
+  .gkey {
+    background: color-mix(in srgb, var(--hp-brand) 18%, var(--hp-subtle));
+  }
+  .gamers-dot { opacity: 0.55; }
+}
+
+/* For work / WFH: featured band after gamers, before value */
 .wfh-band {
   background:
     radial-gradient(ellipse at 20% 0%, rgba(113, 222, 240, 0.08), transparent 55%),
@@ -1541,3 +1711,113 @@ input:focus-visible {
   color: var(--hp-cyan);
   box-shadow: inset 0 0 0 1px rgba(5, 209, 232, 0.45);
 }
+
+/* WFH Trace hop demo */
+.wfh-trace {
+  width: 100%;
+  margin-top: 4px;
+}
+.trace-track {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0;
+  width: 100%;
+  min-height: 64px;
+  padding: 4px 2px 0;
+}
+.trace-hop {
+  flex: 0 0 auto;
+  width: 52px;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  opacity: 0.22;
+  transform: scale(0.92);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.trace-hop.is-lit {
+  opacity: 1;
+  transform: scale(1);
+}
+.trace-hop.is-newest .trace-label {
+  color: var(--hp-text);
+}
+.trace-hop.is-newest .trace-dot {
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 28%, transparent), 0 0 12px color-mix(in srgb, currentColor 45%, transparent);
+}
+.trace-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #5a7a8c;
+  color: #5a7a8c;
+}
+.trace-hop.tone-good .trace-dot { background: var(--hp-green); color: var(--hp-green); }
+.trace-hop.tone-warn .trace-dot { background: var(--hp-amber, #f0b429); color: var(--hp-amber, #f0b429); }
+.trace-hop.tone-bad .trace-dot { background: var(--hp-red, #ff5c7a); color: var(--hp-red, #ff5c7a); }
+.trace-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--hp-muted);
+  text-align: center;
+  line-height: 1.15;
+  min-height: 1.15em;
+}
+.trace-meta {
+  font-size: 10px;
+  color: var(--hp-muted);
+  font-variant-numeric: tabular-nums;
+  min-height: 1em;
+}
+.trace-line {
+  flex: 1 1 auto;
+  height: 2px;
+  margin-top: 8px;
+  border-radius: 2px;
+  background: var(--hp-line);
+  opacity: 0.35;
+  transition: opacity 0.25s ease, background 0.25s ease;
+}
+.trace-line.is-on {
+  opacity: 1;
+  background: linear-gradient(90deg, #00e6a655, #05d1e855);
+}
+@media (max-width: 480px) {
+  .trace-hop { width: 44px; }
+  .trace-label { font-size: 9px; }
+}
+
+/* Closing punch line */
+.punch-band {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.punch-panel {
+  text-align: center;
+  padding: 28px 20px;
+  border-radius: calc(var(--hp-radius) + 4px);
+  background:
+    radial-gradient(ellipse 70% 80% at 50% 0%, rgba(0, 230, 166, 0.12), transparent 60%),
+    var(--hp-subtle);
+  border: 1px solid var(--hp-line);
+}
+.punch-line {
+  margin: 0 auto 10px;
+  max-width: 22ch;
+  font-size: clamp(22px, 3.4vw, 30px);
+  letter-spacing: -0.7px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+.punch-sub {
+  margin: 0;
+  font-size: 14px;
+}
+.punch-sub a {
+  color: var(--hp-cyan);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--hp-cyan) 40%, transparent);
+}
+.punch-sub a:hover { color: var(--hp-brand); }
