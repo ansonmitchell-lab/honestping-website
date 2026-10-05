@@ -901,7 +901,7 @@ input:focus-visible {
   .isp-card { transition: none; }
 }
 
-/* For gamers: featured band after ISP, before value */
+/* For gamers (DRAFT): featured band after ISP, before value */
 .gamers-band {
   background:
     radial-gradient(ellipse at 80% 0%, rgba(5, 209, 232, 0.09), transparent 55%),
@@ -937,6 +937,20 @@ input:focus-visible {
 .gamers-label-row .section-label {
   margin-bottom: 0;
   color: var(--hp-cyan);
+}
+.draft-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--hp-line);
+  background: var(--hp-dial);
+  color: var(--hp-muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  opacity: 0.75;
 }
 .gamers-head { max-width: 46rem; margin-bottom: 28px; }
 .gamers-title {
@@ -1042,7 +1056,7 @@ input:focus-visible {
 .gamer-tier {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--hp-muted);
 }
@@ -1103,7 +1117,7 @@ input:focus-visible {
   .gamers-card { transition: none; }
 }
 
-/* For work / WFH: featured band after gamers, before value */
+/* For work / WFH (DRAFT): featured band after gamers, before value */
 .wfh-band {
   background:
     radial-gradient(ellipse at 20% 0%, rgba(113, 222, 240, 0.08), transparent 55%),
@@ -1293,7 +1307,7 @@ input:focus-visible {
   .wfh-card { transition: none; }
 }
 
-/* In-Home Streaming (#streaming): featured band after WFH, before value */
+/* DRAFT: streaming section (#streaming). Not approved for live. */
 .streaming-band {
   background:
     radial-gradient(ellipse at 80% 0%, rgba(5, 209, 232, 0.08), transparent 55%),
@@ -1482,4 +1496,48 @@ input:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .streaming-card { transition: none; }
   .streaming-spinner { animation: none; }
+}
+
+/* Hero brand + demo honesty */
+.brand-kicker {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--hp-brand);
+  margin-right: 4px;
+}
+.hero h1 {
+  font-size: clamp(28px, 4.2vw, 40px);
+  letter-spacing: -0.9px;
+  line-height: 1.15;
+  max-width: 18ch;
+}
+.gauge-demo-caption {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--hp-muted);
+}
+.plan-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--hp-primary-text);
+  background: linear-gradient(125deg, var(--hp-brand), var(--hp-cyan));
+  border-radius: 999px;
+  padding: 4px 10px;
+  margin-bottom: 8px;
+}
+.plan-tag-pro {
+  background: var(--hp-subtle);
+  color: var(--hp-cyan);
+  box-shadow: inset 0 0 0 1px rgba(5, 209, 232, 0.45);
 }

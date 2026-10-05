@@ -18,7 +18,7 @@ Mirrors the HonestPing Windows app **navy Neon** theme from `theme-tokens.json`:
 1. **Header**: App-style brand lockup (icon + name + tagline subtitle), nav (For gamers, For work, In-Home Streaming, What you get, The gap, Preview, About Us), waitlist CTA  
 2. **Hero**: Tagline exactly *Network health, explained*; value prop; live Overview dial (SVG + CSS + `gauge.js`) matching app `.hp-dial-rim` / `.hp-dial-face` / `.hp-dial-value`, ping ticks 22 to 36 ms around 28 ms, jitter and packet loss beside it; reduced motion freezes at 28 ms; single Join the waitlist CTA (no creator credit in the hero)  
 3. **ISP accountability** (`#isp`): Featured gradient-ringed band directly under the hero. Lead message: are you getting the speed you pay for? Four-step flow (enter advertised download speed · realistic speed tests over time · compare to the promise · clear verdict: getting what you pay for or getting ripped off) beside an example verdict card (500 Mbps advertised vs 212 Mbps measured, 42%). ISP detection shown as a supporting line. Waitlist CTA.
-4. **For gamers** (`#gamers`, live): Featured band after ISP, before value. Message: network health you can see while you play. Free: quality word (Healthy / Degraded) in the ring center. Pro: live ping number in the ring plus jitter and packet-loss tracking. Abstract trademark-safe visuals only (dial mocks, geometric HUD, controller silhouette; no game or platform brand marks). Header nav link "For gamers". Approved and published.
+4. **For gamers** (`#gamers`, live): Featured band after ISP, before value. Message: network health you can see while you play. Free: quality word (Healthy / Degraded) in the ring center. Pro: live ping number in the ring plus jitter and packet-loss tracking. Abstract trademark-safe visuals only (dial mocks, geometric HUD, controller silhouette; no game/platform brand marks). Header nav link "For gamers". Marked with HTML draft comment and `data-draft="gamers"`; small muted Preview chip. Approved and published.
 5. **For work / WFH** (`#wfh`, live): Featured band after gamers, before value. Hook: tired of wondering whether it’s your internet when a video call isn’t working. Features named only as they exist: live connection-quality ring, jitter and packet-loss tracking, “Is it just me?” check, Trace, Wi-Fi details, History & evidence. Abstract trademark-safe visuals (unlabeled call tiles, waveform, path hops; no meeting-app brand marks). Header nav link "For work". Approved and published.
 6. **In-Home Streaming** (`#streaming`, live): Featured band after WFH, before value. Hook: know whether a glitch is your internet or your favorite streaming service (no named services). Features: “Is it just me?” check, streaming-service status icons, live connection-quality ring, packet loss, speed test, Wi-Fi details. Abstract icons only. Nav: In-Home Streaming. Approved and published.
 7. **What it does for you**: Four concrete client-value cards: bars lie / evidence / history / next steps  
@@ -45,3 +45,10 @@ Co-created by Anson Mitchell and Matt Lewis, always with equal prominence. On th
 Under `assets/`: logo (png/webp), icon-display, app-preview (png/webp), favicons, og-image.
 
 Only the current product name HonestPing appears in user-facing copy.
+
+## Shipped 2026-10-05 (hero + gamers emotional)
+
+- Hero H1: You’re not crazy. It might be your connection. Brand kicker: HonestPing. Tagline unchanged.
+- Hero dial: simulated Live demo · Example reading; loss mostly 0% with 0.1–0.6% blips; jitter ~1–6 ms; prefers-reduced-motion kept; no third-party target names (Internet target · ICMP).
+- #gamers H2: Your ping is the difference between life and death. Plan tags: Free plan / Pro plan (not status-style Free pills).
+- Company rule: no third-party service/game brand names or logos on site.
