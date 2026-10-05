@@ -42,6 +42,9 @@
         </div>
       </a>
       <nav class="nav" aria-label="Primary">
+        <a class="nav-link" href="#gamers">For gamers</a>
+        <a class="nav-link" href="#wfh">For work</a>
+        <a class="nav-link" href="#streaming">In-Home Streaming</a>
         <a class="nav-link" href="#value">What you get</a>
         <a class="nav-link" href="#gap">The gap</a>
         <a class="nav-link" href="#preview">Preview</a>
@@ -178,6 +181,269 @@
         </div>
       </div>
     </section>
+    <section class="section gamers-band" id="gamers" aria-labelledby="gamers-heading">
+      <div class="wrap">
+        <div class="gamers-panel">
+          <div class="gamers-head">
+            <div class="gamers-label-row">
+              <span class="section-label">For gamers</span>
+            </div>
+            <h2 class="gamers-title" id="gamers-heading">Network health you can see while you play</h2>
+            <p class="gamers-intro">
+              Stutters and sudden lag ruin matches. HonestPing keeps a clear read of your path
+              on the desktop, so you know if the connection is solid without digging into numbers mid-game.
+            </p>
+          </div>
+
+          <div class="gamers-showcase">
+            <div class="gamers-points">
+              <article class="gamers-card">
+                <span class="status good">Free</span>
+                <h3>A quality word in the ring</h3>
+                <p>
+                  The center of the dial shows a plain word like Healthy or Degraded.
+                  One glance tells you if the path is good. No digging, no charts required.
+                </p>
+              </article>
+              <article class="gamers-card">
+                <span class="status good">Pro</span>
+                <h3>Live ping in the ring</h3>
+                <p>
+                  On Pro, the ring center shows your live ping number, with jitter and
+                  packet loss tracked beside it, so you can spot a rough path as it happens.
+                </p>
+              </article>
+              <article class="gamers-card gamers-card-wide">
+                <span class="status warn">While you play</span>
+                <h3>Built for the match, not a lab console</h3>
+                <p>
+                  Keep HonestPing visible on a second screen or tucked beside your game.
+                  When something feels off, you already have a straight answer: your path, or not.
+                </p>
+              </article>
+            </div>
+
+            <figure class="gamers-visual" aria-label="Abstract HonestPing dial comparison: Free shows the word Healthy in the ring center, Pro shows 28 milliseconds, with jitter and packet loss chips. Decorative controller silhouette and ping dots. No game brand marks.">
+              <div class="gamers-hud" aria-hidden="true">
+                <svg class="gamers-controller" viewBox="0 0 120 72" focusable="false">
+                  <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                    d="M28 44c-8 0-16-6-16-16 0-12 8-20 20-20h56c12 0 20 8 20 20 0 10-8 16-16 16h-8l-8 12H44l-8-12h-8z"/>
+                  <circle cx="40" cy="30" r="4" fill="currentColor"/>
+                  <circle cx="80" cy="28" r="2.5" fill="currentColor"/>
+                  <circle cx="88" cy="34" r="2.5" fill="currentColor"/>
+                  <circle cx="80" cy="40" r="2.5" fill="currentColor"/>
+                  <circle cx="72" cy="34" r="2.5" fill="currentColor"/>
+                  <rect x="52" y="28" width="16" height="4" rx="2" fill="currentColor" opacity="0.55"/>
+                </svg>
+                <span class="gamers-dot d1"></span>
+                <span class="gamers-dot d2"></span>
+                <span class="gamers-dot d3"></span>
+              </div>
+
+              <div class="gamers-dials">
+                <div class="gamer-dial-card">
+                  <span class="gamer-tier">Free</span>
+                  <div class="gamer-dial">
+                    <div class="hp-dial-rim gamer-ring">
+                      <div class="hp-dial-face">
+                        <div class="hp-dial-value gamer-word">Healthy</div>
+                        <span class="gauge-label">Path quality</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="gamer-dial-note">Word in the center</p>
+                </div>
+                <div class="gamer-dial-card pro">
+                  <span class="gamer-tier">Pro</span>
+                  <div class="gamer-dial">
+                    <div class="hp-dial-rim gamer-ring">
+                      <div class="hp-dial-face">
+                        <div class="hp-dial-value"><span>28</span><small class="gauge-unit">ms</small></div>
+                        <span class="gauge-label">Live ping</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="gamer-mini-metrics">
+                    <span>Jitter <strong>3</strong><small>ms</small></span>
+                    <span>Loss <strong>0</strong><small>%</small></span>
+                  </div>
+                </div>
+              </div>
+              <figcaption class="gamers-caption">Example dials. Abstract UI only. No game brands.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section wfh-band" id="wfh" aria-labelledby="wfh-heading">
+      <div class="wrap">
+        <div class="wfh-panel">
+          <div class="wfh-head">
+            <div class="wfh-label-row">
+              <span class="section-label">For work from home</span>
+            </div>
+            <h2 class="wfh-title" id="wfh-heading">Are you tired of wondering whether it’s your internet or not when your video call isn’t working right?</h2>
+            <p class="wfh-intro">
+              When a call freezes mid-sentence, you need a straight answer: your path, or theirs.
+              HonestPing watches the connection while you work so you stop guessing and start fixing the right thing.
+            </p>
+          </div>
+
+          <div class="wfh-showcase">
+            <div class="wfh-features">
+              <article class="wfh-card">
+                <h3>Live connection-quality ring</h3>
+                <p>A clear ring on the desktop shows whether your path looks healthy right now, while the call is still going.</p>
+              </article>
+              <article class="wfh-card">
+                <h3>Jitter and packet-loss tracking</h3>
+                <p>See the chop and drops that make voices break up, not just a speed number from earlier this morning.</p>
+              </article>
+              <article class="wfh-card">
+                <h3>“Is it just me?” check</h3>
+                <p>Confirm whether the trouble is on your side before you apologize to the room or reboot half the house.</p>
+              </article>
+              <article class="wfh-card">
+                <h3>Trace</h3>
+                <p>Shows where along the path it slows down, so you can tell a local Wi-Fi hiccup from something further out.</p>
+              </article>
+              <article class="wfh-card">
+                <h3>Wi-Fi details</h3>
+                <p>Signal and link facts when the problem might be the wireless hop, not the wider internet.</p>
+              </article>
+              <article class="wfh-card">
+                <h3>History &amp; evidence</h3>
+                <p>Keep timed results you can show IT, your ISP, or yourself, instead of “it felt bad for a while.”</p>
+              </article>
+            </div>
+
+            <figure class="wfh-visual" aria-label="Abstract work-from-home network visual: unlabeled call tiles, a simple audio waveform, and a path diagram with hops. No video-call brand marks.">
+              <div class="wfh-call-row" aria-hidden="true">
+                <div class="wfh-tile"><span></span><i></i></div>
+                <div class="wfh-tile active"><span></span><i></i></div>
+                <div class="wfh-tile"><span></span><i></i></div>
+                <div class="wfh-tile muted"><span></span><i></i></div>
+              </div>
+              <svg class="wfh-wave" viewBox="0 0 280 36" focusable="false" aria-hidden="true">
+                <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  d="M4 18h8l4-10 6 20 6-16 6 12 6-8 6 14 6-18 6 10 6-4 6 8 6-12 6 16 6-10 6 6 6-2 8 0"/>
+              </svg>
+              <div class="wfh-path" aria-hidden="true">
+                <div class="wfh-hop good">
+                  <span class="wfh-hop-dot"></span>
+                  <strong>You</strong>
+                  <small>OK</small>
+                </div>
+                <span class="wfh-path-line"></span>
+                <div class="wfh-hop warn">
+                  <span class="wfh-hop-dot"></span>
+                  <strong>Hop 3</strong>
+                  <small>Slow</small>
+                </div>
+                <span class="wfh-path-line"></span>
+                <div class="wfh-hop good">
+                  <span class="wfh-hop-dot"></span>
+                  <strong>Target</strong>
+                  <small>OK</small>
+                </div>
+              </div>
+              <p class="wfh-visual-status"><span class="status warn">Path looks rough past your router</span></p>
+              <figcaption class="wfh-caption">Abstract call tiles, waveform, and Trace-style path. No meeting-app brands.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section streaming-band" id="streaming" aria-labelledby="streaming-heading">
+      <div class="wrap">
+        <div class="streaming-panel">
+          <div class="streaming-head">
+            <div class="streaming-label-row">
+              <span class="section-label">In-Home Streaming</span>
+            </div>
+            <h2 class="streaming-title" id="streaming-heading">In-Home Streaming</h2>
+            <p class="streaming-intro">
+              When your favorite streaming service glitches, the spinner doesn’t tell you whose fault it is.
+              HonestPing helps you know whether the problem is your internet or the service, so you can wait it out or fix your setup.
+            </p>
+          </div>
+
+          <div class="streaming-showcase">
+            <div class="streaming-features">
+              <article class="streaming-card">
+                <h3>“Is it just me?” check</h3>
+                <p>One tap tells you if the problem is on your end or out on the service, before you restart the router.</p>
+              </article>
+              <article class="streaming-card">
+                <h3>Streaming-service status</h3>
+                <p>Simple status icons for popular services sit next to your own results, so a bad night on their side is easy to spot.</p>
+              </article>
+              <article class="streaming-card">
+                <h3>Live connection-quality ring</h3>
+                <p>A clear ring shows whether your connection looks healthy right now, while the show is still on screen.</p>
+              </article>
+              <article class="streaming-card">
+                <h3>Packet loss</h3>
+                <p>Dropped packets are what turn a sharp picture into blur and stalls. See them instead of guessing.</p>
+              </article>
+              <article class="streaming-card">
+                <h3>Speed test</h3>
+                <p>Check whether you have enough bandwidth for HD or 4K, measured on your connection, not someone else’s.</p>
+              </article>
+              <article class="streaming-card">
+                <h3>Wi-Fi details</h3>
+                <p>Signal and link facts for when the weak spot is the wireless hop to the TV room, not the wider internet.</p>
+              </article>
+            </div>
+
+            <figure class="streaming-visual" aria-label="Abstract in-home streaming visual: an unbranded video frame with a buffering spinner, a row of generic status icons, and a HonestPing quality ring reading Healthy with packet loss and speed.">
+              <div class="streaming-screen" aria-hidden="true">
+                <span class="streaming-spinner"></span>
+                <span class="streaming-progress"><i></i></span>
+              </div>
+
+              <div class="streaming-services" aria-hidden="true">
+                <div class="streaming-svc good">
+                  <svg viewBox="0 0 24 24" focusable="false"><path d="M8 5l11 7-11 7z" fill="currentColor"/></svg>
+                  <small>OK</small>
+                </div>
+                <div class="streaming-svc warn">
+                  <svg viewBox="0 0 24 24" focusable="false"><rect x="5" y="5" width="14" height="14" rx="3" fill="currentColor"/></svg>
+                  <small>Issues</small>
+                </div>
+                <div class="streaming-svc good">
+                  <svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="7" fill="currentColor"/></svg>
+                  <small>OK</small>
+                </div>
+                <div class="streaming-svc good">
+                  <svg viewBox="0 0 24 24" focusable="false"><path d="M12 4l8 15H4z" fill="currentColor"/></svg>
+                  <small>OK</small>
+                </div>
+              </div>
+
+              <div class="streaming-readout">
+                <div class="streaming-dial" aria-hidden="true">
+                  <div class="hp-dial-rim">
+                    <div class="hp-dial-face">
+                      <div class="hp-dial-value streaming-word">Healthy</div>
+                      <span class="gauge-label">Your connection</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="streaming-metrics" aria-hidden="true">
+                  <span>Packet loss <strong>0</strong><small>%</small></span>
+                  <span>Download <strong>310</strong><small>Mbps</small></span>
+                  <span>Wi-Fi <strong>Strong</strong></span>
+                </div>
+              </div>
+
+              <p class="streaming-visual-status"><span class="status warn">Not just you: the service is having issues</span></p>
+              <figcaption class="streaming-caption">Abstract player and generic status icons.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- CLIENT VALUE -->
     <section class="section" id="value" aria-labelledby="value-heading">
@@ -301,7 +567,7 @@
         </p>
         <div class="benefits">
           <article class="card benefit">
-            <h3>Before you blame Zoom</h3>
+            <h3>Before you blame the call app</h3>
             <p>Check whether internet targets are answering. If they are, the problem may be the app, not your pipe.</p>
           </article>
           <article class="card benefit">
