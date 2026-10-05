@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HonestPing — Network health, explained</title>
-  <meta name="description" content="HonestPing is a Windows app that explains whether your internet is actually working—in plain language, with clear status, evidence, and history. Not bars. Not a vanity speed number.">
+  <title>HonestPing · Network health, explained</title>
+  <meta name="description" content="HonestPing is a Windows app that explains whether your internet is actually working, in plain language, with clear status, evidence, and history. Not bars. Not a vanity speed number.">
   <meta name="theme-color" content="#07131f">
   <link rel="canonical" href="https://www.honestping.com/">
 
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.honestping.com/">
-  <meta property="og:title" content="HonestPing — Network health, explained">
-  <meta property="og:description" content="Plain-language network health for Windows. Clear status, real evidence, and history—filling the gap between Wi-Fi bars and opaque enterprise tools.">
+  <meta property="og:title" content="HonestPing · Network health, explained">
+  <meta property="og:description" content="Plain-language network health for Windows. Clear status, real evidence, and history, filling the gap between Wi-Fi bars and opaque enterprise tools.">
   <meta property="og:image" content="https://www.honestping.com/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -19,7 +19,7 @@
   <meta property="og:locale" content="en_US">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="HonestPing — Network health, explained">
+  <meta name="twitter:title" content="HonestPing · Network health, explained">
   <meta name="twitter:description" content="Plain-language network health for Windows. Clear status, real evidence, and history.">
   <meta name="twitter:image" content="https://www.honestping.com/assets/og-image.png">
 
@@ -64,8 +64,8 @@
           <p class="lede">
             A Windows app that answers the question you actually have:
             <strong style="color:var(--hp-text);font-weight:600">is my internet working right now?</strong>
-            Plain language. Clear status. Evidence and history you can trust—
-            not a vanity speed score and not another set of radio bars.
+            Plain language. Clear status. Evidence and history you can trust.
+            Not a vanity speed score and not another set of radio bars.
           </p>
           <div class="hero-actions">
             <a class="btn btn-primary btn-lg" href="#waitlist">Join the waitlist</a>
@@ -74,19 +74,27 @@
           <p class="hero-note">Free Windows download coming soon · No public installer yet</p>
         </div>
 
-        <div class="hero-dial" aria-hidden="true">
-          <div class="dial-rim">
-            <div class="dial-face">
-              <picture>
-                <source srcset="assets/logo.webp" type="image/webp">
-                <img src="assets/logo.png" width="160" height="160" alt="" fetchpriority="high">
-              </picture>
+        <div class="hero-gauge card" role="img" aria-label="Live demo of the HonestPing Overview dial: current ping around 28 milliseconds to google.com over ICMP, jitter 3 milliseconds, packet loss 0 percent">
+          <span class="status good gauge-status">Healthy</span>
+          <div class="gauge-dial">
+            <div class="hp-dial-rim gauge-ring">
+              <span class="gauge-glow"></span>
+              <span class="gauge-pulse"></span>
+              <svg class="gauge-sweep" viewBox="0 0 220 220" focusable="false">
+                <circle cx="110" cy="110" r="107.5" pathLength="100"/>
+              </svg>
+              <div class="hp-dial-face">
+                <div class="hp-dial-value"><span class="gauge-ms" id="hero-ping-ms">28</span><small class="gauge-unit">ms</small></div>
+                <span class="gauge-label">Current ping</span>
+              </div>
             </div>
+            <span class="gauge-src">google.com · ICMP</span>
           </div>
-          <p class="dial-caption">
-            <strong>Same brand ring as the app</strong>
-            Glossy green → cyan gauge · navy Neon theme
-          </p>
+          <div class="gauge-metrics">
+            <div><span>Jitter</span><strong id="hero-jitter">3</strong><small>ms</small></div>
+            <div><span>Packet loss</span><strong id="hero-loss">0</strong><small>%</small></div>
+            <p>google.com<br>Last 15 minutes</p>
+          </div>
         </div>
       </div>
     </section>
@@ -95,7 +103,7 @@
     <section class="section" id="value" aria-labelledby="value-heading">
       <div class="wrap">
         <span class="section-label">What it does for you</span>
-        <h2 class="section-title" id="value-heading">Answers you can act on—not numbers to stare at</h2>
+        <h2 class="section-title" id="value-heading">Answers you can act on, not numbers to stare at</h2>
         <p class="section-intro">
           When a call stutters or a stream stalls, you need to know if it’s your Wi-Fi, your router,
           or the wider internet. HonestPing checks real reachability and tells you what it found,
@@ -119,7 +127,7 @@
             <h3>Status you can point at</h3>
             <p>
               “Your internet is responding.” Or it isn’t. Reply time, jitter, and packet loss sit next
-              to the verdict—so you (or whoever’s helping you) can see the same evidence without
+              to the verdict, so you (or whoever’s helping you) can see the same evidence without
               translating jargon first.
             </p>
             <p class="next"><strong>You get:</strong> shared clarity for family, support, or your own notes.</p>
@@ -127,7 +135,7 @@
 
           <article class="card value-card">
             <span class="status good">History that settles arguments</span>
-            <h3>Was it a blip—or a pattern?</h3>
+            <h3>Was it a blip, or a pattern?</h3>
             <p>
               A single bad second doesn’t mean an outage. A quiet chart with a spike tells a different
               story than an afternoon of red. HonestPing keeps recent connection history so you can
@@ -141,7 +149,7 @@
             <h3>A next step when it’s not healthy</h3>
             <p>
               Overview doesn’t dump a wall of metrics and walk away. When things look shaky or down,
-              you get a short explanation and a sensible next move—troubleshoot, dig into tools, or
+              you get a short explanation and a sensible next move: troubleshoot, dig into tools, or
               confirm it’s outside your house.
             </p>
             <p class="next"><strong>You get:</strong> less flailing, faster path to “fixed” or “not my fault.”</p>
@@ -159,7 +167,7 @@
           <p class="gap-lead">
             Most people are stuck between three incomplete options: the Wi-Fi icon on the taskbar,
             a one-shot speed test that looks impressive and goes stale in a minute, or heavy
-            monitoring built for IT desks—not for someone trying to finish a video call at home.
+            monitoring built for IT desks, not for someone trying to finish a video call at home.
             <strong style="font-weight:600">HonestPing fills that middle:</strong>
             consumer-friendly, continuously honest, and explained in plain language.
           </p>
@@ -169,7 +177,7 @@
               <span class="tag">What you already have</span>
               <h3>Radio bars &amp; “Connected”</h3>
               <p>
-                Show signal to the access point—not whether packets reach the internet.
+                Show signal to the access point, not whether packets reach the internet.
                 Full bars can still mean dead DNS, a captive portal, or an upstream outage.
               </p>
             </div>
@@ -194,7 +202,7 @@
               <h3>Explained network health</h3>
               <p>
                 Live reachability, plain-language status, evidence beside the verdict, and history
-                in a Windows app that feels like a product—not a lab console.
+                in a Windows app that feels like a product, not a lab console.
               </p>
             </div>
           </div>
@@ -208,21 +216,21 @@
         <span class="section-label">Day to day</span>
         <h2 class="section-title" id="benefits-heading">Built for the moments that waste your afternoon</h2>
         <p class="section-intro">
-          Same Neon navy UI as the app: status chips, surface cards, and a green-to-cyan brand ring—
+          Same Neon navy UI as the app: status chips, surface cards, and a green-to-cyan brand ring,
           so the landing page and the product feel like one thing.
         </p>
         <div class="benefits">
           <article class="card benefit">
             <h3>Before you blame Zoom</h3>
-            <p>Check whether internet targets are answering. If they are, the problem may be the app—not your pipe.</p>
+            <p>Check whether internet targets are answering. If they are, the problem may be the app, not your pipe.</p>
           </article>
           <article class="card benefit">
             <h3>Before you reboot everything</h3>
-            <p>See if the failure is local Wi-Fi, the router hop, or further upstream—so you reboot the right box.</p>
+            <p>See if the failure is local Wi-Fi, the router hop, or further upstream, so you reboot the right box.</p>
           </article>
           <article class="card benefit">
             <h3>When you call the ISP</h3>
-            <p>Bring times, reply-time spikes, and loss—not “it felt slow.” History turns a vague complaint into a ticket.</p>
+            <p>Bring times, reply-time spikes, and loss, not “it felt slow.” History turns a vague complaint into a ticket.</p>
           </article>
         </div>
       </div>
@@ -236,7 +244,7 @@
           <h2 class="section-title" id="preview-heading">Status first. Numbers second.</h2>
           <p class="section-intro">
             Overview leads with a human verdict, the green→cyan dial for live ping, jitter and loss,
-            then recent history—exactly the layout you’ll see in the Windows build.
+            then recent history, exactly the layout you’ll see in the Windows build.
           </p>
         </div>
         <figure class="card window" aria-label="HonestPing Overview screenshot">
@@ -265,7 +273,7 @@
           <h2 id="waitlist-heading">Join the waitlist</h2>
           <p>
             There’s no public download URL yet. Leave your email and we’ll tell you when the
-            Windows build is ready—honest network health, explained.
+            Windows build is ready. Honest network health, explained.
           </p>
           <form class="waitlist-form" id="waitlist-form" action="mailto:hello@honestping.com" method="get">
             <input type="hidden" name="subject" value="HonestPing waitlist">
@@ -300,5 +308,6 @@
   </footer>
 
   <script src="waitlist.js" defer></script>
+  <script src="gauge.js" defer></script>
 </body>
 </html>
