@@ -259,10 +259,10 @@
               </li>
             </ol>
 
-            <figure class="verdict-card" aria-label="Example HonestPing verdict: advertised 500 megabits per second, measured average 212 megabits per second over 7 days, 42 percent of advertised, verdict: you are not getting what you pay for">
+            <figure class="verdict-card" data-verdict-demo aria-label="Example HonestPing verdict: advertised 500 megabits per second, measured average 212 megabits per second over 7 days, 42 percent of advertised, verdict: you are not getting what you pay for">
               <div class="verdict-top">
-                <span class="status bad">Under-delivering</span>
-                <span class="verdict-period">Last 7 days · 168 tests</span>
+                <span class="status bad verdict-pill">Under-delivering</span>
+                <span class="verdict-period">Last 7 days · <span data-count="168">168</span> tests</span>
               </div>
               <div class="verdict-compare">
                 <div class="verdict-stat">
@@ -271,16 +271,16 @@
                 </div>
                 <div class="verdict-stat measured">
                   <span>You actually get</span>
-                  <strong>212<small>Mbps avg</small></strong>
+                  <strong><span data-count="212">212</span><small>Mbps avg</small></strong>
                 </div>
               </div>
               <div class="verdict-bar" aria-hidden="true">
-                <span class="verdict-fill" style="width:42%"></span>
+                <span class="verdict-fill" data-fill="42" style="width:42%"></span>
                 <span class="verdict-mark">Advertised</span>
               </div>
-              <p class="verdict-pct"><strong>42%</strong> of the speed you pay for</p>
-              <p class="verdict-text">You’re not getting what you pay for. Evenings drop as low as 96 Mbps. Here’s the evidence to send your provider.</p>
-              <p class="verdict-isp">Provider detected automatically: <strong>Your ISP</strong>, tied to every result</p>
+              <p class="verdict-pct"><strong><span data-count="42">42</span>%</strong> of the speed you pay for</p>
+              <p class="verdict-text verdict-reveal">You’re not getting what you pay for. Evenings drop as low as 96 Mbps. Here’s the evidence to send your provider.</p>
+              <p class="verdict-isp verdict-reveal">Provider detected automatically: <strong>Your ISP</strong>, tied to every result</p>
               <figcaption class="verdict-caption">Example verdict. Your numbers will be your own.</figcaption>
             </figure>
           </div>
@@ -668,5 +668,6 @@
   <script src="waitlist.js" defer></script>
   <script src="gauge.js" defer></script>
   <script src="trace-demo.js" defer></script>
+  <script src="verdict-demo.js" defer></script>
 </body>
 </html>

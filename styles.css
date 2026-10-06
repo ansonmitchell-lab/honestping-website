@@ -1838,3 +1838,45 @@ input:focus-visible {
 .wfh-tile.is-lit.tone-bad span { background: radial-gradient(circle at 40% 35%, #ffa3b4, var(--hp-red, #ff5c7a)); border-color: #ff5c7aaa; box-shadow: 0 0 12px #ff5c7a66; }
 .wfh-tile.is-lit.tone-bad i { background: var(--hp-red, #ff5c7a); width: 28%; }
 .wfh-tile.is-newest { box-shadow: 0 0 18px #05d1e822; }
+
+/* ISP verdict card animation */
+.verdict-card .verdict-fill {
+  position: relative;
+  overflow: hidden;
+  transition: none;
+}
+.verdict-card .verdict-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: translateX(-120%);
+  animation: verdict-shimmer 2.8s ease-in-out infinite;
+}
+.verdict-card .verdict-pill::before { animation: verdict-pulse 1.8s ease-in-out infinite; }
+.verdict-card .verdict-pill { animation: verdict-glow 2.4s ease-in-out infinite; }
+.verdict-card .verdict-reveal { transition: opacity 0.5s ease, transform 0.5s ease; }
+.verdict-card.is-running .verdict-reveal { opacity: 0; transform: translateY(6px); }
+.verdict-card.is-running .verdict-pill { opacity: 0.35; }
+.verdict-card.is-done .verdict-pill { opacity: 1; transition: opacity 0.4s ease; }
+.verdict-card.is-running .verdict-stat.measured strong { color: var(--hp-muted); }
+.verdict-card .verdict-stat.measured strong { transition: color 0.5s ease; }
+.verdict-card [data-count] { font-variant-numeric: tabular-nums; }
+@keyframes verdict-shimmer {
+  0% { transform: translateX(-120%); }
+  60%, 100% { transform: translateX(320%); }
+}
+@keyframes verdict-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.75); }
+}
+@keyframes verdict-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 92, 122, 0); }
+  50% { box-shadow: 0 0 0 4px rgba(255, 92, 122, 0.12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .verdict-card .verdict-fill::after,
+  .verdict-card .verdict-pill,
+  .verdict-card .verdict-pill::before { animation: none !important; }
+}
