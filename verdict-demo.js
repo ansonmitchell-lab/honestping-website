@@ -76,3 +76,48 @@
     else if (motion.addListener) motion.addListener(onChange);
   }
 })();
+
+/* HonestPing marketing: example evidence report, rows reveal one by one, then Export glows */
+(function () {
+  var report = document.querySelector("[data-report-demo]");
+  if (!report || !("IntersectionObserver" in window)) return; // content stays fully visible
+  var motion = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+  if (motion && motion.matches) return; // static, nothing hidden
+
+  var rows = Array.prototype.slice.call(report.querySelectorAll(".report-row"));
+  var glowTimer = 0, done = false;
+  rows.forEach(function (row, i) { row.style.setProperty("--i", String(i)); });
+  report.classList.add("is-ready"); // only now are rows hidden (see styles.css)
+
+  function reveal() {
+    if (done) return;
+    done = true;
+    report.classList.add("is-revealed");
+    // Glow once the last row has landed
+    glowTimer = setTimeout(function () { report.classList.add("is-glow"); }, rows.length * 140 + 500);
+  }
+
+  function finishNow() {
+    clearTimeout(glowTimer);
+    done = true;
+    report.classList.add("is-instant", "is-revealed");
+    if (!(motion && motion.matches)) report.classList.add("is-glow");
+    else report.classList.remove("is-glow");
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) { reveal(); io.disconnect(); }
+    });
+  }, { threshold: 0.35 });
+  io.observe(report);
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) { io.disconnect(); finishNow(); }
+  });
+  if (motion) {
+    var onChange = function () { if (motion.matches) { io.disconnect(); finishNow(); } };
+    if (motion.addEventListener) motion.addEventListener("change", onChange);
+    else if (motion.addListener) motion.addListener(onChange);
+  }
+})();

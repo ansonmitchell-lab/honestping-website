@@ -857,6 +857,7 @@ input:focus-visible {
 .verdict-stat strong { font-size: clamp(28px, 4vw, 36px); font-weight: 600; letter-spacing: -1px; line-height: 1.1; }
 .verdict-stat small { font-size: 12px; font-weight: 500; color: var(--hp-muted); margin-left: 4px; letter-spacing: 0; }
 .verdict-stat.measured strong { color: var(--hp-red); }
+.verdict-stat strong [data-count] { font-size: inherit; color: inherit; } /* keep the counted number at headline size */
 .verdict-bar {
   position: relative;
   height: 12px;
@@ -889,6 +890,120 @@ input:focus-visible {
 }
 .verdict-isp strong { color: var(--hp-blue); font-weight: 600; }
 .verdict-caption { font-size: 11px; color: var(--hp-muted); opacity: 0.8; }
+
+/* ISP proof column: verdict card + exportable evidence report */
+.isp-proof-col { display: grid; gap: 22px; min-width: 0; }
+@media (min-width: 900px) {
+  /* Steps stay beside the verdict and report while the taller proof column scrolls */
+  .isp-flow { position: sticky; top: 88px; }
+}
+.isp-proof { display: grid; gap: 10px; min-width: 0; }
+.isp-proof-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.2px;
+  color: var(--hp-text);
+}
+.isp-proof-icon { width: 22px; height: 22px; flex: none; color: var(--hp-green); }
+.report-card {
+  margin: 0;
+  padding: 20px 20px 18px;
+  border-radius: calc(var(--hp-radius) + 2px);
+  background: var(--hp-bg);
+  border: 1px solid #71def040;
+  box-shadow: 0 0 40px #05d1e812;
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+.report-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--hp-line);
+}
+.report-icon { width: 34px; height: 34px; flex: none; color: var(--hp-blue); }
+.report-head-text { display: grid; gap: 2px; min-width: 0; }
+.report-title { font-size: 15px; font-weight: 600; color: var(--hp-text); }
+.report-meta { font-size: 12px; color: var(--hp-muted); }
+.report-isp { color: var(--hp-blue); font-weight: 600; }
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.report-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--hp-muted);
+  padding: 0 8px 6px 0;
+}
+.report-table td {
+  padding: 7px 8px 7px 0;
+  border-top: 1px solid var(--hp-line);
+  color: var(--hp-text);
+  white-space: nowrap;
+}
+.report-table th:last-child,
+.report-table td:last-child { text-align: right; padding-right: 0; }
+.report-table td:first-child { color: var(--hp-muted); }
+.report-pct {
+  display: inline-block;
+  min-width: 3.4em;
+  padding: 1px 7px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--hp-muted);
+  background: var(--hp-subtle);
+}
+.report-row.is-bad td:nth-child(2) { color: var(--hp-red); }
+.report-row.is-bad .report-pct { color: var(--hp-red); background: var(--hp-red-bg); }
+.report-row.is-warn td:nth-child(2) { color: var(--hp-amber); }
+.report-row.is-warn .report-pct { color: var(--hp-amber); background: var(--hp-amber-bg); }
+.report-row.is-ok .report-pct { color: var(--hp-blue); background: var(--hp-selected); }
+.report-summary {
+  font-size: 13px;
+  color: var(--hp-muted);
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--hp-surface);
+  border: 1px solid var(--hp-line);
+}
+.report-summary strong { color: var(--hp-text); font-weight: 600; }
+.report-summary .report-avg { color: var(--hp-red); }
+.report-export { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.report-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--hp-primary-text);
+  background: linear-gradient(90deg, var(--hp-brand), var(--hp-cyan));
+  cursor: default;
+  user-select: none;
+}
+.report-btn svg { width: 16px; height: 16px; flex: none; }
+.report-export-note { font-size: 12px; color: var(--hp-muted); flex: 1 1 12rem; }
+.report-caption { font-size: 11px; color: var(--hp-muted); opacity: 0.8; }
+@media (max-width: 420px) {
+  .report-card { padding: 16px 14px; }
+  .report-table { font-size: 12.5px; }
+  .report-table td { padding-right: 6px; }
+}
 .isp-cta {
   margin-top: 26px;
   display: flex;
@@ -1841,7 +1956,7 @@ input:focus-visible {
 
 /* ISP verdict card animation */
 .verdict-card .verdict-fill {
-  position: relative;
+  position: absolute; /* was relative, which collapsed the inline fill to 0 width */
   overflow: hidden;
   transition: none;
 }
@@ -1879,4 +1994,25 @@ input:focus-visible {
   .verdict-card .verdict-fill::after,
   .verdict-card .verdict-pill,
   .verdict-card .verdict-pill::before { animation: none !important; }
+}
+
+/* Evidence report: rows reveal one by one, then Export glows (JS adds .is-ready only when motion is OK) */
+.report-card.is-ready.is-revealed .report-row {
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  transition-delay: calc(var(--i, 0) * 140ms);
+}
+.report-card.is-ready:not(.is-revealed) .report-row { opacity: 0; transform: translateY(8px); }
+.report-card.is-ready.is-revealed .report-summary { transition: opacity 0.45s ease 0.75s; }
+.report-card.is-ready:not(.is-revealed) .report-summary { opacity: 0; }
+.report-card.is-instant .report-row,
+.report-card.is-instant .report-summary { transition: none !important; }
+.report-card.is-glow .report-btn { animation: report-glow 2.6s ease-in-out infinite; }
+@keyframes report-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 230, 166, 0); }
+  50% { box-shadow: 0 0 0 4px rgba(0, 230, 166, 0.14), 0 0 18px rgba(5, 209, 232, 0.28); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .report-card .report-row,
+  .report-card .report-summary { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .report-card .report-btn { animation: none !important; }
 }

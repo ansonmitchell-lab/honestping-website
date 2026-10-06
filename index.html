@@ -254,35 +254,79 @@
                 <span class="isp-step">04</span>
                 <div>
                   <h3>Get a clear verdict</h3>
-                  <p>Getting what you pay for, or getting ripped off. Plain words, backed by dated results you can take to your provider.</p>
+                  <p>Getting what you pay for, or getting ripped off. Plain words, backed by a dated report you can export and send your provider.</p>
                 </div>
               </li>
             </ol>
 
-            <figure class="verdict-card" data-verdict-demo aria-label="Example HonestPing verdict: advertised 500 megabits per second, measured average 212 megabits per second over 7 days, 42 percent of advertised, verdict: you are not getting what you pay for">
-              <div class="verdict-top">
-                <span class="status bad verdict-pill">Under-delivering</span>
-                <span class="verdict-period">Last 7 days · <span data-count="168">168</span> tests</span>
-              </div>
-              <div class="verdict-compare">
-                <div class="verdict-stat">
-                  <span>You pay for</span>
-                  <strong>500<small>Mbps</small></strong>
+            <div class="isp-proof-col">
+              <figure class="verdict-card" data-verdict-demo aria-label="Example HonestPing verdict: advertised 500 megabits per second, measured average 212 megabits per second over 7 days, 42 percent of advertised, verdict: you are not getting what you pay for">
+                <div class="verdict-top">
+                  <span class="status bad verdict-pill">Under-delivering</span>
+                  <span class="verdict-period">Last 7 days · <span data-count="168">168</span> tests</span>
                 </div>
-                <div class="verdict-stat measured">
-                  <span>You actually get</span>
-                  <strong><span data-count="212">212</span><small>Mbps avg</small></strong>
+                <div class="verdict-compare">
+                  <div class="verdict-stat">
+                    <span>You pay for</span>
+                    <strong>500<small>Mbps</small></strong>
+                  </div>
+                  <div class="verdict-stat measured">
+                    <span>You actually get</span>
+                    <strong><span data-count="212">212</span><small>Mbps avg</small></strong>
+                  </div>
                 </div>
+                <div class="verdict-bar" aria-hidden="true">
+                  <span class="verdict-fill" data-fill="42" style="width:42%"></span>
+                  <span class="verdict-mark">Advertised</span>
+                </div>
+                <p class="verdict-pct"><strong><span data-count="42">42</span>%</strong> of the speed you pay for</p>
+                <p class="verdict-text verdict-reveal">You’re not getting what you pay for. Evenings drop as low as 96 Mbps. Here’s the evidence to send your provider.</p>
+                <p class="verdict-isp verdict-reveal">Provider detected automatically: <strong>Your ISP</strong>, tied to every result</p>
+                <figcaption class="verdict-caption">Example verdict. Your numbers will be your own.</figcaption>
+              </figure>
+
+              <div class="isp-proof">
+                <h3 class="isp-proof-label">
+                  <svg class="isp-proof-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 2 3.5 4.5v5c0 4 2.8 7.2 6.5 8.5 3.7-1.3 6.5-4.5 6.5-8.5v-5L10 2Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m7 10 2.2 2.2L13.3 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Solid proof to bring to your ISP
+                </h3>
+                <figure class="report-card" data-report-demo>
+                  <div class="report-head">
+                    <svg class="report-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+                      <path d="M8 3h11l7 7v17a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                      <path d="M19 3v5a2 2 0 0 0 2 2h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                      <path d="M10.5 24v-4M14.5 24v-7M18.5 24v-2.5M22.5 24v-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M10.5 13h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
+                    </svg>
+                    <div class="report-head-text">
+                      <strong class="report-title">HonestPing speed report</strong>
+                      <span class="report-meta">Plan: 500 Mbps advertised · Provider: <span class="report-isp">Your ISP</span></span>
+                    </div>
+                  </div>
+                  <table class="report-table">
+                    <thead>
+                      <tr><th scope="col">Tested</th><th scope="col">Download</th><th scope="col">Of plan</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr class="report-row is-bad"><td>Mon Sep 28, 8:12 PM</td><td>118 Mbps</td><td><span class="report-pct">24%</span></td></tr>
+                      <tr class="report-row is-warn"><td>Tue Sep 29, 7:05 AM</td><td>286 Mbps</td><td><span class="report-pct">57%</span></td></tr>
+                      <tr class="report-row is-ok"><td>Wed Sep 30, 1:30 PM</td><td>341 Mbps</td><td><span class="report-pct">68%</span></td></tr>
+                      <tr class="report-row is-bad"><td>Thu Oct 1, 9:04 PM</td><td>96 Mbps</td><td><span class="report-pct">19%</span></td></tr>
+                      <tr class="report-row is-bad"><td>Sat Oct 3, 7:48 PM</td><td>152 Mbps</td><td><span class="report-pct">30%</span></td></tr>
+                    </tbody>
+                  </table>
+                  <p class="report-summary"><strong>168 tests</strong> over 7 days · average <strong class="report-avg">212 Mbps</strong> (42% of plan)</p>
+                  <div class="report-export">
+                    <span class="report-btn">
+                      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      Export report
+                    </span>
+                    <span class="report-export-note">PDF and CSV, timestamped, ready to send your provider</span>
+                  </div>
+                  <figcaption class="report-caption">Example report. Your numbers will be your own.</figcaption>
+                </figure>
               </div>
-              <div class="verdict-bar" aria-hidden="true">
-                <span class="verdict-fill" data-fill="42" style="width:42%"></span>
-                <span class="verdict-mark">Advertised</span>
-              </div>
-              <p class="verdict-pct"><strong><span data-count="42">42</span>%</strong> of the speed you pay for</p>
-              <p class="verdict-text verdict-reveal">You’re not getting what you pay for. Evenings drop as low as 96 Mbps. Here’s the evidence to send your provider.</p>
-              <p class="verdict-isp verdict-reveal">Provider detected automatically: <strong>Your ISP</strong>, tied to every result</p>
-              <figcaption class="verdict-caption">Example verdict. Your numbers will be your own.</figcaption>
-            </figure>
+            </div>
           </div>
 
           <div class="isp-cta">
@@ -409,15 +453,15 @@
                   <small>OK</small>
                 </div>
                 <div class="streaming-svc warn">
-                  <svg viewBox="0 0 24 24" focusable="false"><rect x="5" y="5" width="14" height="14" rx="3" fill="currentColor"/></svg>
+                  <svg viewBox="0 0 24 24" focusable="false"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/></svg>
                   <small>Issues</small>
                 </div>
                 <div class="streaming-svc good">
-                  <svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="7" fill="currentColor"/></svg>
+                  <svg viewBox="0 0 24 24" focusable="false"><path d="M3 6l9 6-9 6zM12 6l9 6-9 6z" fill="currentColor"/></svg>
                   <small>OK</small>
                 </div>
                 <div class="streaming-svc good">
-                  <svg viewBox="0 0 24 24" focusable="false"><path d="M12 4l8 15H4z" fill="currentColor"/></svg>
+                  <svg viewBox="0 0 24 24" focusable="false"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>
                   <small>OK</small>
                 </div>
               </div>
