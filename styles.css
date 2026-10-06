@@ -1821,3 +1821,6 @@ input:focus-visible {
   border-bottom: 1px solid color-mix(in srgb, var(--hp-cyan) 40%, transparent);
 }
 .punch-sub a:hover { color: var(--hp-brand); }
+
+/* Trace: finished pill only in the finished state */
+[data-trace-demo]:not([data-state="finished"]) [data-trace-status] .status.good { display: none; }
