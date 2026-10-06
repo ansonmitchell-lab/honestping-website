@@ -4,6 +4,10 @@
   if (!root) return;
   var track = root.querySelector("[data-trace-track]");
   var statusEl = root.querySelector("[data-trace-status]");
+  var figure = root.closest("figure") || root.parentNode;
+  var tiles = figure ? Array.prototype.slice.call(figure.querySelectorAll("[data-trace-tile]")) : [];
+  // Which call tile lights with which hop: You, Router, Hop 4 (slow), Hop 5 (no reply)
+  var TILE_FOR_HOP = { 0: 0, 1: 1, 3: 2, 4: 3 };
   var motion = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
 
   // Abstract labels only; no real hostnames or brands
@@ -35,7 +39,23 @@
     }
   }
 
+  function setTile(hopIndex, on) {
+    var ti = TILE_FOR_HOP[hopIndex];
+    if (ti == null || !tiles[ti]) return;
+    var tile = tiles[ti];
+    tile.classList.remove("tone-good", "tone-warn", "tone-bad", "is-lit", "is-newest");
+    if (on) tile.classList.add("is-lit", "tone-" + HOPS[hopIndex].tone);
+  }
+
+  function markNewestTile(hopIndex) {
+    tiles.forEach(function (t) { t.classList.remove("is-newest"); });
+    var ti = TILE_FOR_HOP[hopIndex];
+    if (ti != null && tiles[ti]) tiles[ti].classList.add("is-newest");
+  }
+
   function build(lit) {
+    HOPS.forEach(function (_, i) { setTile(i, lit); });
+    tiles.forEach(function (t) { t.classList.remove("is-newest"); });
     track.innerHTML = "";
     nodes = [];
     HOPS.forEach(function (hop, i) {
@@ -74,6 +94,8 @@
     node.classList.add("is-lit", "is-newest");
     node.querySelector(".trace-label").textContent = hop.label;
     node.querySelector(".trace-meta").textContent = meta(hop);
+    setTile(i, true);
+    markNewestTile(i);
   }
 
   function showStaticFinished() {

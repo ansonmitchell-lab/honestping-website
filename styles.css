@@ -1824,3 +1824,17 @@ input:focus-visible {
 
 /* Trace: finished pill only in the finished state */
 [data-trace-demo]:not([data-state="finished"]) [data-trace-status] .status.good { display: none; }
+
+/* Call tiles light in step with Trace hops */
+.wfh-tile span, .wfh-tile i { transition: background 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, border-color 0.3s ease; }
+.wfh-tile { transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+.wfh-tile.is-lit.tone-good { border-color: #00e6a655; }
+.wfh-tile.is-lit.tone-good span { background: radial-gradient(circle at 40% 35%, #5fffd0, var(--hp-green)); border-color: #00e6a6aa; box-shadow: 0 0 12px #00e6a666; }
+.wfh-tile.is-lit.tone-good i { background: var(--hp-green); }
+.wfh-tile.is-lit.tone-warn { border-color: #f0b42955; }
+.wfh-tile.is-lit.tone-warn span { background: radial-gradient(circle at 40% 35%, #ffd98a, var(--hp-amber, #f0b429)); border-color: #f0b429aa; box-shadow: 0 0 12px #f0b42966; }
+.wfh-tile.is-lit.tone-warn i { background: var(--hp-amber, #f0b429); }
+.wfh-tile.is-lit.tone-bad { border-color: #ff5c7a55; }
+.wfh-tile.is-lit.tone-bad span { background: radial-gradient(circle at 40% 35%, #ffa3b4, var(--hp-red, #ff5c7a)); border-color: #ff5c7aaa; box-shadow: 0 0 12px #ff5c7a66; }
+.wfh-tile.is-lit.tone-bad i { background: var(--hp-red, #ff5c7a); width: 28%; }
+.wfh-tile.is-newest { box-shadow: 0 0 18px #05d1e822; }
