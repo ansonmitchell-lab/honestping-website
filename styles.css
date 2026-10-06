@@ -789,15 +789,39 @@ input:focus-visible {
   letter-spacing: -0.8px;
   line-height: 1.18;
   margin-bottom: 12px;
+  text-wrap: balance;
 }
 .isp-intro { color: var(--hp-muted); font-size: 16px; }
+/* Mobile: steps, verdict, proof copy, report, CTA. Desktop: 2x2 grid, CTA closes the left column. */
 .isp-showcase {
   display: grid;
-  gap: 18px;
-  align-items: start;
+  gap: 20px;
+  grid-template-areas: "flow" "verdict" "proof" "report" "cta";
 }
+.isp-flow { grid-area: flow; }
+.isp-showcase > .verdict-card { grid-area: verdict; }
+.isp-proof { grid-area: proof; }
+.isp-showcase > .report-card { grid-area: report; }
+.isp-showcase > .isp-cta { grid-area: cta; }
 @media (min-width: 900px) {
-  .isp-showcase { grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr); gap: 24px; }
+  .isp-showcase {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr);
+    /* Row 1: steps | verdict. Row 2: proof copy + CTA, centered as a group beside the report. */
+    grid-template-rows: auto 1fr auto auto 1fr;
+    grid-template-areas:
+      "flow verdict"
+      ". report"
+      "proof report"
+      "cta report"
+      ". report";
+    gap: 28px 28px;
+  }
+  .isp-showcase > .report-card { align-self: start; }
+  .isp-showcase > .verdict-card { align-content: space-between; }
+  .isp-showcase > .isp-cta { margin-top: -6px; flex-wrap: nowrap; }
+  .isp-showcase > .isp-cta .btn { flex: none; }
+  .isp-flow { display: flex; flex-direction: column; }
+  .isp-flow .isp-card { flex: 1 1 auto; padding: 14px 18px; align-items: center; }
 }
 .isp-flow {
   list-style: none;
@@ -828,7 +852,7 @@ input:focus-visible {
   background-clip: text;
   color: transparent;
 }
-.isp-card h3 { font-size: 17px; font-weight: 600; line-height: 1.25; margin-bottom: 4px; }
+.isp-card h3 { font-size: 17px; font-weight: 600; line-height: 1.25; margin-bottom: 4px; text-wrap: balance; }
 .isp-card p { color: var(--hp-muted); font-size: 14px; }
 
 /* Verdict mock: the hero message of the ISP band */
@@ -891,31 +915,52 @@ input:focus-visible {
 .verdict-isp strong { color: var(--hp-blue); font-weight: 600; }
 .verdict-caption { font-size: 11px; color: var(--hp-muted); opacity: 0.8; }
 
-/* ISP proof column: verdict card + exportable evidence report */
-.isp-proof-col { display: grid; gap: 22px; min-width: 0; }
-@media (min-width: 900px) {
-  /* Steps stay beside the verdict and report while the taller proof column scrolls */
-  .isp-flow { position: sticky; top: 88px; }
+/* ISP proof copy (left of the report) */
+.isp-proof { display: grid; gap: 12px; align-content: start; min-width: 0; }
+@media (max-width: 899px) {
+  .isp-proof { margin-top: 12px; }
 }
-.isp-proof { display: grid; gap: 10px; min-width: 0; }
 .isp-proof-label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 18px;
+  gap: 10px;
+  font-size: clamp(20px, 2.4vw, 24px);
   font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -0.2px;
+  line-height: 1.2;
+  letter-spacing: -0.4px;
+  color: var(--hp-text);
+  text-wrap: balance;
+}
+.isp-proof-icon { width: 26px; height: 26px; flex: none; color: var(--hp-green); }
+.isp-proof-intro { color: var(--hp-muted); font-size: 16px; max-width: 34rem; }
+.isp-checklist {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 4px 16px;
+  border-radius: var(--hp-radius);
+  background: var(--hp-dial);
+  border: 1px solid var(--hp-line);
+}
+.isp-checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 0;
+  font-size: 14px;
   color: var(--hp-text);
 }
-.isp-proof-icon { width: 22px; height: 22px; flex: none; color: var(--hp-green); }
+.isp-checklist li + li { border-top: 1px solid var(--hp-line); }
+.isp-checklist span,
+.isp-cta-note { text-wrap: pretty; }
+.isp-proof-intro { text-wrap: balance; }
+.isp-check { width: 20px; height: 20px; flex: none; margin-top: 1px; color: var(--hp-green); }
 .report-card {
   margin: 0;
-  padding: 20px 20px 18px;
+  padding: 24px 22px;
   border-radius: calc(var(--hp-radius) + 2px);
   background: var(--hp-bg);
-  border: 1px solid #71def040;
-  box-shadow: 0 0 40px #05d1e812;
+  border: 1px solid #71def055;
+  box-shadow: 0 0 40px #71def014;
   display: grid;
   gap: 14px;
   min-width: 0;
@@ -932,6 +977,8 @@ input:focus-visible {
 .report-title { font-size: 15px; font-weight: 600; color: var(--hp-text); }
 .report-meta { font-size: 12px; color: var(--hp-muted); }
 .report-isp { color: var(--hp-blue); font-weight: 600; }
+.report-nowrap,
+.report-summary strong { white-space: nowrap; }
 .report-table {
   width: 100%;
   border-collapse: collapse;
@@ -1000,12 +1047,15 @@ input:focus-visible {
 .report-export-note { font-size: 12px; color: var(--hp-muted); flex: 1 1 12rem; }
 .report-caption { font-size: 11px; color: var(--hp-muted); opacity: 0.8; }
 @media (max-width: 420px) {
-  .report-card { padding: 16px 14px; }
+  .verdict-card,
+  .report-card { padding: 20px 16px; }
+  .verdict-stat { padding: 12px; }
+  .verdict-stat small { white-space: nowrap; }
   .report-table { font-size: 12.5px; }
   .report-table td { padding-right: 6px; }
 }
 .isp-cta {
-  margin-top: 26px;
+  margin-top: 4px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;

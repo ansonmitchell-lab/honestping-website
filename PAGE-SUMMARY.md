@@ -67,6 +67,6 @@ Only the current product name HonestPing appears in user-facing copy.
 
 ## Shipped 2026-10-06 (ISP evidence report)
 
-- `#isp` adds "Solid proof to bring to your ISP" under the verdict card, inside `.isp-proof-col`. Example rows reveal, then "Export report" glows. Reduced motion keeps every row visible.
+- `#isp` layout: row 1 steps | verdict card; row 2 "Solid proof to bring to your ISP" copy (intro, 3-item checklist, waitlist CTA) | example report card. Mobile stacks steps, verdict, proof copy, report, CTA. Example rows reveal, then "Export report" glows. Reduced motion keeps every row visible.
 - Verdict bar fill is `position: absolute` so the 42% bar renders. The counted 212 uses the headline size.
 - `#streaming` status tiles use play, pause, fast forward, and stop icons. No service names.
