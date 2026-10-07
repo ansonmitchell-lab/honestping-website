@@ -2066,3 +2066,47 @@ input:focus-visible {
   .report-card .report-summary { opacity: 1 !important; transform: none !important; transition: none !important; }
   .report-card .report-btn { animation: none !important; }
 }
+
+/* For ISPs page (isp.html) */
+.isp-partner-line { margin-top: 10px; font-size: 13px; color: var(--hp-muted); }
+.ispx-hero h1 { max-width: 46rem; font-size: clamp(28px, 5vw, 44px); line-height: 1.15; margin: 10px 0 14px; }
+.ispx-sub { color: var(--hp-muted); max-width: 44rem; font-size: 16px; margin-bottom: 20px; }
+.ispx-hero .hero-note { margin-top: 14px; max-width: 44rem; }
+.ispx-problem { padding: 22px; }
+.ispx-problem p { color: var(--hp-muted); font-size: 16px; margin-top: 8px; }
+.ispx-grid { display: grid; gap: 12px; margin-top: 16px; }
+@media (min-width: 720px) { .ispx-grid { grid-template-columns: 1fr 1fr; } }
+.ispx-card { padding: 18px 18px 20px; }
+.ispx-card h3 { font-size: 16px; margin: 10px 0 6px; }
+.ispx-card p { color: var(--hp-muted); font-size: 14px; }
+.ispx-icon { width: 22px; height: 22px; color: var(--hp-brand); display: block; }
+.ispx-soon { margin-top: 14px; color: var(--hp-muted); font-size: 14px; }
+.ispx-steps { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 12px; }
+@media (min-width: 720px) { .ispx-steps { grid-template-columns: 1fr 1fr; } }
+.ispx-steps li { display: flex; gap: 12px; padding: 16px 18px; }
+.ispx-steps h3 { font-size: 15px; margin-bottom: 4px; }
+.ispx-steps p { color: var(--hp-muted); font-size: 14px; }
+.ispx-two { display: grid; gap: 16px; }
+@media (min-width: 860px) { .ispx-two { grid-template-columns: 1fr 1.3fr; align-items: start; } }
+.ispx-list li span { color: var(--hp-muted); }
+.ispx-list li strong { color: var(--hp-text); }
+.ispx-example { margin-top: 10px; font-size: 13px; }
+.ispx-report { position: relative; overflow: hidden; margin: 0; padding: 20px; }
+.ispx-report h3 { font-size: 16px; margin-bottom: 10px; }
+.ispx-report dl { margin: 0; display: grid; gap: 8px; }
+.ispx-report dl div { display: grid; gap: 2px; padding: 8px 0; border-top: 1px solid var(--hp-line); }
+.ispx-report dt { font-size: 12px; color: var(--hp-muted); }
+.ispx-report dd { margin: 0; font-size: 14px; }
+.ispx-report figcaption { margin-top: 10px; font-size: 12px; color: var(--hp-muted); }
+.ispx-ribbon { position: absolute; top: 14px; right: -34px; transform: rotate(45deg); background: var(--hp-amber); color: #2a1d08; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 40px; }
+.ispx-faqs { display: grid; gap: 8px; margin-top: 16px; }
+.ispx-faq { padding: 14px 16px; }
+.ispx-faq summary { cursor: pointer; font-weight: 600; }
+.ispx-faq p { color: var(--hp-muted); font-size: 14px; margin-top: 8px; }
+.ispx-contact h2 { margin: 6px 0 8px; }
+.ispx-form { display: grid; gap: 12px; text-align: left; max-width: 560px; margin: 16px auto 0; }
+@media (min-width: 640px) { .ispx-form { grid-template-columns: 1fr 1fr; } }
+.ispx-form label { display: grid; gap: 4px; font-size: 13px; color: var(--hp-muted); }
+.ispx-form input, .ispx-form textarea { width: 100%; min-width: 0; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--hp-line); background: var(--hp-bg); color: var(--hp-text); font: inherit; font-size: 14px; }
+.ispx-full { grid-column: 1 / -1; }
+.ispx-opt { font-size: 12px; opacity: 0.8; }
