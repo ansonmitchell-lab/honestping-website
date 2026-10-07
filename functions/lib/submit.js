@@ -206,10 +206,16 @@ async function verifyTurnstile(request, env, token, expectedAction) {
   return { ok: true };
 }
 
+function wroteRow(result) {
+  const changes = result && result.meta ? result.meta.changes : undefined;
+  if (changes === undefined || changes === null) return true;
+  return Number(changes) > 0;
+}
+
 async function notify(env, subject, text, replyTo) {
   if (!env.EMAIL || typeof env.EMAIL.send !== "function") {
     console.error(JSON.stringify({ message: "email_binding_missing", subject }));
-    return false;
+    return;
   }
   try {
     await env.EMAIL.send({
@@ -219,14 +225,12 @@ async function notify(env, subject, text, replyTo) {
       subject,
       text,
     });
-    return true;
   } catch (error) {
     console.error(JSON.stringify({
       message: "email_send_failed",
       subject,
       error: error instanceof Error ? error.message : "failed",
     }));
-    return false;
   }
 }
 
@@ -265,19 +269,21 @@ export async function handleSubmit(request, env) {
 
   try {
     if (form === "waitlist") {
-      await env.DB.prepare(
+      const result = await env.DB.prepare(
         "INSERT INTO waitlist (email, created_at, source_page, user_agent_hash) VALUES (?, ?, ?, ?) ON CONFLICT(email) DO NOTHING",
       ).bind(email, createdAt, source, userAgentHash).run();
-      const text = [
-        "New HonestPing waitlist sign-up",
-        "",
-        "Email: " + email,
-        "Page: " + (source || "not provided"),
-        "Time: " + createdAt,
-      ].join("\n");
-      const sent = await notify(env, WAITLIST_SUBJECT, text, email);
-      if (!sent) return fail(request, 502, COPY.tryAgain, back);
-      console.log(JSON.stringify({ message: "signup_saved", form: "waitlist" }));
+      const isNew = wroteRow(result);
+      if (isNew) {
+        const text = [
+          "New HonestPing waitlist sign-up",
+          "",
+          "Email: " + email,
+          "Page: " + (source || "not provided"),
+          "Time: " + createdAt,
+        ].join("\n");
+        await notify(env, WAITLIST_SUBJECT, text, email);
+      }
+      console.log(JSON.stringify({ message: "signup_saved", form: "waitlist", new_row: isNew }));
       return succeed(request, COPY.waitlistThanks, source || back);
     }
 
@@ -289,24 +295,26 @@ export async function handleSubmit(request, env) {
     if (!name || !company || !message || message.length > 4000 || (subscribersRaw && !subscribers)) {
       return fail(request, 400, message.length > 4000 || (subscribersRaw && !subscribers) ? COPY.tooLong : COPY.ispFields, back);
     }
-    await env.DB.prepare(
-      "INSERT INTO isp_inquiries (email, name, company, subscribers, message, created_at, source_page, user_agent_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    const result = await env.DB.prepare(
+      "INSERT INTO isp_inquiries (email, name, company, subscribers, message, created_at, source_page, user_agent_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(email) DO NOTHING",
     ).bind(email, name, company, subscribers, message, createdAt, source, userAgentHash).run();
-    const text = [
-      "New ISP partnership note",
-      "",
-      "Name: " + name,
-      "Company: " + company,
-      "Email: " + email,
-      "Subscribers: " + (subscribers || "Not given"),
-      "Page: " + (source || "not provided"),
-      "Time: " + createdAt,
-      "",
-      message,
-    ].join("\n");
-    const sent = await notify(env, ISP_SUBJECT, text, email);
-    if (!sent) return fail(request, 502, COPY.tryAgain, back);
-    console.log(JSON.stringify({ message: "signup_saved", form: "isp" }));
+    const isNew = wroteRow(result);
+    if (isNew) {
+      const text = [
+        "New ISP partnership note",
+        "",
+        "Name: " + name,
+        "Company: " + company,
+        "Email: " + email,
+        "Subscribers: " + (subscribers || "Not given"),
+        "Page: " + (source || "not provided"),
+        "Time: " + createdAt,
+        "",
+        message,
+      ].join("\n");
+      await notify(env, ISP_SUBJECT, text, email);
+    }
+    console.log(JSON.stringify({ message: "signup_saved", form: "isp", new_row: isNew }));
     return succeed(request, COPY.ispThanks, source || back);
   } catch (error) {
     console.error(JSON.stringify({

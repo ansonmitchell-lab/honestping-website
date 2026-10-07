@@ -26,8 +26,10 @@ function fakeEnv(state) {
                   return { meta: { changes: duplicate ? 0 : 1 } };
                 }
                 if (sql.includes("INSERT INTO isp_inquiries")) {
-                  state.isp.push(args);
-                  return { meta: { changes: 1 } };
+                  const email = args[0];
+                  const duplicate = state.isp.some((row) => row[0] === email);
+                  if (!duplicate) state.isp.push(args);
+                  return { meta: { changes: duplicate ? 0 : 1 } };
                 }
                 throw new Error("unexpected sql");
               },
@@ -123,7 +125,8 @@ test("a duplicate waitlist address gets the same thank-you and one row", async (
     const second = await handleSubmit(post("/api/waitlist", { email: "A@Example.com" }), env);
     assert.equal((await first.json()).message, (await second.json()).message);
     assert.equal(saved.waitlist.size, 1);
-    assert.equal(saved.emails.length, 2);
+    assert.equal(saved.emails.length, 1);
+    assert.equal(second.status, 200);
   } finally {
     restore();
   }
@@ -163,6 +166,28 @@ test("production ignores a localhost hostname even if the allowlist includes it"
     const response = await handleSubmit(post("/api/waitlist", { email: "a@example.com" }), env);
     assert.equal(response.status, 403);
     assert.equal(saved.waitlist.size, 0);
+  } finally {
+    restore();
+  }
+});
+
+test("preview accepts the workers.dev host", async () => {
+  const saved = state();
+  const env = fakeEnv(saved);
+  env.TURNSTILE_HOSTNAMES = "honestping-web-preview.honestping.workers.dev";
+  const restore = mockVerify(
+    { success: true, action: "waitlist", hostname: "honestping-web-preview.honestping.workers.dev" },
+    { calls: [] },
+  );
+  try {
+    const response = await handleSubmit(
+      post("/api/waitlist", { email: "a@example.com" }, {
+        host: "honestping-web-preview.honestping.workers.dev",
+      }),
+      env,
+    );
+    assert.equal(response.status, 200);
+    assert.equal(saved.emails.length, 1);
   } finally {
     restore();
   }
@@ -219,7 +244,43 @@ test("ISP notes go in their own table with the partnership subject", async () =>
     assert.equal(saved.isp[0].includes(IP), false);
     assert.equal(saved.emails[0].subject, "ISP partnership");
     assert.equal(saved.emails[0].text.includes(IP), false);
+    const again = await handleSubmit(post("/api/isp", {
+      name: "Ada",
+      company: "Example ISP",
+      email: "ada@isp.example",
+      subscribers: "1200",
+      message: "A second note from the same address.",
+      source_page: "/isp",
+    }), fakeEnv(saved));
+    assert.equal(again.status, 200);
+    assert.match((await again.json()).message, /partnering/);
+    assert.equal(saved.isp.length, 1);
+    assert.equal(saved.emails.length, 1);
   } finally {
+    restore();
+  }
+});
+
+test("a saved sign-up still thanks the visitor when email fails", async () => {
+  const saved = state();
+  const env = fakeEnv(saved);
+  const errors = [];
+  env.EMAIL.send = async () => {
+    throw new Error("mailbox unavailable");
+  };
+  const restore = mockVerify(pass, { calls: [] });
+  const originalError = console.error;
+  console.error = (line) => errors.push(String(line));
+  try {
+    const response = await handleSubmit(post("/api/waitlist", { email: "a@example.com" }), env);
+    assert.equal(response.status, 200);
+    assert.match((await response.json()).message, /You're on the list/);
+    assert.equal(saved.waitlist.size, 1);
+    assert.equal(saved.emails.length, 0);
+    assert.match(errors.join("\n"), /email_send_failed/);
+    assert.equal(errors.join("\n").includes("a@example.com"), false);
+  } finally {
+    console.error = originalError;
     restore();
   }
 });
@@ -234,9 +295,10 @@ test("missing Turnstile config fails closed", async () => {
 });
 
 test("the worker answers the API and still proxies other paths", async () => {
+  const seen = [];
   const original = globalThis.fetch;
   globalThis.fetch = async (url) => {
-    assert.equal(String(url).startsWith("https://raw.githubusercontent.com/"), true);
+    seen.push(String(url));
     return new Response("body", { status: 200 });
   };
   try {
@@ -246,9 +308,36 @@ test("the worker answers the API and still proxies other paths", async () => {
     assert.equal(file.status, 200);
     assert.equal(file.headers.get("content-type"), "text/css; charset=utf-8");
     assert.equal(await file.text(), "body");
+    assert.match(seen[0], /^https:\/\/raw\.githubusercontent\.com\/ansonmitchell-lab\/honestping-website\/main\/styles\.css\?v=/);
+    seen.length = 0;
+    const preview = await worker.fetch(new Request("https://honestping-web-preview.honestping.workers.dev/index.html"), {
+      ORIGIN_BASE: "https://raw.githubusercontent.com/ansonmitchell-lab/honestping-website/cursor/waitlist-d1-bbe4",
+    });
+    assert.equal(preview.status, 200);
+    assert.match(seen[0], /^https:\/\/raw\.githubusercontent\.com\/ansonmitchell-lab\/honestping-website\/cursor\/waitlist-d1-bbe4\/index\.html\?v=/);
+    const blocked = await worker.fetch(new Request("https://www.honestping.com/styles.css"), {
+      ORIGIN_BASE: "https://example.com/not-github",
+    });
+    assert.equal(blocked.status, 500);
+    assert.equal(seen.length, 1);
   } finally {
     globalThis.fetch = original;
   }
+});
+
+test("preview worker config is separate from production and Pages mail", () => {
+  const workerConfig = readFileSync(new URL("../wrangler.worker.jsonc", import.meta.url), "utf8");
+  const pagesConfig = readFileSync(new URL("../wrangler.jsonc", import.meta.url), "utf8");
+  const preview = workerConfig.slice(workerConfig.indexOf('"env"'));
+  assert.match(preview, /"routes": \[\]/);
+  assert.match(preview, /"database_id": "834af7c2-165f-4fb4-92b9-49b1aa0b3eb6"/);
+  assert.equal(preview.includes("c732d15a-f4c9-4f7d-8588-41f7774d41d1"), false);
+  assert.match(preview, /honestping-web-preview\.honestping\.workers\.dev/);
+  assert.match(preview, /ORIGIN_BASE/);
+  assert.match(preview, /cursor\/waitlist-d1-bbe4/);
+  assert.match(workerConfig, /"name": "honestping-web"/);
+  assert.equal(pagesConfig.includes("\"send_email\""), false);
+  assert.match(pagesConfig, /Pages Functions cannot use a send_email binding/);
 });
 
 test("the page keeps a mailto fallback and does not open the mail app from script", () => {

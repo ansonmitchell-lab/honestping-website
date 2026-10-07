@@ -1,6 +1,6 @@
 import { handleSubmit } from "../functions/lib/submit.js";
 
-const ORIGIN = "https://raw.githubusercontent.com/ansonmitchell-lab/honestping-website/main";
+const DEFAULT_ORIGIN = "https://raw.githubusercontent.com/ansonmitchell-lab/honestping-website/main";
 const TYPES = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -19,13 +19,34 @@ function typeFor(path) {
   return TYPES[path.slice(index).toLowerCase()] || null;
 }
 
-async function proxy(request) {
+function originBase(env) {
+  const configured = env && typeof env.ORIGIN_BASE === "string" ? env.ORIGIN_BASE.trim() : "";
+  const value = configured || DEFAULT_ORIGIN;
+  let url;
+  try {
+    url = new URL(value);
+  } catch {
+    return null;
+  }
+  if (url.protocol !== "https:" || url.hostname !== "raw.githubusercontent.com") return null;
+  if (url.username || url.password || url.search || url.hash) return null;
+  return "https://raw.githubusercontent.com" + url.pathname.replace(/\/+$/, "");
+}
+
+async function proxy(request, env) {
+  const origin = originBase(env);
+  if (!origin) {
+    return new Response("Site origin is not configured", {
+      status: 500,
+      headers: { "content-type": "text/plain; charset=utf-8" },
+    });
+  }
   try {
     const url = new URL(request.url);
     let path = url.pathname;
     if (path === "/" || path === "") path = "/index.html";
     if (path.includes("..")) return new Response("Bad request", { status: 400 });
-    const upstreamUrl = ORIGIN + path + "?v=" + Date.now();
+    const upstreamUrl = origin + path + "?v=" + Date.now();
     const upstream = await fetch(upstreamUrl, {
       method: "GET",
       headers: {
@@ -60,6 +81,6 @@ export default {
   async fetch(request, env) {
     const path = new URL(request.url).pathname;
     if (path === "/api/waitlist" || path === "/api/isp") return handleSubmit(request, env);
-    return proxy(request);
+    return proxy(request, env);
   },
 };

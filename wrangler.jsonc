@@ -9,6 +9,9 @@
     "logs": { "enabled": true, "head_sampling_rate": 1 },
     "traces": { "enabled": true, "head_sampling_rate": 1 }
   },
+  // Pages Functions cannot use a send_email binding. Do not add one here.
+  // A Pages deploy will not email Anson. The preview that can send mail is the
+  // Worker honestping-web-preview in wrangler.worker.jsonc (env.preview).
   // Top level is the production Pages config and the local default.
   // preview_database_id keeps `wrangler dev --remote` and `migrations apply --preview` off production.
   "d1_databases": [
@@ -20,19 +23,14 @@
       "migrations_dir": "migrations"
     }
   ],
-  "send_email": [
-    {
-      "name": "EMAIL",
-      "destination_address": "ansonmitchell@gmail.com",
-      "allowed_sender_addresses": ["waitlist@honestping.com"]
-    }
-  ],
   "vars": {
     "TURNSTILE_HOSTNAMES": "www.honestping.com,honestping.com"
   },
   "secrets": {
     "required": ["TURNSTILE_SECRET"]
   },
+  // Not the site preview. Pages cannot send the notification.
+  // Use wrangler.worker.jsonc env.preview (honestping-web-preview) for that.
   "env": {
     "preview": {
       "d1_databases": [
@@ -41,13 +39,6 @@
           "database_name": "honestping-waitlist-preview",
           "database_id": "834af7c2-165f-4fb4-92b9-49b1aa0b3eb6",
           "migrations_dir": "migrations"
-        }
-      ],
-      "send_email": [
-        {
-          "name": "EMAIL",
-          "destination_address": "ansonmitchell@gmail.com",
-          "allowed_sender_addresses": ["waitlist@honestping.com"]
         }
       ],
       "vars": {
