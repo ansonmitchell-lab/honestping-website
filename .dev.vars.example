@@ -1,0 +1,8 @@
+# Local wrangler only. This file is not deployed.
+# The value below is Cloudflare's published Turnstile test secret.
+# Preview and production must use the real widget secret via `wrangler pages secret put`
+# or `wrangler secret put`. Never put that secret in this file or in git.
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+# Dummy siteverify responses use hostname example.com and omit action, so they still fail closed.
+# Point this at example.com only if you are mocking siteverify. A real local widget needs localhost.
+TURNSTILE_HOSTNAMES=example.com

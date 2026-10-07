@@ -27,7 +27,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20261005c">
+  <link rel="stylesheet" href="styles.css?v=20261007c">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -682,18 +682,20 @@
             There’s no public download URL yet. Leave your email and we’ll tell you when the
             Windows build is ready. Honest network health, explained.
           </p>
-          <form class="waitlist-form" id="waitlist-form" action="mailto:hello@honestping.com" method="get">
-            <input type="hidden" name="subject" value="HonestPing waitlist">
+          <form class="waitlist-form" id="waitlist-form" action="/api/waitlist" method="post">
             <label for="waitlist-email">Email address</label>
             <input
               id="waitlist-email"
-              name="body"
+              name="email"
               type="email"
               autocomplete="email"
               required
               placeholder="you@example.com"
               inputmode="email">
+            <div class="waitlist-turnstile" id="waitlist-turnstile"></div>
+            <p class="waitlist-error" id="waitlist-error" role="alert" hidden></p>
             <button class="btn btn-primary btn-lg" type="submit">Join the waitlist</button>
+            <p class="waitlist-thanks" id="waitlist-thanks" role="status" hidden></p>
           </form>
           <p class="waitlist-alt">
             Or email
@@ -714,7 +716,7 @@
     </div>
   </footer>
 
-  <script src="waitlist.js?v=20261005c" defer></script>
+  <script src="waitlist.js?v=20261007c" defer></script>
   <script src="gauge.js?v=20261005c" defer></script>
   <script src="trace-demo.js?v=20261005c" defer></script>
   <script src="verdict-demo.js?v=20261005c" defer></script>

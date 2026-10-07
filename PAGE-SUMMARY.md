@@ -26,7 +26,7 @@ Mirrors the HonestPing Windows app **navy Neon** theme from `theme-tokens.json`:
 9. **Day to day**: Three practical moments (calls, reboot triage, ISP tickets)  
 10. **Inside the app**: `overview-navy` preview in window chrome  
 11. **Closing line** (`#punch`): Just above the waitlist. Exact line: “One disputed internet bill can pay for your entire app.” Link to `#isp`. No dollar amounts or prices.
-12. **Waitlist**: mailto `hello@honestping.com?subject=HonestPing%20waitlist` (+ email field via JS)  
+12. **Waitlist**: POST `/api/waitlist` saves the address and shows a thank-you on the page. A mailto link to `hello@honestping.com` stays under the form if JavaScript cannot run.  
 13. **Footer**: © Anson Mitchell and Matt Lewis (equal plain text) · About Us · www.honestping.com · privacy-light waitlist note  
 
 ## About Us (`about.html`)
@@ -39,7 +39,7 @@ Co-created by Anson Mitchell and Matt Lewis, always with equal prominence. On th
 
 ## Primary CTA
 
-**Join the waitlist** → `mailto:hello@honestping.com` (no public download yet).
+**Join the waitlist** → on-page form (POST `/api/waitlist`). Mailto link remains for when JavaScript cannot run. No public download yet.
 
 ## Assets
 

@@ -665,6 +665,29 @@ input:focus-visible {
   color: var(--hp-muted);
 }
 .waitlist-alt a { font-weight: 600; }
+.waitlist-form .waitlist-turnstile {
+  flex: 1 1 100%;
+  display: flex;
+  justify-content: center;
+  min-height: 65px;
+}
+.waitlist-form .waitlist-thanks,
+.waitlist-form .waitlist-error,
+.ispx-form .waitlist-thanks,
+.ispx-form .waitlist-error {
+  flex: 1 1 100%;
+  margin: 0;
+  font-size: 14px;
+}
+.waitlist-error { color: var(--hp-amber); }
+.waitlist-form.is-done > :not(.waitlist-thanks),
+.ispx-form.is-done > :not(.waitlist-thanks) { display: none; }
+.waitlist-form.is-done .waitlist-thanks,
+.ispx-form.is-done .waitlist-thanks { display: block; color: var(--hp-text); }
+.ispx-turnstile { display: flex; justify-content: center; }
+.ispx-form .ispx-turnstile,
+.ispx-form .waitlist-thanks,
+.ispx-form .waitlist-error { grid-column: 1 / -1; }
 
 /* Footer */
 .site-footer {
