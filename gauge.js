@@ -74,19 +74,19 @@
     if (history.length > 6) history.shift();
     var d = 0;
     for (var i = 1; i < history.length; i++) d += Math.abs(history[i] - history[i - 1]);
-    // Subtle smooth jitter 1–6 ms
+    // Subtle smooth jitter 1 to 6 ms
     var jRaw = Math.max(1, Math.min(6, d / Math.max(1, history.length - 1) + (Math.random() - 0.5) * 1.2));
     jitterTarget = Math.round(jitterTarget * 0.55 + jRaw * 0.45);
     jitterTarget = Math.max(1, Math.min(6, jitterTarget));
 
-    // Packet loss mostly 0; occasional 0.1–0.6% blips that ease back to 0
+    // Packet loss mostly 0; occasional 0.1 to 0.6% blips that ease back to 0
     if (lossBlipLeft > 0) {
       lossBlipLeft -= 1;
       lossTarget = lossTarget * 0.45; // ease back
       if (lossBlipLeft === 0 || lossTarget < 0.05) lossTarget = 0;
     } else if (Math.random() < 0.08) {
-      lossTarget = 0.1 + Math.random() * 0.5; // 0.1–0.6
-      lossBlipLeft = 2 + Math.floor(Math.random() * 2); // 2–3 samples easing
+      lossTarget = 0.1 + Math.random() * 0.5; // 0.1 to 0.6
+      lossBlipLeft = 2 + Math.floor(Math.random() * 2); // 2 to 3 samples easing
     } else {
       lossTarget = 0;
     }
