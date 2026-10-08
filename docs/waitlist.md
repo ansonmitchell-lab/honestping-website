@@ -1,6 +1,6 @@
 # Waitlist and ISP forms
 
-Submitting Join the waitlist saves the address in Cloudflare D1 and shows a thank-you on the page. It does not open the visitor's mail app. A new row also emails Anson. If that send fails, the visitor still sees the thank-you and the failure is logged. A duplicate address gets the same thank-you and no second email. The ISP partnership form uses the same rules, its own table, and the subject `ISP partnership`.
+Submitting Join the waitlist saves the address in Cloudflare D1 and shows a thank-you on the page. It does not open the visitor's mail app. A new row also emails hello@honestping.com. If that send fails, the visitor still sees the thank-you and the failure is logged. A duplicate address gets the same thank-you and no second email. The ISP partnership form uses the same rules, its own table, and the subject `ISP partnership`.
 
 Nothing in this repo deploys itself. Preview and production stay on separate D1 databases and separate Workers. Do not merge this into `main`, and do not deploy the `honestping-web` Worker, until you mean to go live.
 

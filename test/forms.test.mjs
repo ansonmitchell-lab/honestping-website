@@ -81,7 +81,7 @@ function mockVerify(result, capture) {
 
 const pass = { success: true, action: "waitlist", hostname: "www.honestping.com" };
 
-test("waitlist saves a lowercased email and notifies Anson", async () => {
+test("waitlist saves a lowercased email and notifies hello@honestping.com", async () => {
   const saved = state();
   const capture = { calls: [] };
   const restore = mockVerify(pass, capture);
