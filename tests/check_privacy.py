@@ -25,10 +25,13 @@ class PagesHandler(SimpleHTTPRequestHandler):
         if path != "/" and path.endswith("/"):
             path = path[:-1]
         rel = path.lstrip("/")
-        if rel and not (ROOT / rel).exists():
+        if rel:
             html = ROOT / f"{rel}.html"
+            index = ROOT / rel / "index.html"
             if html.is_file():
                 self.path = f"/{rel}.html"
+            elif index.is_file():
+                self.path = f"/{rel}/index.html"
         return super().do_GET()
 
     def log_message(self, fmt, *args):
@@ -36,7 +39,18 @@ class PagesHandler(SimpleHTTPRequestHandler):
 
 
 def pages():
-    return sorted(ROOT.glob("*.html"))
+    found = sorted(ROOT.glob("*.html"))
+    privacy_dir = ROOT / "privacy"
+    if privacy_dir.is_dir():
+        found.extend(sorted(privacy_dir.glob("*.html")))
+    return found
+
+
+def visible_text(html):
+    text = re.sub(r"<!--.*?-->", "", html, flags=re.S)
+    text = re.sub(r"<script\b[^>]*>.*?</script>", "", text, flags=re.S | re.I)
+    text = re.sub(r"<style\b[^>]*>.*?</style>", "", text, flags=re.S | re.I)
+    return re.sub(r"<[^>]+>", " ", text)
 
 
 def emails_in(text):
@@ -114,18 +128,66 @@ def main():
             "Nothing is sent until you press Submit.",
             "You can change this anytime in Settings",
             "Crash reports and provider name lookup happen only if you allow them.",
-            "[DATE OF PUBLICATION]",
-            "[MAILING ADDRESS]",
-            "[TODO ATTORNEY: confirm regions and UK approach.]",
-            "[TODO: zero retention / no more than 30 days]",
-            "[TODO: subprocessor list, honestping.com/privacy/subprocessors]",
-            "[ENGINEERING: confirm when an unsent report is deleted.]",
+            "Last updated:",
+            "October 8, 2026",
+            "Cloudflare, which hosts our website, processes standard connection data such as your IP address and browser type to deliver the site and protect it from attacks.",
+            "We don't use this data to identify visitors.",
+            "We use your email only to tell you when HonestPing is available.",
+            "We don't send marketing email unless you ask for it.",
+            "The form opens your email app and sends to",
+            "Our email is hosted by Google.",
+            "This site doesn't use cookies.",
+            "When you press",
+            "Check for updates",
+            "If a report can't be sent, HonestPing tries once more the next time it starts, then deletes it.",
+            "Turning crash reports off deletes any report waiting to be sent.",
+            "The AI service can't use reports to train its models and keeps them for no more than 30 days.",
+            "an AI service provider listed on our subprocessors page",
+            'href="/privacy/subprocessors"',
+            'href="/privacy/history"',
+            "Depending on where you live, you may have the right to access, correct, delete, or get a copy of your personal information",
+            "We don't sell personal information or use it for targeted advertising.",
         )
         for phrase in present:
             check(phrase in body, f"/privacy is missing canonical text: {phrase}")
         privacy_emails = emails_in(body)
         check(privacy_emails == {"hello@honestping.com"}, f"/privacy emails: {sorted(privacy_emails)}")
         check(body.lower().count("hello@honestping.com") >= 4, "expected hello@honestping.com on each contact line")
+        check("1500 N Grant" not in body, "/privacy includes the street address")
+        check("GitHub" not in body, "/privacy names GitHub")
+        check("Site analytics" not in body, "/privacy still contains the analytics paragraph")
+
+        updated_js = (ROOT / "privacy-updated.js").read_text(encoding="utf-8")
+        date_match = re.search(r'HONESTPING_POLICY_UPDATED = "([^"]+)"', updated_js)
+        policy_date = date_match.group(1) if date_match else ""
+        check(policy_date == "October 8, 2026", f"policy date constant is {policy_date!r}")
+
+        publication_paths = ("/privacy", "/privacy/subprocessors", "/privacy/history")
+        for path in publication_paths:
+            with urlopen(f"http://127.0.0.1:{port}{path}") as response:
+                page_body = response.read().decode("utf-8")
+                page_status = response.status
+            check(page_status == 200, f"{path} status {page_status}, expected 200")
+            shown = visible_text(page_body)
+            check("[" not in shown, f"{path} has a visible bracket placeholder")
+            check("TODO" not in shown, f"{path} has a visible TODO")
+            if path != "/privacy/subprocessors":
+                check(policy_date in shown, f"{path} does not show the policy date {policy_date}")
+            check(CREDIT in page_body, f"{path} footer credit line does not match")
+            check(PRIVACY_HREF in page_body, f"{path} footer is missing the Privacy link")
+
+        with urlopen(f"http://127.0.0.1:{port}/privacy/subprocessors") as response:
+            sub_body = response.read().decode("utf-8")
+        check("Cloudflare (website hosting and security)" in sub_body, "subprocessors page is missing Cloudflare")
+        check("Google (email)" in sub_body, "subprocessors page is missing Google")
+        check("GitHub" not in sub_body, "subprocessors page names GitHub")
+        check(
+            "We'll add our AI service here before any reports are shared with it." in sub_body,
+            "subprocessors page is missing the AI service line",
+        )
+        with urlopen(f"http://127.0.0.1:{port}/privacy/history") as response:
+            history_body = response.read().decode("utf-8")
+        check("First published." in history_body, "history page is missing the first published entry")
 
         html_pages = pages()
         check(html_pages, "no HTML pages found")
@@ -135,8 +197,8 @@ def main():
             check(CREDIT in text, f"{page.name} footer credit line does not match")
             extra = emails_in(text) - ALLOWED_EMAILS
             check(not extra, f"{page.name} has unexpected email addresses: {sorted(extra)}")
-            if page.name == "privacy.html":
-                check("Created by" not in text, "privacy.html meta description includes a Created by phrase")
+            if page.name == "privacy.html" or (page.parent.name == "privacy" and page.name == "index.html"):
+                check("Created by" not in text, "privacy page meta description includes a Created by phrase")
 
         index = (ROOT / "index.html").read_text(encoding="utf-8")
         check("you@example.com" in index, "waitlist placeholder you@example.com was removed")
@@ -144,6 +206,7 @@ def main():
         check('id="creators"' in about, "about.html is missing the creators section from main")
 
         planned = (ROOT / "docs" / "privacy-planned.md").read_text(encoding="utf-8")
+        check("Cloudflare Web Analytics" in planned, "planned doc is missing the analytics text")
         for heading in (
             "3.5 Sharing a report with your internet provider",
             "3.6 Daily check-in",

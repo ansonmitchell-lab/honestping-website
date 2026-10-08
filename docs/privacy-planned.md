@@ -105,6 +105,12 @@ Deletion requests, parked sentence:
 
 > Some purchase records must be kept for tax law even after a deletion request.
 
+## Site analytics (not enabled)
+
+Removed from the live page. Cloudflare Web Analytics is not turned on.
+
+**Site analytics (no cookies).** [IF ENABLED:] We use Cloudflare Web Analytics to count page views and download clicks. Cloudflare says it doesn't use cookies or local storage and doesn't fingerprint visitors. We see totals only, like "120 visits to the home page this week," not individuals. [Currently not enabled. Remove this paragraph or keep "if enabled" until it's turned on.]
+
 ## 4. Purchases (HonestPing Pro)
 
 Parked until checkout exists.
