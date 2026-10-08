@@ -73,7 +73,7 @@ Account `4e7e5db788ca85b49af0442d922ebc6e`.
 | Binding | Name | Preview Worker `honestping-web-preview` | Production Worker `honestping-web` |
 | --- | --- | --- | --- |
 | D1 | `DB` | `834af7c2-165f-4fb4-92b9-49b1aa0b3eb6` | `c732d15a-f4c9-4f7d-8588-41f7774d41d1` |
-| Send email | `EMAIL` | From `waitlist@honestping.com` only, to `hello@honestping.com` only | Same |
+| Send email | `EMAIL` | From `hello@honestping.com` only, to `hello@honestping.com` only | Same |
 | Var | `TURNSTILE_HOSTNAMES` | `honestping-web-preview.honestping.workers.dev` | `www.honestping.com,honestping.com` |
 | Var | `ORIGIN_BASE` | `https://raw.githubusercontent.com/ansonmitchell-lab/honestping-website/cursor/waitlist-d1-bbe4` | Unset. The script defaults to the `main` raw URL above. |
 | Secret | `TURNSTILE_SECRET` | Secret for sitekey `0x4AAAAAAFQof7EbIcyPa73s`. Not in git. | Same secret. Not in git. |
@@ -119,7 +119,7 @@ printf '%s' "$TURNSTILE_SECRET" | npx wrangler secret put TURNSTILE_SECRET --con
 ```
 
 4. Open `https://honestping-web-preview.honestping.workers.dev/`. The pages come from this branch because `ORIGIN_BASE` points at `cursor/waitlist-d1-bbe4` on GitHub raw. `main` is unchanged.
-5. Submit the waitlist form. You should see "You're on the list. We'll email you when HonestPing is ready." and no mail app. A new row emails `hello@honestping.com` from `waitlist@honestping.com` with the subject `HonestPing waitlist`, then sets `notified_at`. Submit the same address again: the thank-you shows, and no second email arrives. If the first send failed, `notified_at` stays empty and the second submit tries once more. The cron tries again within 15 minutes. The first real send waits on the destination verification click described above.
+5. Submit the waitlist form. You should see "You're on the list. We'll email you when HonestPing is ready." and no mail app. A new row emails `hello@honestping.com` from `hello@honestping.com` with the subject `HonestPing waitlist`, then sets `notified_at`. Submit the same address again: the thank-you shows, and no second email arrives. If the first send failed, `notified_at` stays empty and the second submit tries once more. The cron tries again within 15 minutes. The first real send waits on the destination verification click described above.
 6. The row should be in `honestping-waitlist-preview`, not `honestping-waitlist`.
 
 `secret put` and `deploy` for this env publish the preview Worker immediately. They do not publish the live site when `--env preview` is present.

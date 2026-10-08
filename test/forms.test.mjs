@@ -185,7 +185,7 @@ test("waitlist saves a lowercased email and notifies hello@honestping.com", asyn
     assert.equal(saved.emails.length, 1);
     assert.equal(saved.emails[0].subject, "HonestPing waitlist");
     assert.equal(saved.emails[0].to, "hello@honestping.com");
-    assert.equal(saved.emails[0].from.email, "waitlist@honestping.com");
+    assert.equal(saved.emails[0].from.email, "hello@honestping.com");
     assert.equal(saved.emails[0].replyTo, "person@example.com");
     assert.equal(saved.emails[0].text.includes(IP), false);
     assert.match(saved.emails[0].text, /person@example.com/);
@@ -550,8 +550,8 @@ test("preview worker config is separate from production and Pages mail", () => {
   assert.match(preview, /honestping-web-preview\.honestping\.workers\.dev/);
   assert.match(preview, /ORIGIN_BASE/);
   assert.match(preview, /cursor\/waitlist-d1-bbe4/);
-  assert.match(preview, /"crons": \["\*\/15 \* \* \* \*"\]/);
-  assert.match(workerConfig.slice(0, workerConfig.indexOf('"env"')), /"crons": \["\*\/15 \* \* \* \*"\]/);
+  assert.match(preview, /"crons": \["\*\/15 \* \* \* \*", "15 3 \* \* \*"\]/);
+  assert.match(workerConfig.slice(0, workerConfig.indexOf('"env"')), /"crons": \["\*\/15 \* \* \* \*", "15 3 \* \* \*"\]/);
   assert.match(workerConfig, /"name": "honestping-web"/);
   assert.equal(workerConfig.includes("hello@honestping.com"), true);
   assert.equal(workerConfig.includes("ansonmitchell@gmail.com"), false);

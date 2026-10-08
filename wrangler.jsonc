@@ -23,11 +23,26 @@
       "migrations_dir": "migrations"
     }
   ],
+  "r2_buckets": [
+    {
+      "binding": "SCREENSHOTS",
+      "bucket_name": "honestping-feedback",
+      "preview_bucket_name": "honestping-feedback-preview"
+    }
+  ],
   "vars": {
-    "TURNSTILE_HOSTNAMES": "www.honestping.com,honestping.com"
+    "TURNSTILE_HOSTNAMES": "www.honestping.com,honestping.com",
+    "K_MIN": "10"
   },
+  "kv_namespaces": [
+    {
+      "binding": "FEEDBACK_LIMITS",
+      "id": "00000000000000000000000000000000",
+      "preview_id": "00000000000000000000000000000000"
+    }
+  ],
   "secrets": {
-    "required": ["TURNSTILE_SECRET"]
+    "required": ["TURNSTILE_SECRET", "FEEDBACK_IP_SALT"]
   },
   // Not the site preview. Pages cannot send the notification.
   // Use wrangler.worker.jsonc env.preview (honestping-web-preview) for that.
@@ -41,11 +56,24 @@
           "migrations_dir": "migrations"
         }
       ],
+      "r2_buckets": [
+        {
+          "binding": "SCREENSHOTS",
+          "bucket_name": "honestping-feedback-preview"
+        }
+      ],
       "vars": {
-        "TURNSTILE_HOSTNAMES": ".honestping.pages.dev"
+        "TURNSTILE_HOSTNAMES": ".honestping.pages.dev",
+        "K_MIN": "10"
       },
+      "kv_namespaces": [
+        {
+          "binding": "FEEDBACK_LIMITS",
+          "id": "00000000000000000000000000000000"
+        }
+      ],
       "secrets": {
-        "required": ["TURNSTILE_SECRET"]
+        "required": ["TURNSTILE_SECRET", "FEEDBACK_IP_SALT"]
       }
     }
   }

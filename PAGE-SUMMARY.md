@@ -16,7 +16,7 @@ Mirrors the HonestPing Windows app **navy Neon** theme from `theme-tokens.json`:
 
 
 1. **Header**: App-style brand lockup (icon + name + tagline subtitle), nav (For gamers, For work, In-Home Streaming, What you get, The gap, Preview, About Us), waitlist CTA  
-2. **Hero**: Tagline exactly *Network health, explained*; H1 “You’re not crazy. It might be your connection.”; gaming hook link and For gamers button to `#gamers`; live Overview dial (SVG + CSS + `gauge.js`) matching app `.hp-dial-rim` / `.hp-dial-face` / `.hp-dial-value`, ping ticks 22 to 36 ms around 28 ms, jitter and packet loss beside it; reduced motion freezes at 28 ms; Join the waitlist CTA (no creator credit in the hero)  
+2. **Hero**: Tagline exactly *Network health, explained*; H1 “You’re not crazy. It might be your connection.”; gaming hook link and For gamers button to `#gamers`; live Overview dial (SVG + CSS + `gauge.js`) matching app `.hp-dial-rim` / `.hp-dial-face` / `.hp-dial-value`, ping ticks 22 to 36 ms around 28 ms, jitter and packet loss beside it; reduced motion freezes at 28 ms; Join the waitlist CTA (no personal credit in the hero)  
 3. **For gamers** (`#gamers`, live): Page centerpiece immediately under the hero, before ISP. H2: “Your ping is the difference between life and death.” Free plan: status in the ring (Healthy or Degraded), helper “Status in the ring”. Pro plan: sample ping in the ring plus jitter and packet loss. Caption: “Sample comparison · Example UI”. Animated abstract HUD (controller face buttons, keycaps, ping dots, HUD sweep); `prefers-reduced-motion` disables those animations. No game or platform brand marks. Header nav link "For gamers". Approved and published.
 4. **ISP accountability** (`#isp`): Featured gradient-ringed band after gamers. Lead message: are you getting the speed you pay for? Four-step flow (enter advertised download speed · realistic speed tests over time · compare to the promise · clear verdict: getting what you pay for or getting ripped off). Step 04 says the verdict is backed by a dated report you can export and send your provider. Beside the steps: an example verdict card (500 Mbps advertised vs 212 Mbps measured, 42%) and, under it in `.isp-proof-col`, a "Solid proof to bring to your ISP" report (5 dated test rows including a 96 Mbps evening low, 168 tests / 7 days / 212 avg / 42%, mock "Export report" button, PDF and CSV note). Rows reveal one by one, then the button glows (`verdict-demo.js`; reduced motion stays static). Verdict bar fill is absolutely positioned so the 42% width renders, and the counted 212 stays headline size. Waitlist CTA.
 5. **For work / WFH** (`#wfh`, live): Featured band after ISP, before streaming. Hook: tired of wondering whether it’s your internet when a video call isn’t working. Features named only as they exist: live connection-quality ring, jitter and packet-loss tracking, “Is it just me?” check, Trace, Wi-Fi details, History & evidence. Trace demo (`trace-demo.js`): hops appear one at a time (You, Router, ISP, Hop 4, Hop 5, Destination), latency tones, “Trace finished”, then loop; reduced motion shows the finished path. Caption: “Example Trace · Abstract path only”. No meeting-app brand marks. Header nav link "For work". Approved and published.
@@ -26,16 +26,16 @@ Mirrors the HonestPing Windows app **navy Neon** theme from `theme-tokens.json`:
 9. **Day to day**: Three practical moments (calls, reboot triage, ISP tickets)  
 10. **Inside the app**: `overview-navy` preview in window chrome  
 11. **Closing line** (`#punch`): Just above the waitlist. Exact line: “One disputed internet bill can pay for your entire app.” Link to `#isp`. No dollar amounts or prices.
-12. **Waitlist**: POST `/api/waitlist` saves the address and shows a thank-you on the page. A mailto link to `hello@honestping.com` stays under the form if JavaScript cannot run.  
-13. **Footer**: © Anson Mitchell and Matt Lewis (equal plain text) · About Us · www.honestping.com · privacy-light waitlist note  
+12. **Waitlist**: POST `/api/waitlist` saves the address and shows a thank-you on the page. A mailto link to `hello@honestping.com` stays under the form if JavaScript cannot run. The waitlist note sits with the form: mail is only used to say when HonestPing is available.  
+13. **Footer**: `© <span id="year">2026</span> Honest Ping LLC`  
 
 ## About Us (`about.html`)
 
-Same header/nav/footer chrome. Product blurb (*Network health, explained*), then two identical co-creator cards (initials badge, name, "Co-creator" role): **Anson Mitchell** and **Matt Lewis**. No personal links for either creator. Waitlist CTA links back to `index.html#waitlist`.
+Same header/nav/footer chrome. Product blurb (*Network health, explained*), then the waitlist CTA back to `index.html#waitlist`. There is no creators section.
 
 ## Credits
 
-Co-created by Anson Mitchell and Matt Lewis, always with equal prominence. On the homepage, credit appears only in the footer (plain, muted text). The site contains no links or references to any personal domain.
+The only credit line is `© <span id="year">2026</span> Honest Ping LLC`. It is the whole footer on every page. The About page has no creators section.
 
 ## Primary CTA
 
