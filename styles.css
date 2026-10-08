@@ -2131,3 +2131,31 @@ input:focus-visible {
 .waitlist-privacy { margin-top: 8px; font-size: 12px; color: var(--hp-muted); max-width: 32rem; margin-left: auto; margin-right: auto; }
 .ispx-card h3 + .draft-chip { margin: 0 0 8px; }
 .section-label + .draft-chip { margin-left: 6px; vertical-align: middle; }
+
+/* Claim Check section (isp.html, v=20261007c) */
+.ispx-cc-head { align-items: start; }
+.ispx-cc-promise { margin-top: 12px; color: var(--hp-text); font-size: 14px; max-width: 36rem; }
+.ispx-cc-example { position: relative; overflow: hidden; margin: 0; padding: 20px; display: grid; gap: 10px; justify-items: start; }
+.ispx-cc-kicker { font-size: 12px; color: var(--hp-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.ispx-cc-reasons { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; color: var(--hp-muted); }
+.ispx-cc-example figcaption { font-size: 12px; color: var(--hp-muted); }
+.ispx-pill { font-size: 13px; font-weight: 600; padding: 5px 10px; }
+.ispx-lv-backed { color: var(--hp-green); background: var(--hp-green-bg); }
+.ispx-lv-isolated { color: var(--hp-blue); background: var(--hp-selected); }
+.ispx-lv-home { color: var(--hp-amber); background: var(--hp-amber-bg); }
+.ispx-lv-thin { color: var(--hp-muted); background: var(--hp-subtle); }
+.ispx-subhead { font-size: 17px; margin: 26px 0 0; }
+.ispx-subhead-tight { margin: 0 0 4px; }
+.ispx-levels { margin-top: 12px; }
+.ispx-level { padding: 16px 18px 18px; display: grid; gap: 8px; align-content: start; justify-items: start; }
+.ispx-level-means { font-size: 14px; color: var(--hp-text); }
+.ispx-level-step { font-size: 14px; color: var(--hp-muted); }
+.ispx-level-step strong { color: var(--hp-text); }
+.ispx-level-not { font-size: 12.5px; color: var(--hp-muted); font-style: italic; }
+.ispx-cc-note { margin-top: 12px; font-size: 13px; color: var(--hp-muted); }
+.ispx-cc-detail { margin-top: 24px; }
+@media (min-width: 860px) { .ispx-cc-detail { grid-template-columns: 1.15fr 1fr; } }
+.ispx-cc-checks { padding: 18px 20px; }
+.ispx-cc-checks h3 { font-size: 16px; margin-bottom: 8px; }
+.ispx-cc-checks ol { margin: 0; padding-left: 20px; display: grid; gap: 10px; font-size: 14px; color: var(--hp-muted); }
+.ispx-cc-checks ol strong { color: var(--hp-text); }
