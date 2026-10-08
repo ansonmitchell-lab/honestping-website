@@ -694,6 +694,9 @@ input:focus-visible {
   .hero { padding-top: 32px; }
 }
 
+/* Footer credit: unobtrusive, both names identical */
+.footer-creator { color: inherit; font-weight: inherit; }
+
 /* About page */
 .about-hero { padding: 56px 0 40px; }
 .about-hero h1 {
@@ -711,6 +714,44 @@ input:focus-visible {
   display: grid;
   gap: 12px;
 }
+.creators-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .creators-grid { grid-template-columns: 1fr 1fr; }
+}
+.creator-card {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.creator-card .creator-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--hp-primary-text);
+  background: linear-gradient(135deg, var(--hp-brand), var(--hp-cyan));
+}
+.creator-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--hp-text);
+}
+.creator-card .creator-role {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--hp-green);
+}
+.creator-card p { color: var(--hp-muted); font-size: 14px; }
 .about-hero .wrap { position: relative; z-index: 1; }
 
 /* ISP accountability showcase: featured band */

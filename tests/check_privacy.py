@@ -9,7 +9,7 @@ from urllib.error import HTTPError
 from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
-CREDIT = "© <span id=\"year\">2026</span> Honest Ping LLC"
+CREDIT = "© <span id=\"year\">2026</span> <span class=\"footer-creator\">Anson Mitchell</span> and <span class=\"footer-creator\">Matt Lewis</span>"
 PRIVACY_HREF = 'href="/privacy"'
 ALLOWED_EMAILS = {"hello@honestping.com", "you@example.com"}
 
@@ -133,12 +133,13 @@ def main():
             check(CREDIT in text, f"{page.name} footer credit line does not match")
             extra = emails_in(text) - ALLOWED_EMAILS
             check(not extra, f"{page.name} has unexpected email addresses: {sorted(extra)}")
-            check("Created by" not in text, f"{page.name} meta description still says Created by")
+            if page.name == "privacy.html":
+                check("Created by" not in text, "privacy.html meta description includes a Created by phrase")
 
         index = (ROOT / "index.html").read_text(encoding="utf-8")
         check("you@example.com" in index, "waitlist placeholder you@example.com was removed")
         about = (ROOT / "about.html").read_text(encoding="utf-8")
-        check('id="creators"' not in about, "about.html still has the creators section")
+        check('id="creators"' in about, "about.html is missing the creators section from main")
 
         planned = (ROOT / "docs" / "privacy-planned.md").read_text(encoding="utf-8")
         for heading in (
