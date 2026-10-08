@@ -18,6 +18,7 @@ import { renderPathCard } from "../isp/src/views/path-card.js";
 import { renderPreviewPage } from "../isp/src/views/page.js";
 import { renderSupportView } from "../isp/src/views/support-view.js";
 import { displayHop } from "../isp/src/views/format.js";
+import { sameOrigin } from "../isp/src/http.js";
 
 const fixture = JSON.parse(readFileSync(new URL("../isp/seed/fixtures/example-slow-aggregation.json", import.meta.url), "utf8"));
 const example = fixture.trace;
@@ -347,4 +348,12 @@ test("preview copy stays plain and uses the company footer", () => {
   const handler = readFileSync(new URL("../isp/src/index.js", import.meta.url), "utf8");
   const ingest = readFileSync(new URL("../isp/src/ingest.js", import.meta.url), "utf8");
   assert.equal(/cf-connecting-ip/i.test(handler + ingest), false);
+});
+
+test("form posts need a real origin", () => {
+  const target = "http://127.0.0.1:8791/isp-preview/network/suggestions";
+  assert.equal(sameOrigin(new Request(target, { method: "POST", headers: { origin: "null" } })), false);
+  assert.equal(sameOrigin(new Request(target, { method: "POST" })), false);
+  assert.equal(sameOrigin(new Request(target, { method: "POST", headers: { origin: "http://127.0.0.1:8791" } })), true);
+  assert.equal(sameOrigin(new Request(target, { method: "POST", headers: { origin: "http://evil.example" } })), false);
 });

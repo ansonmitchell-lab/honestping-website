@@ -28,7 +28,8 @@ export function previewOrg(request, env) {
 
 export function sameOrigin(request) {
   const origin = request.headers.get("origin");
-  if (!origin) return false;
+  // Browsers send the literal "null" when the page's referrer policy hides the origin.
+  if (!origin || origin === "null") return false;
   try {
     return new URL(origin).origin === new URL(request.url).origin;
   } catch {

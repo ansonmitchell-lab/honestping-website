@@ -15,7 +15,7 @@ const HTML_HEADERS = {
   "content-type": "text/html; charset=utf-8",
   "cache-control": "no-store",
   "x-content-type-options": "nosniff",
-  "referrer-policy": "no-referrer",
+  "referrer-policy": "same-origin",
   "x-frame-options": "DENY",
   "x-robots-tag": "noindex",
   "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; script-src 'none'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'",
@@ -75,6 +75,14 @@ export async function handleIspRequest(request, env) {
     if (!hops.length) return json(404, { error: "not_found" });
     return json(200, { run_id: runId, hops });
   }
+  const previewPage = request.method === "GET" && (
+    path === "/isp-preview"
+    || path === "/isp-preview/support"
+    || path === "/isp-preview/paths"
+    || path === "/isp-preview/network"
+  );
+  const previewPost = request.method === "POST" && path.startsWith("/isp-preview/network/");
+  if (!previewPage && !previewPost) return text(404, "Not found");
   if (!org) return text(401, "Sign in to the ISP preview.");
   const floor = floorOf(env);
   const notice = noticeText(url.searchParams.get("notice"));

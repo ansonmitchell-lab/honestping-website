@@ -101,7 +101,7 @@ test("isp migrations, isolation, k-min, and ingest", async (t) => {
       assert.equal(hops.find((hop) => hop.ttl === 3).matched_node_id, "tight");
       assert.equal(hops.find((hop) => hop.ttl === 3).ip, "10.212.4.1");
       assert.equal(hops.find((hop) => hop.ttl === 1).ip, null);
-      assert.equal(await hopsForRun(db, "isp-b", first.run_id), []);
+      assert.deepEqual(await hopsForRun(db, "isp-b", first.run_id), []);
 
       const second = await resign({
         ...structuredClone(fixture.trace),
@@ -285,6 +285,7 @@ test("isp migrations, isolation, k-min, and ingest", async (t) => {
       const page = await handleIspRequest(new Request("https://preview.example/isp-preview/support?run=11111111-1111-4111-8111-111111111111", {
         headers: { authorization: "Bearer token-a" },
       }), env);
+      assert.equal(page.headers.get("referrer-policy"), "same-origin");
       const html = await page.text();
       assert.equal(html.includes("10.88.1.9"), false);
     });
