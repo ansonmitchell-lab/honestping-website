@@ -260,8 +260,8 @@ export function renderIspPreview(options = {}) {
     .sum { color: var(--grn); font-weight: 700; margin-top: 8px; }
     .btn.p { background: var(--acc); color: #04222a; border-color: var(--acc); font-weight: 700; }
     .btn.ghost { background: var(--sub); border-color: var(--bor); color: var(--txt); font-weight: 700; }
-    .note-row, footer { padding: 8px 28px 0; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center; }
-    footer { padding-bottom: 28px; }
+    .note-row { padding: 8px 28px 0; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center; }
+    footer { padding: 8px 28px 28px; }
     .text-btn { background: none; border: 0; color: var(--acc); padding: 0; font-weight: 700; }
     #help { position: fixed; top: 0; right: 0; height: 100%; width: min(400px, 100%); background: #0d1e2e; border-left: 1px solid var(--bor); z-index: 5; padding: 18px; overflow: auto; box-shadow: -12px 0 40px rgba(0,0,0,.35); }
     #help[hidden] { display: none; }
