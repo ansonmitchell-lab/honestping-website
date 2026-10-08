@@ -57,3 +57,63 @@ Retention table rows left out:
 | [PLANNED] Check-ins | Per-install records [13] months, then totals only |
 | [PLANNED] Area contributions | Raw data 90 days. Area totals up to 25 months |
 | [PLANNED] Shared reports | Until the share expires or you revoke it, then deleted within 24 hours. Open-log 12 months |
+
+## Sentences taken off the live page
+
+These were on `/privacy` and are parked until the feature ships. The live page no longer includes them.
+
+Short version, parked phrase:
+
+> sharing a report with your internet provider
+
+The live page says: "Everything else is sent only when you choose: bug reports, feature requests, and joining the waitlist."
+
+Your choices, parked sentence:
+
+> Revoke any share.
+
+Legal bases, parked flows:
+
+> check-ins, area sharing, sharing with your provider
+
+Legal basis parked with purchases:
+
+> contract (your Pro license)
+
+What this policy covers, parked clauses:
+
+> and purchases of HonestPing Pro
+> That includes the company that processes your payment (see §4) and the Microsoft Store (see §5).
+
+Crash reports, parked until the three-way control exists:
+
+> [OPTIONAL MODE:] You can also choose **Ask me each time**, which shows what would be sent and waits for you to press Send.
+
+Contact, parked form clause:
+
+> **Contact and ISP inquiries.** If you email us or use the "For ISPs" form, we get what you send: your name, company, work email, approximate subscriber count, and your message. We use it to reply and, for ISPs, to discuss a partnership.
+
+Security, parked clause:
+
+> and audit logs on our owner dashboard
+
+Who we share information with, parked clause:
+
+> and the merchant of record where it acts on our behalf
+
+Deletion requests, parked sentence:
+
+> Some purchase records must be kept for tax law even after a deletion request.
+
+## 4. Purchases (HonestPing Pro)
+
+Parked until checkout exists.
+
+Pro is sold by our merchant of record, **[Lemon Squeezy (Sold through Link, LLC) / Stripe – DECISION]**. It is the seller on your receipt and processes your payment, billing address, tax and refunds under **its own privacy policy** [LINK]. We never see your full card number. From the merchant of record, we receive [your name, email, country, order ID, plan, price paid, tax collected, license key, and refund or chargeback status], which we use to deliver and support your license, handle refunds, and keep business and tax records. The license key and activation records are kept for the life of your license plus 12 months. Order records are kept for [7] years for tax and accounting reasons [ACCOUNTANT/ATTORNEY]. [If license activation contacts our server, describe what it sends here: license key, install ID?, app version, and the IP in transit, not stored.]
+
+Retention rows parked with purchases:
+
+| Information | How long |
+|---|---|
+| Purchase records | [7] years (tax and accounting). The merchant of record keeps its own records |
+| License records | Life of the license plus 12 months |
