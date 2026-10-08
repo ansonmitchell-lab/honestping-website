@@ -27,7 +27,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20261007d">
+  <link rel="stylesheet" href="styles.css?v=20261008a">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -218,12 +218,13 @@
       <div class="wrap">
         <div class="isp-panel">
           <div class="isp-head">
-            <span class="section-label">Are you getting what you pay for?</span>
-            <h2 class="isp-title" id="isp-heading">Your plan says one speed. HonestPing tells you the real one.</h2>
+            <div class="isp-label-row"><span class="section-label">Are you getting what you pay for?</span> <span class="plan-tag plan-tag-pro">Pro</span></div>
+            <h2 class="isp-title" id="isp-heading">Your plan says one speed. Your <span class="nowrap">7-day report</span> shows the real one.</h2>
             <p class="isp-intro">
-              Type in the download speed your provider advertises. HonestPing tests your real connection
-              over time, compares the results to that promise, and gives you a straight answer:
-              you’re getting what you pay for, or you’re not.
+              Type in the download speed on your bill. HonestPing Pro tests your real connection three times
+              a day for a week and turns it into a 7-day report: a straight answer, you’re getting what you
+              pay for or you’re not, with dated evidence you can bring to your provider. If you’re short,
+              it can also show what that gap could be worth.
             </p>
           </div>
 
@@ -253,8 +254,8 @@
               <li class="isp-card">
                 <span class="isp-step">04</span>
                 <div>
-                  <h3>Get a clear verdict</h3>
-                  <p>Getting what you pay for, Close to plan, or Under-delivering. Plain words, with dated results you can copy or export.</p>
+                  <h3>Get your 7-day report</h3>
+                  <p>Getting what you pay for, Close to plan, or Under-delivering. Plain words, with every test dated, ready to copy or export.</p>
                 </div>
               </li>
             </ol>
@@ -292,8 +293,10 @@
               <p class="isp-partner-line">Same tests and same results, whoever your provider is. <a href="isp.html">For ISPs</a></p>
               <ul class="isp-checklist">
                 <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Every test dated and timed, morning to evening, plus a weekend day</span></li>
-                <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Your plan speed beside what you actually got, with the percentage</span></li>
-                <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy a summary or export a CSV, ready to attach to an email or a support chat. PDF export coming soon.</span></li>
+                <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Typical (median) speed beside your plan speed, with the percentage, so one bad test can’t skew it</span></li>
+                <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Home-side causes ruled out: a test on weak Wi-Fi, a busy PC, or a VPN is marked not counted</span></li>
+                <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>A report fingerprint, so anyone can check the numbers weren’t changed (coming soon)</span></li>
+                <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy a summary or export a CSV, ready to attach to an email or a support chat</span></li>
               </ul>
             </div>
 
@@ -331,8 +334,59 @@
                 </span>
                 <span class="report-export-note">Dated and ready to send. PDF export coming soon.</span>
               </div>
-              <figcaption class="report-caption">Example data. Your numbers will be your own.</figcaption>
+              <figcaption class="report-caption">Example data. Your numbers will be your own. <a href="r/example/">See a full example 7-day report</a></figcaption>
             </figure>
+
+            <div class="isp-value">
+              <form class="savings-card" data-savings-demo aria-labelledby="savings-heading" novalidate>
+                <div class="savings-head">
+                  <h3 id="savings-heading">What could you be overpaying?</h3>
+                  <span class="draft-chip">Estimate</span>
+                </div>
+                <p class="savings-intro">Try your own numbers. The 7-day report uses this same estimate.</p>
+                <div class="savings-inputs">
+                  <label>Monthly bill
+                    <span class="savings-field"><span aria-hidden="true">$</span><input id="sv-bill" type="number" inputmode="decimal" min="0" max="1000" step="1" value="70" disabled></span>
+                  </label>
+                  <label>Plan speed
+                    <span class="savings-field"><input id="sv-plan" type="number" inputmode="numeric" min="1" max="10000" step="1" value="500" disabled><span aria-hidden="true">Mbps</span></span>
+                  </label>
+                  <label class="savings-wide">Typical speed from your 7-day report
+                    <span class="savings-slider"><input id="sv-typical-range" type="range" min="0" max="500" step="1" value="212" aria-label="Typical speed, slider" disabled><span class="savings-field savings-field-sm"><input id="sv-typical" type="number" inputmode="numeric" min="0" max="10000" step="1" value="212" disabled><span aria-hidden="true">Mbps</span></span></span>
+                  </label>
+                </div>
+                <div class="savings-result" aria-live="polite">
+                  <p class="savings-big"><span>About</span> <strong id="sv-month">$40</strong><span>/month</span></p>
+                  <p class="savings-year">about <strong id="sv-year">$484</strong> a year for speed you’re not getting (estimate)</p>
+                  <p class="savings-share" id="sv-share">Typical speed is 42% of your plan.</p>
+                </div>
+                <p class="savings-formula">Monthly bill × (1 minus typical speed ÷ plan speed). Zero when you get your plan speed or better.</p>
+                <p class="savings-fine">Example values: a $70 bill, a 500 Mbps plan, and 212 Mbps typical, the same week as the report above. An estimate, not a bill and not a refund. Your provider decides whether to offer any credit.</p>
+              </form>
+
+              <div class="uses-card">
+                <h3>How people use their 7-day report</h3>
+                <ul class="uses-list">
+                <li>
+                  <svg class="uses-icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="15" height="10" rx="2"/><path d="M2.5 8.5h15M6 12h3"/></svg>
+                  <div><h4>Ask for a credit or a fix</h4><p>Send the dated results with your request. Your provider decides what, if anything, to offer.</p></div>
+                </li>
+                <li>
+                  <svg class="uses-icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10l-3-3M16 13H6l3 3"/></svg>
+                  <div><h4>Ask for a plan that matches</h4><p>Ask to move to a plan priced for the speed you actually get.</p></div>
+                </li>
+                <li>
+                  <svg class="uses-icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4H4.5A1.5 1.5 0 0 0 3 5.5v9A1.5 1.5 0 0 0 4.5 16H8"/><path d="m12 6 4 4-4 4M16 10H8"/></svg>
+                  <div><h4>Back up a cancellation or a switch</h4><p>Show why you’re leaving with dates and times, not a hunch.</p></div>
+                </li>
+                <li>
+                  <svg class="uses-icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 4.5a3.5 3.5 0 0 0-4.6 4.4L3.5 13.3a1.4 1.4 0 0 0 2 2l4.4-4.4a3.5 3.5 0 0 0 4.4-4.6l-2 2-1.8-.4-.4-1.8 2.4-1.6Z"/></svg>
+                  <div><h4>Ask for a tech visit</h4><p>Show that Wi-Fi, your PC, and a VPN were ruled out, instead of starting over with a router restart.</p></div>
+                </li>
+                </ul>
+                <p class="uses-fine">Ways to use it, not promised outcomes.</p>
+              </div>
+            </div>
 
             <div class="isp-cta">
               <a class="btn btn-primary btn-lg" href="#waitlist">Join the waitlist</a>
@@ -654,9 +708,9 @@
             <span class="window-title">HonestPing Overview (Pro view, example)</span>
           </div>
           <picture>
-            <source srcset="assets/app-preview.webp?v=20261007d" type="image/webp">
+            <source srcset="assets/app-preview.webp?v=20261008a" type="image/webp">
             <img
-              src="assets/app-preview.png?v=20261007d"
+              src="assets/app-preview.png?v=20261008a"
               width="1068"
               height="971"
               alt="HonestPing Overview: Healthy badge, Your internet is responding, example 28 ms ping in the ring, jitter and packet loss, and a 15-minute ping chart"
@@ -721,9 +775,10 @@
     </div>
   </footer>
 
-  <script src="waitlist.js?v=20261007d" defer></script>
-  <script src="gauge.js?v=20261007d" defer></script>
-  <script src="trace-demo.js?v=20261007d" defer></script>
-  <script src="verdict-demo.js?v=20261007d" defer></script>
+  <script src="waitlist.js?v=20261008a" defer></script>
+  <script src="gauge.js?v=20261008a" defer></script>
+  <script src="trace-demo.js?v=20261008a" defer></script>
+  <script src="verdict-demo.js?v=20261008a" defer></script>
+  <script src="savings-demo.js?v=20261008a" defer></script>
 </body>
 </html>

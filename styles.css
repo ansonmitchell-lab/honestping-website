@@ -796,29 +796,30 @@ input:focus-visible {
 .isp-showcase {
   display: grid;
   gap: 20px;
-  grid-template-areas: "flow" "verdict" "proof" "report" "cta";
+  grid-template-areas: "flow" "verdict" "proof" "report" "value" "cta";
 }
 .isp-flow { grid-area: flow; }
 .isp-showcase > .verdict-card { grid-area: verdict; }
 .isp-proof { grid-area: proof; }
 .isp-showcase > .report-card { grid-area: report; }
 .isp-showcase > .isp-cta { grid-area: cta; }
+.isp-showcase > .isp-value { grid-area: value; }
 @media (min-width: 900px) {
   .isp-showcase {
     grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr);
     /* Row 1: steps | verdict. Row 2: proof copy + CTA, centered as a group beside the report. */
-    grid-template-rows: auto 1fr auto auto 1fr;
+    grid-template-rows: auto auto auto auto;
     grid-template-areas:
       "flow verdict"
-      ". report"
       "proof report"
-      "cta report"
-      ". report";
+      "value value"
+      "cta cta";
     gap: 28px 28px;
   }
   .isp-showcase > .report-card { align-self: start; }
   .isp-showcase > .verdict-card { align-content: space-between; }
-  .isp-showcase > .isp-cta { margin-top: -6px; flex-wrap: nowrap; }
+  .isp-showcase > .isp-proof { align-self: center; }
+  .isp-showcase > .isp-cta { margin-top: -6px; flex-wrap: nowrap; justify-content: center; }
   .isp-showcase > .isp-cta .btn { flex: none; }
   .isp-flow { display: flex; flex-direction: column; }
   .isp-flow .isp-card { flex: 1 1 auto; padding: 14px 18px; align-items: center; }
@@ -2253,3 +2254,45 @@ input:focus-visible {
 .pdemo-meta { list-style: none; margin: 0; padding: 0; display: grid; font-size: 12.5px; }
 .pdemo-meta li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--hp-line); }
 .pdemo-meta span { color: var(--hp-muted); }
+
+/* 7-day report value: estimate + uses (index #isp, v=20261008a) */
+.isp-head .plan-tag { margin-left: 6px; vertical-align: middle; }
+.isp-value { display: grid; gap: 20px; min-width: 0; }
+@media (min-width: 900px) { .isp-value { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; } }
+.savings-card, .uses-card { margin: 0; min-width: 0; padding: 22px; border-radius: calc(var(--hp-radius) + 2px); background: var(--hp-bg); border: 1px solid var(--hp-line); display: grid; gap: 12px; align-content: start; }
+.savings-card { border-color: #45e5ad55; box-shadow: 0 0 40px #45e5ad12; }
+.savings-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.savings-head h3, .uses-card h3 { font-size: 19px; font-weight: 600; letter-spacing: -0.3px; }
+.savings-intro { color: var(--hp-muted); font-size: 14px; }
+.savings-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.savings-inputs label { display: grid; gap: 5px; font-size: 12.5px; color: var(--hp-muted); min-width: 0; }
+.savings-wide { grid-column: 1 / -1; }
+.savings-field { display: flex; align-items: center; gap: 6px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--hp-line); background: var(--hp-surface); color: var(--hp-muted); font-size: 13px; min-width: 0; }
+.savings-field:focus-within { border-color: var(--hp-cyan); }
+.savings-field input { flex: 1 1 auto; min-width: 0; width: 100%; padding: 9px 0; border: 0; background: transparent; color: var(--hp-text); font: inherit; font-size: 15px; font-variant-numeric: tabular-nums; outline: none; }
+.savings-field input:disabled, .savings-slider input:disabled { opacity: 0.85; }
+.savings-slider { display: flex; align-items: center; gap: 12px; }
+.savings-slider input[type="range"] { flex: 1 1 auto; min-width: 0; accent-color: var(--hp-brand); }
+.savings-field-sm { flex: 0 0 7.5rem; }
+.savings-result { padding: 14px 16px; border-radius: 10px; background: var(--hp-green-bg); border: 1px solid #45e5ad33; display: grid; gap: 2px; }
+.savings-big { display: flex; align-items: baseline; gap: 6px; color: var(--hp-muted); font-size: 14px; }
+.savings-big strong { font-size: 34px; line-height: 1.1; color: var(--hp-green); font-variant-numeric: tabular-nums; }
+.savings-year { font-size: 14px; color: var(--hp-text); }
+.savings-year strong { font-variant-numeric: tabular-nums; }
+.savings-share { font-size: 12.5px; color: var(--hp-muted); }
+.savings-formula { font-size: 12.5px; color: var(--hp-muted); }
+.savings-fine, .uses-fine { font-size: 12px; color: var(--hp-muted); }
+.uses-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.uses-list li { display: flex; gap: 12px; padding: 12px 14px; border-radius: 10px; background: var(--hp-dial); border: 1px solid var(--hp-line); }
+.uses-icon { flex: none; width: 20px; height: 20px; margin-top: 2px; color: var(--hp-cyan); }
+.uses-list h4 { margin: 0 0 2px; font-size: 14.5px; }
+.uses-list p { font-size: 13.5px; color: var(--hp-muted); }
+.report-caption a { white-space: nowrap; margin-left: 4px; }
+@media (max-width: 480px) {
+  .savings-card, .uses-card { padding: 18px 16px; }
+  .savings-field-sm { flex-basis: 6.5rem; }
+}
+.isp-label-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.isp-label-row .section-label { margin: 0; }
+.isp-head .isp-label-row .plan-tag { margin-left: 0; }
+.nowrap { white-space: nowrap; }
