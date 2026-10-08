@@ -1,19 +1,44 @@
 (function () {
-  var year = document.getElementById("year");
-  if (year) year.textContent = String(new Date().getFullYear());
-
-  var form = document.getElementById("waitlist-form");
+  var form = document.getElementById("isp-contact-form");
   if (!form) return;
 
   var SITEKEY = "0x4AAAAAAFQof7EbIcyPa73s";
   var widgetId = null;
   var pending = false;
-  var thanks = document.getElementById("waitlist-thanks");
-  var error = document.getElementById("waitlist-error");
-  var mount = document.getElementById("waitlist-turnstile");
+  var button = form.querySelector("button[type='submit']");
+
+  var mount = document.getElementById("isp-turnstile");
+  if (!mount) {
+    mount = document.createElement("div");
+    mount.id = "isp-turnstile";
+    mount.className = "ispx-turnstile ispx-full";
+    form.insertBefore(mount, button);
+  }
+  var error = document.getElementById("isp-error");
+  if (!error) {
+    error = document.createElement("p");
+    error.id = "isp-error";
+    error.className = "waitlist-error ispx-full";
+    error.setAttribute("role", "alert");
+    error.hidden = true;
+    form.insertBefore(error, button);
+  }
+  var thanks = document.getElementById("isp-thanks");
+  if (!thanks) {
+    thanks = document.createElement("p");
+    thanks.id = "isp-thanks";
+    thanks.className = "waitlist-thanks ispx-full";
+    thanks.setAttribute("role", "status");
+    thanks.hidden = true;
+    form.insertBefore(thanks, button);
+  }
+
+  function value(id) {
+    var el = document.getElementById(id);
+    return ((el && el.value) || "").trim();
+  }
 
   function showError(message) {
-    if (!error) return;
     error.hidden = false;
     error.textContent = message;
   }
@@ -21,6 +46,12 @@
   function loadTurnstile() {
     if (window.turnstile) return Promise.resolve();
     return new Promise(function (resolve, reject) {
+      var existing = document.querySelector("script[src*='challenges.cloudflare.com/turnstile']");
+      if (existing) {
+        existing.addEventListener("load", function () { resolve(); });
+        existing.addEventListener("error", function () { reject(new Error("turnstile")); });
+        return;
+      }
       var script = document.createElement("script");
       script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
       script.async = true;
@@ -35,10 +66,10 @@
   }
 
   loadTurnstile().then(function () {
-    if (!mount || !window.turnstile) return;
+    if (!window.turnstile) return;
     widgetId = window.turnstile.render(mount, {
       sitekey: SITEKEY,
-      action: "waitlist",
+      action: "isp",
       theme: "dark"
     });
   }).catch(function () {
@@ -48,14 +79,16 @@
   form.addEventListener("submit", function (event) {
     event.preventDefault();
     if (pending) return;
-    var emailInput = document.getElementById("waitlist-email");
-    var email = ((emailInput && emailInput.value) || "").trim();
-    if (!email || (emailInput && emailInput.checkValidity && !emailInput.checkValidity())) {
-      if (emailInput) {
-        emailInput.focus();
-        if (emailInput.reportValidity) emailInput.reportValidity();
+    var required = ["ic-name", "ic-company", "ic-email", "ic-message"];
+    for (var i = 0; i < required.length; i++) {
+      var el = document.getElementById(required[i]);
+      if (!value(required[i]) || (el && el.type === "email" && el.checkValidity && !el.checkValidity())) {
+        if (el) {
+          el.focus();
+          if (el.reportValidity) el.reportValidity();
+        }
+        return;
       }
-      return;
     }
     var token = window.turnstile && widgetId !== null ? window.turnstile.getResponse(widgetId) : "";
     if (!token) {
@@ -63,16 +96,19 @@
       return;
     }
     pending = true;
-    if (error) error.hidden = true;
-    var button = form.querySelector("button");
+    error.hidden = true;
     if (button) button.disabled = true;
-    fetch("/api/waitlist", {
+    fetch("/api/isp", {
       method: "POST",
       headers: { "content-type": "application/json", accept: "application/json" },
       body: JSON.stringify({
-        email: email,
+        name: value("ic-name"),
+        company: value("ic-company"),
+        email: value("ic-email"),
+        subscribers: value("ic-subs"),
+        message: value("ic-message"),
         "cf-turnstile-response": token,
-        source_page: window.location.pathname || "/"
+        source_page: window.location.pathname || "/isp"
       })
     }).then(function (res) {
       return res.json().then(function (data) { return { ok: res.ok, data: data }; }, function () { return { ok: false, data: null }; });
@@ -82,10 +118,8 @@
         showError((result.data && result.data.error) || "Something went wrong. Please try again, or email hello@honestping.com.");
         return;
       }
-      if (thanks) {
-        thanks.hidden = false;
-        thanks.textContent = result.data.message || "You're on the list. We'll email you when HonestPing is ready.";
-      }
+      thanks.hidden = false;
+      thanks.textContent = result.data.message || "Thanks. We'll reply to you about partnering.";
       form.classList.add("is-done");
     }).catch(function () {
       resetWidget();
