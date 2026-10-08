@@ -2,7 +2,7 @@
 
 This is a separate Worker, `owner/`, for the HonestPing owner. It reads the waitlist and ISP tables from draft PR #17 and adds two tables of its own. It does not change the marketing site.
 
-Do not merge this PR. Do not deploy the production Worker `honestping-owner`. Preview deploy steps are below and were not run from this change. Go-live needs Anson's approval.
+Do not merge this PR. Do not deploy the production Worker `honestping-owner`. Preview deploy steps are below and were not run from this change. Go-live needs approval.
 
 The PR base is `cursor/waitlist-d1-bbe4` (draft PR #17). `main` does not have the `waitlist` or `isp_inquiries` tables yet.
 
@@ -120,7 +120,7 @@ The Worker checks the JWT itself. Access in front is what asks for the PIN. Both
 
 ## Go live on owner.honestping.com
 
-Do not run this section until Anson approves it. These commands publish `honestping-owner` and attach `owner.honestping.com`.
+Do not run this section until go-live is approved. These commands publish `honestping-owner` and attach `owner.honestping.com`.
 
 1. Create a second self-hosted Access application before the production deploy. Name it `HonestPing owner`. Public hostname: `owner.honestping.com`. Same identity provider and the same Allow policy: email is exactly `hello@honestping.com`, one-time PIN, no other include. Copy this application's AUD tag. It is not the preview tag.
 2. Apply the owner migration to production. Do not add `--preview` or `--env preview`. Stop unless the UUID in parentheses is `c732d15a-f4c9-4f7d-8588-41f7774d41d1`.
@@ -159,3 +159,19 @@ npx wrangler deploy --dry-run --outdir /tmp/honestping-owner-preview-check --con
 ```
 
 The preview dry-run must name `honestping-owner-preview` and must not list `owner.honestping.com`.
+
+## Requests and reports
+
+The Requests and reports tab reads the `feedback` table from migrations `migrations/0004_feedback.sql` and `migrations/0005_feedback_retention.sql` (the public Worker migrations). They are not in `owner/migrations`. Apply both to the same D1 database before the queue can load. `0005` drops the IP hash and ISP name columns and adds crash signatures. Use the public Worker config so the migrations land on the waitlist database:
+
+```sh
+npx wrangler d1 migrations apply honestping-waitlist-preview --remote --config wrangler.worker.jsonc --env preview
+```
+
+Stop unless the UUID is `834af7c2-165f-4fb4-92b9-49b1aa0b3eb6`. Do not point that command at production.
+
+The queue lists feature requests, bug reports, and crash reports from the app and the ISP preview. Filters are source, kind, and status. The default view groups by issue type, with a 7 day count, a 30 day count, an app and ISP split, and a daily sparkline. A possible duplicate is a close title in the same issue type. Detail shows the screenshot and the log excerpt. Rows sent with `auto_sent` true show an Auto badge. Crash bodies older than 90 days are reduced to a signature and a count. Bug and feature reports older than 12 months are deleted. The queue does not show area or household counts. The ISP preview uses `K_MIN`, default 10, before it shows a household count.
+
+Saving a status writes `owner_access_log` with action `status` and detail `feedback <id> <status>`. The Access check is unchanged. A missing or bad JWT gets the sign-in page and no rows.
+
+Screenshots are in the private R2 bucket bound as `SCREENSHOTS`. Preview bucket name: `honestping-feedback-preview`. Production bucket name: `honestping-feedback`. This change does not create either bucket and does not deploy the owner Worker. The contract for the app is `docs/feedback-api.md`.

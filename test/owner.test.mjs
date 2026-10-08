@@ -13,6 +13,7 @@ import {
 } from "../owner/src/html.js";
 import { handleOwnerRequest } from "../owner/src/index.js";
 import { formatCount, suppressSmallGroups } from "../owner/src/kanon.js";
+import { attachDuplicates, buildGroups, titlesClose } from "../owner/src/feedback.js";
 import { accessRows, ispRows, logAccess, saveStatus, waitlistSources } from "../owner/src/queries.js";
 
 const TEAM = "https://honestping.cloudflareaccess.com";
@@ -200,6 +201,32 @@ test("dashboard requests fail closed before any database read", async () => {
     body: "inquiry_id=1&status=partner",
   }), env, deps(certFetch()));
   assert.equal(posted.status, 401);
+  assert.equal(prepared, 0);
+
+  const queue = await handleOwnerRequest(
+    new Request("https://owner.honestping.com/requests"),
+    env,
+    deps(certFetch()),
+  );
+  assert.equal(queue.status, 401);
+  const detail = await handleOwnerRequest(
+    new Request("https://owner.honestping.com/requests/4"),
+    env,
+    deps(certFetch()),
+  );
+  assert.equal(detail.status, 401);
+  const shot = await handleOwnerRequest(
+    new Request("https://owner.honestping.com/requests/4/screenshot"),
+    env,
+    deps(certFetch()),
+  );
+  assert.equal(shot.status, 401);
+  const statusPost = await handleOwnerRequest(new Request("https://owner.honestping.com/requests/status", {
+    method: "POST",
+    headers: { "content-type": "application/x-www-form-urlencoded", origin: "https://owner.honestping.com" },
+    body: "feedback_id=4&status=done",
+  }), env, deps(certFetch()));
+  assert.equal(statusPost.status, 401);
   assert.equal(prepared, 0);
 });
 
@@ -455,7 +482,7 @@ function applySqlFiles(db, dir) {
       await db.prepare(statement).run();
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      if (!/duplicate column name/i.test(message)) throw error;
+      if (!/duplicate column name|no such column/i.test(message)) throw error;
     }
   }, Promise.resolve());
 }
@@ -532,4 +559,122 @@ test("owner migration stores ISP status and the access log on local D1", async (
   } finally {
     await proxy.dispose();
   }
+});
+
+test("issue groups count 7 and 30 days, split by source, and flag close titles", () => {
+  const now = new Date("2026-10-08T12:00:00.000Z");
+  const groups = buildGroups([
+    { issue_type: "speed_test", day: "2026-10-08", source: "app", count: 3 },
+    { issue_type: "speed_test", day: "2026-10-02", source: "isp", count: 1 },
+    { issue_type: "trace", day: "2026-10-01", source: "app", count: 2 },
+  ], now);
+  const speed = groups.find((group) => group.issueType === "speed_test");
+  const trace = groups.find((group) => group.issueType === "trace");
+  assert.equal(speed.days7, 4);
+  assert.equal(speed.days30, 4);
+  assert.equal(speed.app, 3);
+  assert.equal(speed.isp, 1);
+  assert.equal(speed.spark.length, 30);
+  assert.equal(speed.spark.at(-1), 3);
+  assert.equal(trace.days7, 0);
+  assert.equal(trace.days30, 2);
+  assert.equal(trace.app, 2);
+  assert.equal(groups[0].issueType, "speed_test");
+
+  assert.equal(titlesClose("Speed test looked wrong", "The speed test looked wrong again"), true);
+  assert.equal(titlesClose("Speed test looked wrong", "Monitor alerts never arrive"), false);
+  const rows = attachDuplicates([
+    { id: 1, issue_type: "speed_test", title: "Speed test looked wrong" },
+    { id: 2, issue_type: "speed_test", title: "Speed test looked wrong again" },
+    { id: 3, issue_type: "trace", title: "Speed test looked wrong again" },
+  ]);
+  assert.deepEqual(rows[0].similar, [2]);
+  assert.deepEqual(rows[1].similar, [1]);
+  assert.deepEqual(rows[2].similar, []);
+});
+
+test("the review queue shows an Auto badge, a log box, and records status changes", async () => {
+  const html = renderDashboard({
+    tab: "requests",
+    email: "hello@honestping.com",
+    requests: {
+      ready: true,
+      mode: "detail",
+      detail: {
+        id: 9,
+        source: "app",
+        kind: "crash",
+        issue_type: "startup_freeze",
+        title: "Closed during startup",
+        description: "The window closed.",
+        expected_behavior: null,
+        page_context: "Startup",
+        app_version: "1.8.48",
+        os: "Windows 10",
+        isp_org: null,
+        screenshot_key: null,
+        auto_sent: 1,
+        status: "new",
+        created_at: "2026-10-08T15:00:00.000Z",
+        diagnostics: { log_excerpt: "startup step 2\nsecond line", screen: "Startup" },
+        similar: [{ id: 4, title: "Closed during startup again" }],
+      },
+    },
+  });
+  assert.match(html, /class="badge-auto">Auto</);
+  assert.match(html, /© <span id="year">2026<\/span> Honest Ping LLC/);
+  assert.equal(/anson|mitchell|matt lewis/i.test(html), false);
+  assert.match(html, /class="logbox"/);
+  assert.match(html, /startup step 2/);
+  assert.match(html, /HP-4/);
+  assert.equal(html.includes("\u2013"), false);
+  assert.equal(html.includes("\u2014"), false);
+
+  const writes = [];
+  const db = scriptedDb({
+    first(sql) {
+      if (/from feedback/i.test(sql)) return { status: "new" };
+      return null;
+    },
+    run(sql, args) {
+      writes.push({ sql, args });
+    },
+  });
+  const token = await signJwt(claims());
+  const saved = await handleOwnerRequest(new Request("https://owner.honestping.com/requests/status", {
+    method: "POST",
+    headers: {
+      "cf-access-jwt-assertion": token,
+      "content-type": "application/x-www-form-urlencoded",
+      origin: "https://owner.honestping.com",
+    },
+    body: "feedback_id=9&status=reviewing",
+  }), { ...accessEnv(), DB: db }, deps(certFetch()));
+  assert.equal(saved.status, 303);
+  assert.match(saved.headers.get("location"), /\/requests\/9$/);
+  assert.equal(writes.some((entry) => /UPDATE feedback/i.test(entry.sql) && entry.args[0] === "reviewing"), true);
+  const logged = writes.find((entry) => /owner_access_log/i.test(entry.sql));
+  assert.ok(logged);
+  assert.equal(logged.args[0], "hello@honestping.com");
+  assert.equal(logged.args[1], "status");
+  assert.equal(logged.args[2], "feedback 9 reviewing");
+
+  const quiet = [];
+  const same = await handleOwnerRequest(new Request("https://owner.honestping.com/requests/status", {
+    method: "POST",
+    headers: {
+      "cf-access-jwt-assertion": token,
+      "content-type": "application/x-www-form-urlencoded",
+      origin: "https://owner.honestping.com",
+    },
+    body: "feedback_id=9&status=new",
+  }), {
+    ...accessEnv(),
+    DB: scriptedDb({
+      first() { return { status: "new" }; },
+      run(sql) { quiet.push(sql); },
+    }),
+  }, deps(certFetch()));
+  assert.equal(same.status, 303);
+  assert.equal(quiet.some((sql) => /owner_access_log/i.test(sql)), false);
 });

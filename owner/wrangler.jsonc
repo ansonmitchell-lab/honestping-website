@@ -5,7 +5,7 @@
   "compatibility_date": "2026-10-08",
   "account_id": "4e7e5db788ca85b49af0442d922ebc6e",
   // Production is not on workers.dev. Preview sets workers_dev and clears routes.
-  // Do not deploy this top level config until Anson approves go-live.
+  // Do not deploy this top level config until go-live is approved.
   "workers_dev": false,
   "observability": {
     "enabled": true,
@@ -22,6 +22,14 @@
       "database_id": "c732d15a-f4c9-4f7d-8588-41f7774d41d1",
       "preview_database_id": "834af7c2-165f-4fb4-92b9-49b1aa0b3eb6",
       "migrations_dir": "migrations"
+    }
+  ],
+  // Private feedback screenshots. This change does not create the bucket.
+  "r2_buckets": [
+    {
+      "binding": "SCREENSHOTS",
+      "bucket_name": "honestping-feedback",
+      "preview_bucket_name": "honestping-feedback-preview"
     }
   ],
   // ACCESS_TEAM_DOMAIN, ACCESS_AUD, ZONE_ID, GITHUB_REPO, and CF_ANALYTICS_TOKEN
@@ -44,6 +52,12 @@
           "database_name": "honestping-waitlist-preview",
           "database_id": "834af7c2-165f-4fb4-92b9-49b1aa0b3eb6",
           "migrations_dir": "migrations"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "SCREENSHOTS",
+          "bucket_name": "honestping-feedback-preview"
         }
       ],
       "secrets": {

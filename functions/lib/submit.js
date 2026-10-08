@@ -1,6 +1,6 @@
 const WAITLIST_SUBJECT = "HonestPing waitlist";
 const ISP_SUBJECT = "ISP partnership";
-const FROM_ADDRESS = "waitlist@honestping.com";
+const FROM_ADDRESS = "hello@honestping.com";
 const TO_ADDRESS = "hello@honestping.com";
 
 const COPY = {
