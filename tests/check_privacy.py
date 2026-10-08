@@ -111,23 +111,16 @@ def main():
         present = (
             "stored on your PC",
             "stores these only on your PC",
-            "Two things are sent automatically, and you can turn off both:",
-            "In the EEA, the UK, Switzerland and Canada, or if your region is unknown, both happen only if you allow them.",
-            "If HonestPing closes unexpectedly, it sends us a short report the next time it starts, so we can fix the problem. Personal and network details are removed first.",
-            "What a crash report contains",
-            "Never included:",
-            "Raw reports are deleted within 90 days.",
-            "Provider name lookup.",
+            "One thing is sent automatically, and you can turn it off: a lookup of your provider's name.",
+            "In this version, crash reports are saved on your PC and aren't sent to us.",
+            "In this version, this website does not receive bug reports or feature requests.",
+            "In the EEA, the UK, Switzerland and Canada, or if your region is unknown, it runs only if you allow it.",
+            "Provider name lookup",
             "Show my provider's name",
             "We don't receive it.",
             "LAN compare is off until you turn it on.",
             "on your home network",
-            "We keep report text for 12 months and screenshots and diagnostics for 90 days.",
-            "Crash reports are off. Any report waiting to be sent was deleted.",
-            "An AI service helps us sort reports. It works only for us and can't train on them.",
-            "Nothing is sent until you press Submit.",
-            "You can change this anytime in Settings",
-            "Crash reports and provider name lookup happen only if you allow them.",
+            "Not received in this version",
             "Last updated:",
             "October 8, 2026",
             "Cloudflare, which hosts our website, processes standard connection data such as your IP address and browser type to deliver the site and protect it from attacks.",
@@ -139,10 +132,7 @@ def main():
             "This site doesn't use cookies.",
             "When you press",
             "Check for updates",
-            "If a report can't be sent, HonestPing tries once more the next time it starts, then deletes it.",
-            "Turning crash reports off deletes any report waiting to be sent.",
-            "The AI service can't use reports to train its models and keeps them for no more than 30 days.",
-            "an AI service provider listed on our subprocessors page",
+            "Saved on your PC. Not sent to us",
             'href="/privacy/subprocessors"',
             'href="/privacy/history"',
             "Depending on where you live, you may have the right to access, correct, delete, or get a copy of your personal information",
@@ -156,6 +146,10 @@ def main():
         check("1500 N Grant" not in body, "/privacy includes the street address")
         check("GitHub" not in body, "/privacy names GitHub")
         check("Site analytics" not in body, "/privacy still contains the analytics paragraph")
+        check("An AI service" not in body, "/privacy still describes an AI service")
+        check("90 days" not in body, "/privacy still states a 90-day retention period")
+        check("Two things are sent automatically" not in body, "/privacy still says two things are sent automatically")
+        check("personal details masked" not in body, "/privacy still says personal details are masked")
 
         updated_js = (ROOT / "privacy-updated.js").read_text(encoding="utf-8")
         date_match = re.search(r'HONESTPING_POLICY_UPDATED = "([^"]+)"', updated_js)
@@ -182,9 +176,10 @@ def main():
         check("Google (email)" in sub_body, "subprocessors page is missing Google")
         check("GitHub" not in sub_body, "subprocessors page names GitHub")
         check(
-            "We'll add our AI service here before any reports are shared with it." in sub_body,
-            "subprocessors page is missing the AI service line",
+            "We'll add our AI service here before any reports are shared with it." not in sub_body,
+            "subprocessors page still has the AI service line",
         )
+        check("An AI service" not in sub_body, "subprocessors page still describes an AI service")
         with urlopen(f"http://127.0.0.1:{port}/privacy/history") as response:
             history_body = response.read().decode("utf-8")
         check("First published." in history_body, "history page is missing the first published entry")
@@ -207,6 +202,15 @@ def main():
 
         planned = (ROOT / "docs" / "privacy-planned.md").read_text(encoding="utf-8")
         check("Cloudflare Web Analytics" in planned, "planned doc is missing the analytics text")
+        check(
+            "This ships with enabling auto-send as a policy update with an in-app notice" in planned,
+            "planned doc is missing the auto-send heading",
+        )
+        check("The AI service can't use reports to train its models and keeps them for no more than 30 days." in planned, "planned doc is missing the AI retention line")
+        check("We'll add our AI service here before any reports are shared with it." in planned, "planned doc is missing the subprocessors AI line")
+        check("Raw reports are deleted within 90 days." in planned, "planned doc is missing the 90-day crash deletion line")
+        check("We don't store it." in planned, "planned doc is missing the IP not stored line")
+        check("If a report can't be sent, HonestPing tries once more the next time it starts, then deletes it." in planned, "planned doc is missing the retry line")
         for heading in (
             "3.5 Sharing a report with your internet provider",
             "3.6 Daily check-in",

@@ -72,7 +72,7 @@
             <a href="#app">3. The HonestPing app</a>
             <ol>
               <li><a href="#stays-on-your-pc">3.1 What stays on your PC</a></li>
-              <li><a href="#crash-reports">3.2 Automatic crash reports</a></li>
+              <li><a href="#crash-reports">3.2 Crash reports</a></li>
               <li><a href="#bug-reports">3.3 Bug reports and feature requests</a></li>
               <li><a href="#provider-lookup">3.4 Provider name lookup</a></li>
             </ol>
@@ -90,15 +90,8 @@
 
       <h2 id="short-version">The short version</h2>
       <ul>
-        <li><strong>Your results stay on your PC unless you share them.</strong> Ping history, speed tests, incidents, your device list and your settings are stored on your PC. We don't have a copy.</li>
-        <li>
-          <strong>Two things are sent automatically, and you can turn off both:</strong>
-          <ol>
-            <li><strong>Crash reports.</strong> If HonestPing closes unexpectedly, it sends us a short report the next time it starts, so we can fix the problem. Personal and network details are removed first. <em>(In the EEA, the UK, Switzerland and Canada, or if your region is unknown, both happen only if you allow them.)</em></li>
-            <li><strong>Provider name lookup.</strong> To show your provider, HonestPing asks a public lookup service, which sees your public IP address. We don't receive it.</li>
-          </ol>
-        </li>
-        <li><strong>Everything else is sent only when you choose:</strong> bug reports, feature requests, and joining the waitlist.</li>
+        <li><strong>Your results stay on your PC unless you share them. One thing is sent automatically, and you can turn it off: a lookup of your provider's name.</strong> Ping history, speed tests, incidents, your device list and your settings are stored on your PC. We don't have a copy. To show your provider, HonestPing asks a public lookup service, which sees your public IP address. We don't receive it.</li>
+        <li><strong>Everything else is sent only when you choose:</strong> joining the waitlist. In this version, bug reports and feature requests are not sent to us.</li>
         <li><strong>We don't sell your personal data, show ads, or use advertising trackers.</strong></li>
         <li><strong>You can ask us</strong> to see or delete what we hold. Write to <a href="mailto:hello@honestping.com">hello@honestping.com</a>.</li>
       </ul>
@@ -120,38 +113,18 @@
         <li>ping history, incidents, daily recaps, speed-test and load-test results, and 7-day reports</li>
         <li>your settings, including your Wi-Fi network name (used only to know when you switch networks), custom monitor targets, trial dates, and your share code</li>
         <li>the device list from <strong>Devices → Scan</strong>, which is kept in memory only and never saved or sent</li>
-        <li>a local crash file, which is deleted after it's sent, after one failed retry, or when you turn crash reports off (see <a href="#crash-reports">3.2</a>)</li>
+        <li>a local crash file, which stays on your PC and is not sent (see <a href="#crash-reports">3.2</a>)</li>
       </ul>
       <p>We can't see any of this. Uninstalling HonestPing leaves your history in place so a reinstall keeps it. Delete the folder above to remove it.</p>
       <p><strong>Network checks.</strong> To tell whether a problem is on your side or further out, HonestPing sends small test messages (pings) to your router and to public servers run by Cloudflare (1.1.1.1), Google (8.8.8.8, google.com) and Quad9 (9.9.9.9), and it checks whether services you choose to monitor answer. These checks don't contain your personal data, but like any internet connection, the servers they reach can see your public IP address. Speed tests and load tests, which you start yourself, download test data from Cloudflare (falling back to OVH) and upload made-up test data, not your files, to Cloudflare (falling back to httpbin.org).</p>
       <p><strong>Update check.</strong> When you press <strong>Check for updates</strong>, HonestPing reads a small file from honestping.com. That request includes your IP address and app version, like any web request.</p>
       <p><strong>LAN compare.</strong> LAN compare is off until you turn it on. Shares a small status snapshot with other HonestPing PCs on your home network. No addresses or history.</p>
 
-      <h3 id="crash-reports">3.2 Automatic crash reports</h3>
-      <p><strong>What happens.</strong> If HonestPing closes unexpectedly, it sends us a short report the next time it starts, so we can fix the problem. Personal and network details are removed first. If sending fails, it tries once more on the next launch. Then the file is deleted either way.</p>
-      <p><strong>Your choice.</strong> Crash reports are controlled by <strong>Settings → Privacy → Send crash reports automatically</strong>. You can change this anytime in Settings → Privacy.</p>
-      <ul>
-        <li><strong>US and most other regions:</strong> on by default. You can turn it off at any time. When you do, HonestPing shows "Crash reports are off. Any report waiting to be sent was deleted." and nothing is sent after that.</li>
-        <li><strong>The EEA, the UK, Switzerland and Canada, or if your region is unknown:</strong> Crash reports and provider name lookup happen only if you allow them. HonestPing asks the first time it starts. HonestPing decides this on your PC from your Windows region setting. It doesn't look up your location.</li>
-      </ul>
-      <p><strong>What a crash report contains</strong></p>
-      <ul>
-        <li>HonestPing version and Windows version</li>
-        <li>The error, and where in HonestPing's code it happened</li>
-        <li>Which screen was open, for example "Speed test"</li>
-        <li>A few lines of HonestPing's own log, with personal and network details removed</li>
-      </ul>
-      <p><strong>Never included:</strong> your files, history, test results, settings, Wi-Fi names, IP addresses, device names, Windows username or provider name.</p>
-      <p>Your IP address reaches our server like any connection. We don't store it.</p>
-      <p>Raw reports are deleted within 90 days.</p>
-      <p><strong>How details are removed.</strong> Before the report leaves your PC, HonestPing removes the following, and our server checks again and removes anything left: your Windows username and folder paths, your computer's name, IP addresses (public, private, router, DNS server, and route hops), MAC addresses, Wi-Fi network names and router IDs, your internet provider's name, hostnames and custom monitor targets, names of devices on your network, email addresses, share codes and license keys, and your test results. Crash reports never include your files, history, settings values, or anything from other apps.</p>
-      <p><strong>Your IP address.</strong> Your IP address reaches our server like any connection. We don't store it. It's used only in passing to deliver the report and to block abuse through our host's automatic rate limits.</p>
-      <p><strong>How we use crash reports.</strong> Only to find and fix bugs, group similar crashes, and check whether a new version is more stable. An AI service helps us sort reports. It works only for us and can't train on them. Our service providers are listed at <a href="/privacy/subprocessors">honestping.com/privacy/subprocessors</a>. Reports aren't used for decisions about you. The AI service can't use reports to train its models and keeps them for no more than 30 days. People at HonestPing review its suggestions.</p>
-      <p><strong>How long we keep them.</strong> Raw reports are deleted within 90 days. We keep short crash "signatures" (the error type, where it happened in our code, the app version, and a count of how many installs hit it) for up to 24 months. They contain no log text or messages.</p>
+      <h3 id="crash-reports">3.2 Crash reports</h3>
+      <p>In this version, crash reports are saved on your PC and aren't sent to us.</p>
 
       <h3 id="bug-reports">3.3 Bug reports and feature requests</h3>
-      <p><strong>Bug reports and feature requests.</strong> Nothing is sent until you press Submit. A report includes your answers and any text you type. A screenshot of the HonestPing window is attached only if you add one, and you see it first. Diagnostics (app version, Windows version, recent HonestPing log lines with personal details masked, and which screen was open) are attached only if you tick them, and you can preview them. Please don't type passwords or account numbers. If a report can't be sent, HonestPing tries once more the next time it starts, then deletes it. Turning crash reports off deletes any report waiting to be sent.</p>
-      <p>We use bug reports to fix problems and improve HonestPing. An AI service helps us sort reports. It works only for us and can't train on them. Our service providers are listed at <a href="/privacy/subprocessors">honestping.com/privacy/subprocessors</a>. Reports aren't used for decisions about you. We keep report text for 12 months and screenshots and diagnostics for 90 days. You can delete a report you sent by emailing us.</p>
+      <p><strong>Bug reports and feature requests.</strong> In this version, this website does not receive bug reports or feature requests.</p>
 
       <h3 id="provider-lookup">3.4 Provider name lookup</h3>
       <p>To show your provider, HonestPing asks a public lookup service, which sees your public IP address. We don't receive it. In order, HonestPing tries api.ipify.org, Cloudflare (1.1.1.1/cdn-cgi/trace) and icanhazip.com for your public IP address, then ipapi.co and ipwho.is for the provider name. These services receive your public IP address and handle it under their own privacy policies. HonestPing doesn't show your IP address, save it, or send it to us. On by default in the US and most other regions. In the EEA, the UK, Switzerland and Canada, or if your region is unknown, it runs only if you allow it. Turn it off with <strong>Settings → Privacy → Show my provider's name</strong> (or set <code>Isp=0</code> in settings.txt), and it stops right away.</p>
@@ -159,14 +132,14 @@
       <h2 id="who-we-share">6. Who we share information with</h2>
       <p>We don't sell your personal data, and we don't share it for targeted advertising. We share it only:</p>
       <ul>
-        <li><strong>with service providers that work for us</strong>, under contracts that limit how they use it: Cloudflare (website, servers, storage), an AI service provider listed on our subprocessors page (crash and bug analysis), Google (email). The current list is at <a href="/privacy/subprocessors">honestping.com/privacy/subprocessors</a>.</li>
+        <li><strong>with service providers that work for us</strong>, under contracts that limit how they use it: Cloudflare (website, servers, storage), Google (email). The current list is at <a href="/privacy/subprocessors">honestping.com/privacy/subprocessors</a>.</li>
         <li><strong>with public lookup services</strong> for provider name lookup (<a href="#provider-lookup">3.4</a>), which you can turn off.</li>
         <li><strong>when the law requires it</strong>, or to protect people's safety or our rights, and we'll tell you when we're allowed to.</li>
         <li><strong>if the business is sold or merged</strong>, under this policy's promises. Material changes need your consent where the law requires it.</li>
       </ul>
 
       <h2 id="grouped">7. Grouped and de-identified data</h2>
-      <p>When we combine information into totals that can't reasonably be linked to a person or household (for example, "crash-free rate for version 1.9"), we keep it in that form and <strong>we won't try to re-identify anyone</strong>. Anyone we share such data with must agree in writing not to re-identify it or combine it with other data to identify people, and we check that they keep that promise.</p>
+      <p>When we combine information into totals that can't reasonably be linked to a person or household (for example, a total that can't be linked back to one person), we keep it in that form and <strong>we won't try to re-identify anyone</strong>. Anyone we share such data with must agree in writing not to re-identify it or combine it with other data to identify people, and we check that they keep that promise.</p>
 
       <h2 id="how-long">8. How long we keep information</h2>
       <div class="privacy-table-wrap">
@@ -180,15 +153,15 @@
           <tbody>
             <tr>
               <td>Crash reports</td>
-              <td>Raw reports deleted within 90 days. Crash signatures (no log text) up to 24 months</td>
+              <td>Saved on your PC. Not sent to us</td>
             </tr>
             <tr>
               <td>Your IP address on our servers</td>
               <td>Not stored</td>
             </tr>
             <tr>
-              <td>Bug reports</td>
-              <td>Text 12 months. Screenshots and diagnostics 90 days</td>
+              <td>Bug reports and feature requests</td>
+              <td>Not received in this version</td>
             </tr>
             <tr>
               <td>Waitlist email</td>
@@ -203,10 +176,10 @@
       </div>
 
       <h2 id="choices">9. Your choices and rights</h2>
-      <p><strong>In the app:</strong> turn off crash reports, provider name lookup and LAN compare in <strong>Settings → Privacy</strong>. Delete local data by removing <code>%LOCALAPPDATA%\PingTray</code>.</p>
-      <p><strong>By email:</strong> write to <a href="mailto:hello@honestping.com"><strong>hello@honestping.com</strong></a> to ask what we hold about you, get a copy, correct it, delete it, or object to how we use it. We'll answer within 45 days (one month in the EU and UK) and may need to confirm it's you, usually by replying from the same email address. Many crash reports have no name, email or ID, so we may not be able to find yours. If you tell us roughly when it was sent, we'll try. We'll delete everything else and tell you what we kept and why.</p>
+      <p><strong>In the app:</strong> turn off provider name lookup and LAN compare in <strong>Settings → Privacy</strong>. Delete local data by removing <code>%LOCALAPPDATA%\PingTray</code>.</p>
+      <p><strong>By email:</strong> write to <a href="mailto:hello@honestping.com"><strong>hello@honestping.com</strong></a> to ask what we hold about you, get a copy, correct it, delete it, or object to how we use it. We'll answer within 45 days (one month in the EU and UK) and may need to confirm it's you, usually by replying from the same email address. We'll delete everything else and tell you what we kept and why.</p>
       <p>Depending on where you live, you may have the right to access, correct, delete, or get a copy of your personal information, and to opt out of its sale or use for targeted advertising. We don't sell personal information or use it for targeted advertising. Email <a href="mailto:hello@honestping.com">hello@honestping.com</a> and we'll respond within 45 days.</p>
-      <p><strong>EU, EEA, UK and Swiss users.</strong> Honest Ping LLC is the controller. Our legal bases are: your <strong>consent</strong> (crash reports and provider name lookup where we ask first, and the waitlist); our <strong>legitimate interests</strong> in fixing bugs, keeping the service secure and replying to messages; and <strong>legal obligation</strong> (tax records). You can withdraw consent at any time in Settings or by emailing us. Withdrawing doesn't affect what was done before. You have the rights of access, rectification, erasure, restriction, portability and objection, and you can complain to your data protection authority (in the UK, the ICO). Our service providers are mainly in the United States. We rely on the EU Standard Contractual Clauses and UK Addendum, or the EU-US Data Privacy Framework where the provider is certified. We don't make decisions about you based solely on automated processing.</p>
+      <p><strong>EU, EEA, UK and Swiss users.</strong> Honest Ping LLC is the controller. Our legal bases are: your <strong>consent</strong> (provider name lookup where we ask first, and the waitlist); our <strong>legitimate interests</strong> in fixing bugs, keeping the service secure and replying to messages; and <strong>legal obligation</strong> (tax records). You can withdraw consent at any time in Settings or by emailing us. Withdrawing doesn't affect what was done before. You have the rights of access, rectification, erasure, restriction, portability and objection, and you can complain to your data protection authority (in the UK, the ICO). Our service providers are mainly in the United States. We rely on the EU Standard Contractual Clauses and UK Addendum, or the EU-US Data Privacy Framework where the provider is certified. We don't make decisions about you based solely on automated processing.</p>
 
       <h2 id="children">10. Children</h2>
       <p>HonestPing isn't directed at children under 13 (under 16 in the EU/UK), and we don't knowingly collect their personal information. If you think a child has sent us information, email us and we'll delete it.</p>

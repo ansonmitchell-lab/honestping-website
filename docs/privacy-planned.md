@@ -2,6 +2,46 @@
 
 Not published. These sections and sentences are marked planned in the privacy draft. They are left out of `/privacy` until those features ship. The wording below is the draft text, unchanged.
 
+## This ships with enabling auto-send as a policy update with an in-app notice
+
+Not on the live page. In this version, crash reports are saved on the PC and are not sent.
+
+**What happens.** If HonestPing closes unexpectedly, it sends us a short report the next time it starts, so we can fix the problem. Personal and network details are removed first. If sending fails, it tries once more on the next launch. Then the file is deleted either way.
+
+**Your choice.** Crash reports are controlled by **Settings → Privacy → Send crash reports automatically**. You can change this anytime in Settings → Privacy.
+
+- **US and most other regions:** on by default. You can turn it off at any time. When you do, HonestPing shows "Crash reports are off. Any report waiting to be sent was deleted." and nothing is sent after that.
+- **The EEA, the UK, Switzerland and Canada, or if your region is unknown:** Crash reports and provider name lookup happen only if you allow them. HonestPing asks the first time it starts. HonestPing decides this on your PC from your Windows region setting. It doesn't look up your location.
+
+**What a crash report contains**
+
+- HonestPing version and Windows version
+- The error, and where in HonestPing's code it happened
+- Which screen was open, for example "Speed test"
+- A few lines of HonestPing's own log, with personal and network details removed
+
+**Never included:** your files, history, test results, settings, Wi-Fi names, IP addresses, device names, Windows username or provider name.
+
+Your IP address reaches our server like any connection. We don't store it.
+
+Raw reports are deleted within 90 days.
+
+**How details are removed.** Before the report leaves your PC, HonestPing removes the following, and our server checks again and removes anything left: your Windows username and folder paths, your computer's name, IP addresses (public, private, router, DNS server, and route hops), MAC addresses, Wi-Fi network names and router IDs, your internet provider's name, hostnames and custom monitor targets, names of devices on your network, email addresses, share codes and license keys, and your test results. Crash reports never include your files, history, settings values, or anything from other apps.
+
+**Your IP address.** Your IP address reaches our server like any connection. We don't store it. It's used only in passing to deliver the report and to block abuse through our host's automatic rate limits.
+
+**How we use crash reports.** Only to find and fix bugs, group similar crashes, and check whether a new version is more stable. An AI service helps us sort reports. It works only for us and can't train on them. Reports aren't used for decisions about you. The AI service can't use reports to train its models and keeps them for no more than 30 days. People at HonestPing review its suggestions.
+
+**How long we keep them.** Raw reports are deleted within 90 days. We keep short crash "signatures" (the error type, where it happened in our code, the app version, and a count of how many installs hit it) for up to 24 months. They contain no log text or messages.
+
+If a report can't be sent, HonestPing tries once more the next time it starts, then deletes it. Turning crash reports off deletes any report waiting to be sent.
+
+A local crash file is deleted after it's sent, after one failed retry, or when you turn crash reports off.
+
+Subprocessors line, not on the live subprocessors page until auto-send is enabled: We'll add our AI service here before any reports are shared with it.
+
+Service-provider line parked with that update: an AI service provider listed on our subprocessors page (crash and bug analysis).
+
 ## 3.5 Sharing a report with your internet provider [PLANNED – remove until shipped]
 
 You can choose to share a report with your internet provider. Nothing is shared unless you press **Share** on a screen that shows exactly what your provider will see.
