@@ -90,6 +90,7 @@ def main():
             "the UK and Quebec",
             "the UK, and Quebec",
             "Quebec",
+            "[TODO ENGINEERING: the Windows region setting is country-level, so confirm how Canada is detected, or whether all of Canada gets this version and the page should say so.]",
         )
         for phrase in absent:
             check(phrase not in body, f"/privacy still contains: {phrase}")
