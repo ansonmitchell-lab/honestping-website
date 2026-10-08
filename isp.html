@@ -27,7 +27,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20261007c">
+  <link rel="stylesheet" href="styles.css?v=20261007d">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -134,7 +134,7 @@
           <li class="card"><span class="isp-step">01</span><div><h3>Your customers use HonestPing.</h3><p>It sits in the Windows tray and watches their connection: live ping, jitter and loss, a simple green, amber or red status, and short speed tests three times a day for a week, compared with the plan they entered. In the pilot, your customers get Pro included.</p></div></li>
           <li class="card"><span class="isp-step">02</span><div><h3>They choose what to share.</h3><p>Customers will be able to turn on anonymous contributions, which helps you see area health. Nothing will be sent unless they switch it on. You won’t be able to switch it on for them.</p></div></li>
           <li class="card"><span class="isp-step">03</span><div><h3>When they need help, they’ll send you a share code.</h3><p>In the app they’ll click <strong>Share with my provider</strong> and get a short code for their 7-day report or speed test. They can read it to your agent or paste it into a chat or ticket. The code will expire, and they can cancel it at any time.</p></div></li>
-          <li class="card"><span class="isp-step">04</span><div><h3>Your team will see the same report they do.</h3><p>Your agent will enter the code in the HonestPing portal and see the customer’s report, explained in the agent’s language, with its Claim Check result. Your network team will see area health, trends, advertised versus real speed, alerts, and a monthly report, and will be able to post status updates.</p></div></li>
+          <li class="card"><span class="isp-step">04</span><div><h3>Your team will see the same report they do.</h3><p>Your agent will enter the code in the HonestPing portal and see the customer’s report, explained in the agent’s language, with its Claim Check result. Your network team will see area health, trends, advertised versus real speed, alerts, and a monthly report, and will be able to post status updates. <a href="#portal">See the portal</a>.</p></div></li>
         </ol>
       </div>
     </section>
@@ -178,25 +178,156 @@
       </div>
     </section>
 
-    <section class="section" id="example" aria-labelledby="ispx-example">
-      <div class="wrap ispx-two">
-        <div>
-          <span class="section-label">What it looks like</span>
-          <h2 class="section-title" id="ispx-example">What your agent sees</h2>
-          <p class="section-intro">Your agent sees this, in their language, only after the customer shares a code.</p>
+    <section class="section" id="portal" aria-labelledby="ispx-portal">
+      <div class="wrap">
+        <span class="section-label">The portal</span> <span class="draft-chip">In development</span>
+        <h2 class="section-title" id="ispx-portal">The HonestPing portal for your team</h2>
+        <p class="section-intro">One web portal will serve both sides of your house. Your network team will watch grouped area health, get outage-spike alerts and post status updates. Your support agents will open a customer’s shared report with a code and see what to do next. Nothing to install on your network, and no hardware.</p>
+
+        <div class="card pdemo" data-portal-demo>
+          <div class="pdemo-bar">
+            <span class="pdemo-brand"><img src="assets/icon-display.png" width="22" height="22" alt=""> HonestPing <span>portal</span></span>
+            <div class="pdemo-tabs" role="tablist" aria-label="Portal views">
+              <button type="button" role="tab" id="pdemo-tab-net" aria-controls="pdemo-net" aria-selected="true" tabindex="0">Network team</button>
+              <button type="button" role="tab" id="pdemo-tab-sup" aria-controls="pdemo-sup" aria-selected="false" tabindex="-1">Support team</button>
+            </div>
+            <span class="draft-chip pdemo-ex">Example data</span>
+          </div>
+
+          <div class="pdemo-panel" role="tabpanel" id="pdemo-net" aria-labelledby="pdemo-tab-net" tabindex="0">
+            <div class="pdemo-grid">
+              <div class="pdemo-box pdemo-areas">
+                <div class="pdemo-head"><h3>Area health</h3><span>Grouped and anonymous · September</span></div>
+                <div class="pdemo-table" role="table" aria-label="Example area health">
+                  <div class="pdemo-tr pdemo-th" role="row"><span role="columnheader">Area</span><span role="columnheader">Typical vs plan</span><span role="columnheader">Evenings</span><span role="columnheader">Uptime</span></div>
+                  <div class="pdemo-tr" role="row"><span role="cell"><i class="pdemo-dot good"></i>Area 1</span><span role="cell">93%</span><span role="cell">88%</span><span role="cell">99.99%</span></div>
+                  <div class="pdemo-tr" role="row"><span role="cell"><i class="pdemo-dot good"></i>Area 2</span><span role="cell">95%</span><span role="cell">91%</span><span role="cell">100%</span></div>
+                  <div class="pdemo-tr" role="row"><span role="cell"><i class="pdemo-dot warn"></i>Area 3</span><span role="cell">81%</span><span role="cell" class="warn">58%</span><span role="cell">99.87%</span></div>
+                  <div class="pdemo-tr pdemo-muted" role="row"><span role="cell"><i class="pdemo-dot"></i>Area 4</span><span role="cell" class="pdemo-span">Not enough data yet</span></div>
+                </div>
+                <p class="pdemo-note">Areas show results only when enough different households contributed. No drill-down to a home.</p>
+              </div>
+
+              <div class="pdemo-box pdemo-alerts">
+                <div class="pdemo-head"><h3>Outage-spike alerts</h3><span>Email, team chat, webhook</span></div>
+                <ul class="pdemo-feed">
+                  <li class="open"><div><strong>Area 3 · Loss spike</strong><span>Started 7:42 PM · about 30 households (rounded)</span></div><span class="pdemo-tag warn">Open</span></li>
+                  <li><div><strong>Area 1 · Slowdown</strong><span>6:02 to 6:15 PM</span></div><span class="pdemo-tag good">Resolved</span></li>
+                  <li><div><strong>Area 2 · Check-ins dropped</strong><span>Weak early hint only</span></div><span class="pdemo-tag">Watching</span></li>
+                </ul>
+                <div class="pdemo-actions"><span class="pdemo-btn primary">Post a status update?</span><span class="pdemo-btn">Acknowledge</span></div>
+                <p class="pdemo-note">Full outages are confirmed as customers reconnect, since an offline PC can’t report.</p>
+              </div>
+
+              <div class="pdemo-box pdemo-status">
+                <div class="pdemo-head"><h3>Status post</h3><span>Draft from the alert, reviewed by a person</span></div>
+                <dl class="pdemo-fields">
+                  <div><dt>Type</dt><dd>Degraded</dd></div>
+                  <div><dt>Region</dt><dd>Area 3</dd></div>
+                  <div><dt>Cause</dt><dd>Equipment upgrade on the area feed</dd></div>
+                  <div><dt>Estimated fix</dt><dd>10:30 PM (estimate)</dd></div>
+                  <div><dt>Expires</dt><dd>Automatically, unless you post an update</dd></div>
+                </dl>
+                <div class="pdemo-msg" aria-label="How the post will look in the app">
+                  <span class="pdemo-msg-label">Message from your provider</span>
+                  <strong>Slower evenings in your area</strong>
+                  <span>Cause: equipment upgrade. Estimated fix 10:30 PM.</span>
+                  <small>Written by your provider · Last updated 3 min ago</small>
+                </div>
+                <div class="pdemo-actions"><span class="pdemo-btn primary">Review and post</span></div>
+              </div>
+
+              <div class="pdemo-box pdemo-report">
+                <div class="pdemo-head"><h3>Monthly report</h3><span>September</span></div>
+                <div class="pdemo-stats">
+                  <div><strong>89%</strong><span>typical speed vs plan, all areas</span></div>
+                  <div><strong>3</strong><span>outages detected across 2 areas</span></div>
+                  <div><strong>2</strong><span>status posts, both within 10 min of the alert</span></div>
+                </div>
+                <div class="pdemo-actions"><span class="pdemo-btn">Download report</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pdemo-panel" role="tabpanel" id="pdemo-sup" aria-labelledby="pdemo-tab-sup" tabindex="0" hidden>
+            <div class="pdemo-grid">
+              <div class="pdemo-box pdemo-lookup">
+                <div class="pdemo-head"><h3>Share-code lookup</h3><span>Only with the customer’s code</span></div>
+                <div class="pdemo-code"><span class="pdemo-input" aria-label="Example share code">HP-7K3M-Q9</span><span class="pdemo-btn primary">Open report</span></div>
+                <p class="pdemo-note">Every open is logged, and the customer sees it: “Opened by your provider’s support, 8:14 PM.”</p>
+                <ul class="pdemo-meta"><li><span>Shared by</span>The customer, with a preview of exactly what’s included</li><li><span>Code</span>Expires on its own, and the customer can cancel it</li><li><span>Not included</span>Device names, Wi-Fi name, home network details</li></ul>
+              </div>
+
+              <div class="pdemo-box pdemo-sum">
+                <div class="pdemo-head"><h3>7-day report</h3><span>Oct 5 to 11 · Plan 500 Mbps</span></div>
+                <div class="pdemo-stats">
+                  <div><strong class="warn">42%</strong><span>evening typical, 212 Mbps</span></div>
+                  <div><strong>94%</strong><span>daytime typical, 470 Mbps</span></div>
+                  <div><strong>19</strong><span>tests counted</span></div>
+                </div>
+                <p class="pdemo-line">Tue 7:42 to 7:58 PM · packet loss 6% for 16 min · <strong>past the router</strong></p>
+                <div class="pdemo-cc"><span class="status ispx-pill ispx-lv-backed">Backed by area data</span><span><strong>Next step:</strong> Check Area 3 evening capacity.</span></div>
+                <p class="pdemo-note">Fingerprint <code>3f9a…c21e</code> matches the customer’s copy.</p>
+              </div>
+
+              <div class="pdemo-box pdemo-home">
+                <div class="pdemo-head"><h3>Home-side checks</h3><span>For the slow tests</span></div>
+                <ul class="pdemo-checks">
+                  <li><svg class="pdemo-ic ok" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m5 10.5 3.2 3.2L15 6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Connection</span><em>Wired · not the cause</em></li>
+                  <li><svg class="pdemo-ic ok" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m5 10.5 3.2 3.2L15 6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>PC load</span><em>Idle · not the cause</em></li>
+                  <li><svg class="pdemo-ic ok" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m5 10.5 3.2 3.2L15 6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>VPN</span><em>None · not the cause</em></li>
+                  <li><svg class="pdemo-ic ok" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m5 10.5 3.2 3.2L15 6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Router</span><em>Port keeps up · not the cause</em></li>
+                  <li class="flagged"><svg class="pdemo-ic flag" width="14" height="14" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 3.5 18 17H2L10 3.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 8.5v4M10 14.6v.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Wi-Fi</span><em>2 tests on weak Wi-Fi · not counted</em></li>
+                </ul>
+              </div>
+
+              <div class="pdemo-box pdemo-script">
+                <div class="pdemo-head"><h3>Suggested reply</h3><span>For the agent</span></div>
+                <p class="pdemo-say">“I can see your evenings dropping, and other homes nearby saw the same thing. We’re checking capacity in your area. You don’t need to restart anything.”</p>
+                <div class="pdemo-lang">
+                  <span class="pdemo-msg-label">What the customer sees · Spanish (example) <span class="draft-chip">Planned</span></span>
+                  <p lang="es">Las tardes van por debajo del plan. Otros hogares de tu zona vieron lo mismo.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="pdemo-foot">Example data for illustration only. No real provider, customer, or place. Concept of a portal that is in development.</p>
         </div>
-        <figure class="card ispx-report">
-          <span class="ispx-ribbon">Example</span>
-          <h3>Example report: Tuesday evening</h3>
-          <dl>
-            <div><dt>7:42 to 7:58 PM</dt><dd>Packet loss 6% for 16 min · <strong>Past the router</strong></dd></div>
-            <div><dt>Evening speed this week</dt><dd>Typical (median) <strong>212 Mbps</strong> of a <strong>500 Mbps</strong> plan (42% of plan)</dd></div>
-            <div><dt>Daytime typical (median)</dt><dd><strong>470 Mbps</strong> (94% of plan)</dd></div>
-            <div><dt>Home</dt><dd>Wi-Fi: strong signal · PC: not busy</dd></div>
-            <div><dt>Report fingerprint</dt><dd><code>3f9a…c21e</code></dd></div>
-          </dl>
-          <figcaption>Example data for illustration only. No real provider, customer, or place.</figcaption>
-        </figure>
+
+        <div class="pdemo-teams">
+          <div>
+            <h3 class="ispx-subhead">For your network team</h3>
+            <ul class="pdemo-feats">
+              <li class="card pdemo-feat"><h4>Area health</h4><p>Every approximate area at a glance: healthy, slipping, or not enough data yet, plus this week against last week.</p></li>
+              <li class="card pdemo-feat"><h4>Area trends</h4><p>Idle and loaded ping, jitter, loss and speed as a share of the plan, with an hour-of-week heat map that highlights evenings.</p></li>
+              <li class="card pdemo-feat"><h4>Advertised vs real</h4><p>Typical delivered speed by plan tier and connection type, evenings against off-peak.</p></li>
+              <li class="card pdemo-feat"><h4>Outage-spike alerts</h4><p>By email, team chat or signed webhook. Acknowledging an alert never changes any data.</p></li>
+              <li class="card pdemo-feat"><h4>Status posts and notes</h4><p>Post updates by region from an alert’s prefilled draft. Nothing is ever posted automatically, posts carry no offers or links, and they expire on their own.</p></li>
+              <li class="card pdemo-feat"><h4>Monthly reports</h4><p>Area health, advertised vs real, and what’s needed to qualify for HonestPing Verified (planned).</p></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="ispx-subhead">For your support team</h3>
+            <ul class="pdemo-feats">
+              <li class="card pdemo-feat"><h4>Share-code lookup</h4><p>Open one customer’s report only with their code. Only your company can open it, and the customer can cancel it at any time.</p></li>
+              <li class="card pdemo-feat"><h4>The same report on both sides</h4><p>Timeline, where on the path it happened, speed against the plan, and which tests were counted, with a fingerprint both sides can match.</p></li>
+              <li class="card pdemo-feat"><h4>Claim Check result</h4><p>An evidence level, up to three reasons and a next step, so tier 1 can resolve or route it the first time.</p></li>
+              <li class="card pdemo-feat"><h4>Home-side causes flagged</h4><p>Weak Wi-Fi, a busy PC, a VPN or a router limit, called out in plain words before anyone books a visit.</p></li>
+              <li class="card pdemo-feat"><h4>Both languages</h4><p>Your agent reads the report in their language, with a “What the customer sees” toggle in the customer’s language (planned).</p></li>
+              <li class="card pdemo-feat"><h4>Into your tickets</h4><p>Later, a shared report will be able to attach itself to the ticket in your ticketing system.</p></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card pdemo-access">
+          <h3>Roles and access</h3>
+          <ul>
+            <li><strong>Separate roles:</strong> admin, network team, support and view-only. Only support and admin can open share codes. Only network and admin can post status.</li>
+            <li><strong>Your data stays yours:</strong> each provider’s portal is walled off from every other provider, and you verify your network before you see any data.</li>
+            <li><strong>Sign-in:</strong> one-time email codes in the pilot, with single sign-on for larger partners later.</li>
+            <li><strong>Audit log:</strong> every share-code open, status post and update is recorded.</li>
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -339,7 +470,8 @@
     </div>
   </footer>
 
-  <script src="waitlist.js?v=20261007c" defer></script>
-  <script src="isp-contact.js?v=20261007c" defer></script>
+  <script src="waitlist.js?v=20261007d" defer></script>
+  <script src="portal-demo.js?v=20261007d" defer></script>
+  <script src="isp-contact.js?v=20261007d" defer></script>
 </body>
 </html>
