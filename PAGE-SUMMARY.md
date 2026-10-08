@@ -27,15 +27,19 @@ Mirrors the HonestPing Windows app **navy Neon** theme from `theme-tokens.json`:
 10. **Inside the app**: `overview-navy` preview in window chrome  
 11. **Closing line** (`#punch`): Just above the waitlist. Exact line: “One disputed internet bill can pay for your entire app.” Link to `#isp`. No dollar amounts or prices.
 12. **Waitlist**: mailto `hello@honestping.com?subject=HonestPing%20waitlist` (+ email field via JS)  
-13. **Footer**: © Anson Mitchell and Matt Lewis (equal plain text) · About Us · www.honestping.com · privacy-light waitlist note  
+13. **Footer**: © Honest Ping LLC · About Us · Privacy (`/privacy`) · www.honestping.com · privacy-light waitlist note  
 
 ## About Us (`about.html`)
 
-Same header/nav/footer chrome. Product blurb (*Network health, explained*), then two identical co-creator cards (initials badge, name, "Co-creator" role): **Anson Mitchell** and **Matt Lewis**. No personal links for either creator. Waitlist CTA links back to `index.html#waitlist`.
+Same header/nav/footer chrome. Product blurb (*Network health, explained*). No personal names. Waitlist CTA links back to `index.html#waitlist`.
+
+## Privacy (`privacy.html`, served at `/privacy`)
+
+Privacy policy for the website and the Windows app. Planned sections are not on this page. They are saved in `docs/privacy-planned.md`.
 
 ## Credits
 
-Co-created by Anson Mitchell and Matt Lewis, always with equal prominence. On the homepage, credit appears only in the footer (plain, muted text). The site contains no links or references to any personal domain.
+The footer credit line is Honest Ping LLC. The site does not name people and does not link to a personal domain.
 
 ## Primary CTA
 
