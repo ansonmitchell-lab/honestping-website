@@ -1,0 +1,6 @@
+# Local preview only. Do not commit real values.
+# K_MIN defaults to 10 when this is unset. The owner has not decided the final value.
+K_MIN=10
+KEEP_ISP_PRIVATE_HOPS=true
+HOUSEHOLD_SALT=preview-example-salt
+ISP_INGEST_TOKEN=

@@ -1,0 +1,44 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "honestping-isp",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-08",
+  "account_id": "4e7e5db788ca85b49af0442d922ebc6e",
+  // Preview only. Do not deploy this file without --env preview.
+  // The top level has no D1 binding, so a default deploy cannot reach a database.
+  "workers_dev": false,
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "head_sampling_rate": 1 },
+    "traces": { "enabled": true, "head_sampling_rate": 1 }
+  },
+  // K_MIN is the single group minimum for area counts, node alerts, and
+  // node suggestions. Default 10. The owner has not decided the final value.
+  "vars": {
+    "KEEP_ISP_PRIVATE_HOPS": "true",
+    "K_MIN": "10"
+  },
+  "env": {
+    "preview": {
+      "workers_dev": true,
+      "routes": [],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "honestping-isp-preview-example",
+          "database_id": "7b86c7ad-3c6b-4af4-8d17-8b5a55bbb692",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "vars": {
+        "ALLOW_ISP_PREVIEW": "1",
+        "KEEP_ISP_PRIVATE_HOPS": "true",
+        "K_MIN": "10",
+        "ISP_PREVIEW_ORG": "example-isp"
+      },
+      "triggers": {
+        "crons": ["15 7 * * *"]
+      }
+    }
+  }
+}
