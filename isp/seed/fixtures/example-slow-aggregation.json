@@ -1,0 +1,130 @@
+{
+  "label": "EXAMPLE fixture. Not a customer trace. Illustrates honestping.shared_trace/v1.",
+  "trace": {
+    "schema": "honestping.shared_trace/v1",
+    "run_id": "6f1c2b9e-4a7d-4c1e-9b2a-3d5e8f0a1c47",
+    "report": {
+      "report_id": "r_example",
+      "fingerprint": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "app_version": "1.8.49",
+    "os": "windows-11",
+    "started_at": "2026-10-07T01:12:04Z",
+    "finished_at": "2026-10-07T01:12:19Z",
+    "method": {
+      "kind": "tracert",
+      "ip_version": 4,
+      "max_hops": 20,
+      "probes_per_hop": 3,
+      "probe_timeout_ms": 1000,
+      "deadline_ms": 45000,
+      "resolve_names": false
+    },
+    "target": {
+      "kind": "default",
+      "host": "1.1.1.1",
+      "ip": "1.1.1.1"
+    },
+    "outcome": {
+      "status": "completed",
+      "reached": true,
+      "hop_count": 7,
+      "app_summary_code": "slow_further_out"
+    },
+    "hops": [
+      {
+        "ttl": 1,
+        "role": "home_router",
+        "role_basis": "gateway_match",
+        "scope": "private",
+        "ip": null,
+        "rtt_ms": [0, 0, 1],
+        "sent": 3,
+        "received": 3,
+        "app_ms": 1
+      },
+      {
+        "ttl": 2,
+        "role": "first_past_router",
+        "scope": "cgnat",
+        "ip": "100.92.0.1",
+        "rtt_ms": [9, 11, 10],
+        "sent": 3,
+        "received": 3,
+        "app_ms": 10
+      },
+      {
+        "ttl": 3,
+        "role": "past_router",
+        "scope": "private",
+        "ip": "10.212.4.1",
+        "rtt_ms": [118, 131, 124],
+        "sent": 3,
+        "received": 3,
+        "app_ms": 124
+      },
+      {
+        "ttl": 4,
+        "role": "unknown",
+        "scope": "none",
+        "ip": null,
+        "rtt_ms": [null, null, null],
+        "sent": 3,
+        "received": 0,
+        "app_ms": null
+      },
+      {
+        "ttl": 5,
+        "role": "past_router",
+        "scope": "public",
+        "ip": "203.0.113.10",
+        "rtt_ms": [121, null, 126],
+        "sent": 3,
+        "received": 2,
+        "app_ms": 124
+      },
+      {
+        "ttl": 6,
+        "role": "past_router",
+        "scope": "public",
+        "ip": "198.51.100.7",
+        "rtt_ms": [127, 125, 129],
+        "sent": 3,
+        "received": 3,
+        "app_ms": 127
+      },
+      {
+        "ttl": 7,
+        "role": "destination",
+        "scope": "public",
+        "ip": "1.1.1.1",
+        "rtt_ms": [128, 126, 130],
+        "sent": 3,
+        "received": 3,
+        "app_ms": 128
+      }
+    ],
+    "home_summary": {
+      "link": "wired",
+      "wifi_signal": "n/a",
+      "nic_link_mbps": 1000,
+      "gateway": {
+        "found": true,
+        "health": "healthy",
+        "typical_ms": 1,
+        "jitter_ms": 0,
+        "loss_permille": 0
+      },
+      "home_hops": 1,
+      "vpn_active": false,
+      "pc_busy": false,
+      "app_overall": "Degraded",
+      "app_blame": "Carrier"
+    },
+    "integrity": {
+      "fingerprint_alg": "sha256:honestping-trace-v1:jcs",
+      "fingerprint": "1c78d378e0e300983fea6f8673d3f3ab7301f03b9ab90711604bfad59208bd3d",
+      "signature": null
+    }
+  }
+}

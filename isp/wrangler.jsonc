@@ -1,0 +1,53 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "honestping-isp",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-08",
+  "account_id": "4e7e5db788ca85b49af0442d922ebc6e",
+  // Preview only. Do not deploy the top level config. It has no public route
+  // and the handler stays closed unless ALLOW_ISP_PREVIEW is set on env.preview.
+  "workers_dev": false,
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "head_sampling_rate": 1 },
+    "traces": { "enabled": true, "head_sampling_rate": 1 }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "honestping-waitlist",
+      "database_id": "c732d15a-f4c9-4f7d-8588-41f7774d41d1",
+      "preview_database_id": "834af7c2-165f-4fb4-92b9-49b1aa0b3eb6",
+      "migrations_dir": "migrations"
+    }
+  ],
+  // K_MIN is the single group minimum for area counts, node alerts, and
+  // node suggestions. Default 10. The owner has not decided the final value.
+  "vars": {
+    "KEEP_ISP_PRIVATE_HOPS": "true",
+    "K_MIN": "10"
+  },
+  "env": {
+    "preview": {
+      "workers_dev": true,
+      "routes": [],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "honestping-waitlist-preview",
+          "database_id": "834af7c2-165f-4fb4-92b9-49b1aa0b3eb6",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "vars": {
+        "ALLOW_ISP_PREVIEW": "1",
+        "KEEP_ISP_PRIVATE_HOPS": "true",
+        "K_MIN": "10",
+        "ISP_PREVIEW_ORG": "example-isp"
+      },
+      "triggers": {
+        "crons": ["15 7 * * *"]
+      }
+    }
+  }
+}
