@@ -1,14 +1,15 @@
 # Waitlist and ISP forms
 
-Submitting Join the waitlist saves the address in Cloudflare D1 and shows a thank-you on the page. It does not open the visitor's mail app. A new row also emails hello@honestping.com. If that send fails, the visitor still sees the thank-you and the failure is logged. A duplicate address gets the same thank-you and no second email. The ISP partnership form uses the same rules, its own table, and the subject `ISP partnership`.
+Submitting Join the waitlist saves the address in Cloudflare D1 and shows a thank-you on the page. It does not open the visitor's mail app. A new row also emails hello@honestping.com. If that send fails, the visitor still sees the thank-you and the failure is logged. `notified_at` stays empty until a send succeeds. A later submit of the same address, and a cron every 15 minutes, try those unsent notices again. A duplicate address still gets the same thank-you. If the notice was already sent, it is not sent again. The ISP partnership form uses the same rules, its own table, and the subject `ISP partnership`.
 
 Nothing in this repo deploys itself. Preview and production stay on separate D1 databases and separate Workers. Do not merge this into `main`, and do not deploy the `honestping-web` Worker, until you mean to go live.
 
 ## What the code does
 
-- `POST /api/waitlist` stores `email` (unique, lowercased), `created_at`, `source_page`, and a SHA-256 of the user agent. A second submit of the same address shows the same thank-you and does not email again.
-- `POST /api/isp` stores name, company, email, optional subscribers, and message in `isp_inquiries`. The email is unique. A second note from the same address shows the thank-you, keeps the first note, and does not email again.
-- The notification is best-effort. Once the row is saved, the response is the thank-you. A missing email binding or a failed send is logged (`email_binding_missing` or `email_send_failed`) and is not a 502.
+- `POST /api/waitlist` stores `email` (unique, lowercased), `created_at`, `source_page`, and a SHA-256 of the user agent. A second submit of the same address shows the same thank-you. If `notified_at` is already set, it does not email again. If `notified_at` is empty, that submit tries the notice again.
+- `POST /api/isp` stores name, company, email, optional subscribers, and message in `isp_inquiries`. The email is unique. A second note from the same address shows the thank-you and keeps the first note. If that saved note was not emailed, the retry sends the saved note.
+- The notification is best-effort. Once the row is saved, the response is the thank-you. A missing email binding or a failed send is logged (`email_binding_missing` or `email_send_failed`) and is not a 502. `notified_at` is set only after `EMAIL.send` succeeds.
+- The Worker cron `*/15 * * * *` calls `scheduled`, which sends up to 10 unsent waitlist rows and 10 unsent ISP rows, oldest first. It uses that Worker's own D1 binding. A submit and the cron can both send the same notice if they overlap. After a successful send the row is marked, so the usual case is one email. Pages has no cron and no `send_email` binding.
 - No raw IP is stored. The connecting IP is sent only to Turnstile siteverify, then dropped.
 - Turnstile action is `waitlist` or `isp`. The token must match that action and a hostname in `TURNSTILE_HOSTNAMES`. On `honestping.com` and `www.honestping.com`, `localhost` and `127.0.0.1` are ignored even if they are listed.
 - The visitor is not emailed. The footer line stays true: waitlist mail is only used to notify them when HonestPing is available.
@@ -50,7 +51,15 @@ CREATE TABLE IF NOT EXISTS isp_inquiries (
 CREATE UNIQUE INDEX IF NOT EXISTS isp_inquiries_email ON isp_inquiries (email);
 ```
 
-Both databases are empty of these tables today. Apply the files to one database at a time. `0002` is what makes a repeated ISP address a duplicate.
+`migrations/0003_notified_at.sql`
+
+```sql
+ALTER TABLE waitlist ADD COLUMN notified_at TEXT;
+
+ALTER TABLE isp_inquiries ADD COLUMN notified_at TEXT;
+```
+
+`notified_at` is empty until the notice email succeeds. Rows saved before this migration have no send record, so the next retry treats them as unsent. Apply the files to one database at a time. `0002` is what makes a repeated ISP address a duplicate. `0003` is what the retry reads.
 
 Wrangler 4.148 can print the word "preview" for a production command when `preview_database_id` is set. Trust the UUID in parentheses:
 
@@ -91,13 +100,13 @@ In Turnstile, the existing widget must allow `www.honestping.com`, `honestping.c
 
 Run these from the repo root. Every command includes `--config wrangler.worker.jsonc` and `--env preview`. Dropping `--env preview` targets the live `honestping-web` Worker.
 
-1. Apply both migrations to the preview database only. Stop if the UUID is not `834af7c2-165f-4fb4-92b9-49b1aa0b3eb6`.
+1. Apply migrations `0001`, `0002`, and `0003` to the preview database only. The command applies every pending file. Stop if the UUID is not `834af7c2-165f-4fb4-92b9-49b1aa0b3eb6`.
 
 ```sh
 npx wrangler d1 migrations apply honestping-waitlist-preview --remote --config wrangler.worker.jsonc --env preview
 ```
 
-2. Deploy the preview Worker. This creates or updates `honestping-web-preview` only. It does not publish `honestping-web`. Confirm the output name is `honestping-web-preview` and the routes do not include `honestping.com`.
+2. Deploy the preview Worker. This creates or updates `honestping-web-preview` only. It does not publish `honestping-web`. Confirm the output name is `honestping-web-preview`, the routes do not include `honestping.com`, and the deploy registers `schedule: */15 * * * *`. That cron belongs to this Worker and reads the preview D1 database. It does not run on the live site until the go-live deploy.
 
 ```sh
 npx wrangler deploy --config wrangler.worker.jsonc --env preview
@@ -110,7 +119,7 @@ printf '%s' "$TURNSTILE_SECRET" | npx wrangler secret put TURNSTILE_SECRET --con
 ```
 
 4. Open `https://honestping-web-preview.honestping.workers.dev/`. The pages come from this branch because `ORIGIN_BASE` points at `cursor/waitlist-d1-bbe4` on GitHub raw. `main` is unchanged.
-5. Submit the waitlist form. You should see "You're on the list. We'll email you when HonestPing is ready." and no mail app. A new row emails `hello@honestping.com` from `waitlist@honestping.com` with the subject `HonestPing waitlist`. Submit the same address again: the thank-you shows, and no second email arrives. The first real send waits on the destination verification click described above.
+5. Submit the waitlist form. You should see "You're on the list. We'll email you when HonestPing is ready." and no mail app. A new row emails `hello@honestping.com` from `waitlist@honestping.com` with the subject `HonestPing waitlist`, then sets `notified_at`. Submit the same address again: the thank-you shows, and no second email arrives. If the first send failed, `notified_at` stays empty and the second submit tries once more. The cron tries again within 15 minutes. The first real send waits on the destination verification click described above.
 6. The row should be in `honestping-waitlist-preview`, not `honestping-waitlist`.
 
 `secret put` and `deploy` for this env publish the preview Worker immediately. They do not publish the live site when `--env preview` is present.
@@ -119,13 +128,13 @@ printf '%s' "$TURNSTILE_SECRET" | npx wrangler secret put TURNSTILE_SECRET --con
 
 Do this only when the preview submit, the preview D1 row, and the notification email all look right. This replaces the script that is currently only in the Cloudflare dashboard. `www.honestping.com` and `honestping.com` are custom domains on `honestping-web`. They are listed in `wrangler.worker.jsonc` so a deploy keeps them.
 
-1. Apply the migrations to production. Do not add `--preview` or `--env preview`. Stop unless the UUID in parentheses is `c732d15a-f4c9-4f7d-8588-41f7774d41d1`.
+1. Apply migrations `0001`, `0002`, and `0003` to production. Do not add `--preview` or `--env preview`. Stop unless the UUID in parentheses is `c732d15a-f4c9-4f7d-8588-41f7774d41d1`.
 
 ```sh
 npx wrangler d1 migrations apply honestping-waitlist --remote --config wrangler.worker.jsonc --env=""
 ```
 
-2. Deploy the Worker. This publishes `honestping-web` immediately. `--env=""` selects the top-level environment. Wrangler warns if you omit it, because `env.preview` also exists. Do not pass `--env preview`.
+2. Deploy the Worker. This publishes `honestping-web` immediately and registers its cron, `*/15 * * * *`. `--env=""` selects the top-level environment. Wrangler warns if you omit it, because `env.preview` also exists. Do not pass `--env preview`. Confirm the log says `schedule: */15 * * * *` for `honestping-web` only.
 
 ```sh
 npx wrangler deploy --config wrangler.worker.jsonc --env=""
@@ -155,11 +164,11 @@ https://dash.cloudflare.com/4e7e5db788ca85b49af0442d922ebc6e/workers/d1/database
 Open the database, then Console, and run:
 
 ```sql
-SELECT email, created_at, source_page, user_agent_hash
+SELECT email, created_at, source_page, user_agent_hash, notified_at
 FROM waitlist
 ORDER BY created_at DESC;
 
-SELECT id, created_at, name, company, email, subscribers, source_page, message
+SELECT id, created_at, name, company, email, subscribers, source_page, message, notified_at
 FROM isp_inquiries
 ORDER BY created_at DESC;
 ```

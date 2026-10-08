@@ -1,4 +1,4 @@
-import { handleSubmit } from "../functions/lib/submit.js";
+import { handleSubmit, retryUnsent } from "../functions/lib/submit.js";
 
 const DEFAULT_ORIGIN = "https://raw.githubusercontent.com/ansonmitchell-lab/honestping-website/main";
 const TYPES = {
@@ -82,5 +82,10 @@ export default {
     const path = new URL(request.url).pathname;
     if (path === "/api/waitlist" || path === "/api/isp") return handleSubmit(request, env);
     return proxy(request, env);
+  },
+  async scheduled(_controller, env, ctx) {
+    const pending = retryUnsent(env);
+    if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(pending);
+    await pending;
   },
 };

@@ -10,7 +10,7 @@
     "traces": { "enabled": true, "head_sampling_rate": 1 }
   },
   // Pages Functions cannot use a send_email binding. Do not add one here.
-  // A Pages deploy will not email Anson. The preview that can send mail is the
+  // A Pages deploy will not email hello@honestping.com. The preview that can send mail is the
   // Worker honestping-web-preview in wrangler.worker.jsonc (env.preview).
   // Top level is the production Pages config and the local default.
   // preview_database_id keeps `wrangler dev --remote` and `migrations apply --preview` off production.

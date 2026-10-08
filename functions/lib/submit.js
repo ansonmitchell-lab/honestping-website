@@ -212,10 +212,40 @@ function wroteRow(result) {
   return Number(changes) > 0;
 }
 
+const TABLES = {
+  waitlist: "waitlist",
+  isp_inquiries: "isp_inquiries",
+};
+
+function waitlistNotice(row) {
+  return [
+    "New HonestPing waitlist sign-up",
+    "",
+    "Email: " + row.email,
+    "Page: " + (row.source_page || "not provided"),
+    "Time: " + row.created_at,
+  ].join("\n");
+}
+
+function ispNotice(row) {
+  return [
+    "New ISP partnership note",
+    "",
+    "Name: " + row.name,
+    "Company: " + row.company,
+    "Email: " + row.email,
+    "Subscribers: " + (row.subscribers || "Not given"),
+    "Page: " + (row.source_page || "not provided"),
+    "Time: " + row.created_at,
+    "",
+    row.message,
+  ].join("\n");
+}
+
 async function notify(env, subject, text, replyTo) {
   if (!env.EMAIL || typeof env.EMAIL.send !== "function") {
     console.error(JSON.stringify({ message: "email_binding_missing", subject }));
-    return;
+    return false;
   }
   try {
     await env.EMAIL.send({
@@ -225,13 +255,91 @@ async function notify(env, subject, text, replyTo) {
       subject,
       text,
     });
+    return true;
   } catch (error) {
     console.error(JSON.stringify({
       message: "email_send_failed",
       subject,
       error: error instanceof Error ? error.message : "failed",
     }));
+    return false;
   }
+}
+
+async function markNotified(env, table, email) {
+  const name = TABLES[table];
+  await env.DB.prepare(
+    `UPDATE ${name} SET notified_at = ? WHERE email = ? AND notified_at IS NULL`,
+  ).bind(new Date().toISOString(), email).run();
+}
+
+async function deliver(env, table, email, subject, text, replyTo) {
+  const sent = await notify(env, subject, text, replyTo);
+  if (!sent) return false;
+  try {
+    await markNotified(env, table, email);
+    return true;
+  } catch (error) {
+    console.error(JSON.stringify({
+      message: "notify_mark_failed",
+      subject,
+      error: error instanceof Error ? error.message : "failed",
+    }));
+    return false;
+  }
+}
+
+export async function retryUnsent(env) {
+  const counts = { waitlist: 0, isp: 0 };
+  if (!env || !env.DB) {
+    console.error(JSON.stringify({ message: "db_binding_missing", form: "retry" }));
+    return counts;
+  }
+  try {
+    const waitlist = await env.DB.prepare(
+      "SELECT email, created_at, source_page FROM waitlist WHERE notified_at IS NULL ORDER BY created_at ASC LIMIT 10",
+    ).all();
+    for (const row of waitlist.results || []) {
+      try {
+        if (await deliver(env, "waitlist", row.email, WAITLIST_SUBJECT, waitlistNotice(row), row.email)) {
+          counts.waitlist += 1;
+        }
+      } catch (error) {
+        console.error(JSON.stringify({
+          message: "notify_retry_failed",
+          form: "waitlist",
+          error: error instanceof Error ? error.message : "failed",
+        }));
+      }
+    }
+    const isp = await env.DB.prepare(
+      "SELECT email, name, company, subscribers, message, created_at, source_page FROM isp_inquiries WHERE notified_at IS NULL ORDER BY created_at ASC LIMIT 10",
+    ).all();
+    for (const row of isp.results || []) {
+      try {
+        if (await deliver(env, "isp_inquiries", row.email, ISP_SUBJECT, ispNotice(row), row.email)) {
+          counts.isp += 1;
+        }
+      } catch (error) {
+        console.error(JSON.stringify({
+          message: "notify_retry_failed",
+          form: "isp",
+          error: error instanceof Error ? error.message : "failed",
+        }));
+      }
+    }
+  } catch (error) {
+    console.error(JSON.stringify({
+      message: "notify_retry_failed",
+      error: error instanceof Error ? error.message : "failed",
+    }));
+  }
+  console.log(JSON.stringify({
+    message: "notify_retry",
+    waitlist_sent: counts.waitlist,
+    isp_sent: counts.isp,
+  }));
+  return counts;
 }
 
 export async function handleSubmit(request, env) {
@@ -273,17 +381,15 @@ export async function handleSubmit(request, env) {
         "INSERT INTO waitlist (email, created_at, source_page, user_agent_hash) VALUES (?, ?, ?, ?) ON CONFLICT(email) DO NOTHING",
       ).bind(email, createdAt, source, userAgentHash).run();
       const isNew = wroteRow(result);
-      if (isNew) {
-        const text = [
-          "New HonestPing waitlist sign-up",
-          "",
-          "Email: " + email,
-          "Page: " + (source || "not provided"),
-          "Time: " + createdAt,
-        ].join("\n");
-        await notify(env, WAITLIST_SUBJECT, text, email);
-      }
-      console.log(JSON.stringify({ message: "signup_saved", form: "waitlist", new_row: isNew }));
+      const row = isNew
+        ? { email, created_at: createdAt, source_page: source, notified_at: null }
+        : await env.DB.prepare(
+          "SELECT email, created_at, source_page, notified_at FROM waitlist WHERE email = ?",
+        ).bind(email).first();
+      const notified = row && !row.notified_at
+        ? await deliver(env, "waitlist", row.email, WAITLIST_SUBJECT, waitlistNotice(row), row.email)
+        : Boolean(row && row.notified_at);
+      console.log(JSON.stringify({ message: "signup_saved", form: "waitlist", new_row: isNew, notified }));
       return succeed(request, COPY.waitlistThanks, source || back);
     }
 
@@ -299,22 +405,24 @@ export async function handleSubmit(request, env) {
       "INSERT INTO isp_inquiries (email, name, company, subscribers, message, created_at, source_page, user_agent_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(email) DO NOTHING",
     ).bind(email, name, company, subscribers, message, createdAt, source, userAgentHash).run();
     const isNew = wroteRow(result);
-    if (isNew) {
-      const text = [
-        "New ISP partnership note",
-        "",
-        "Name: " + name,
-        "Company: " + company,
-        "Email: " + email,
-        "Subscribers: " + (subscribers || "Not given"),
-        "Page: " + (source || "not provided"),
-        "Time: " + createdAt,
-        "",
+    const row = isNew
+      ? {
+        email,
+        name,
+        company,
+        subscribers,
         message,
-      ].join("\n");
-      await notify(env, ISP_SUBJECT, text, email);
-    }
-    console.log(JSON.stringify({ message: "signup_saved", form: "isp", new_row: isNew }));
+        created_at: createdAt,
+        source_page: source,
+        notified_at: null,
+      }
+      : await env.DB.prepare(
+        "SELECT email, name, company, subscribers, message, created_at, source_page, notified_at FROM isp_inquiries WHERE email = ?",
+      ).bind(email).first();
+    const notified = row && !row.notified_at
+      ? await deliver(env, "isp_inquiries", row.email, ISP_SUBJECT, ispNotice(row), row.email)
+      : Boolean(row && row.notified_at);
+    console.log(JSON.stringify({ message: "signup_saved", form: "isp", new_row: isNew, notified }));
     return succeed(request, COPY.ispThanks, source || back);
   } catch (error) {
     console.error(JSON.stringify({

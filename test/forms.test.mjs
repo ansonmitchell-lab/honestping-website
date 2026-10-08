@@ -1,10 +1,107 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { handleSubmit } from "../functions/lib/submit.js";
+import { handleSubmit, retryUnsent } from "../functions/lib/submit.js";
 import worker from "../worker/index.js";
 
 const IP = "203.0.113.9";
+
+function statement(state, sql, args) {
+  return {
+    async run() {
+      state.sql.push(sql);
+      if (sql.includes("INSERT INTO waitlist")) {
+        const [email, createdAt, sourcePage, userAgentHash] = args;
+        const duplicate = state.waitlist.has(email);
+        if (!duplicate) {
+          state.waitlist.set(email, { email, createdAt, sourcePage, userAgentHash, args, notifiedAt: null });
+        }
+        return { meta: { changes: duplicate ? 0 : 1 } };
+      }
+      if (sql.includes("INSERT INTO isp_inquiries")) {
+        const email = args[0];
+        const duplicate = state.isp.some((row) => row[0] === email);
+        if (!duplicate) state.isp.push(args);
+        return { meta: { changes: duplicate ? 0 : 1 } };
+      }
+      if (sql.startsWith("UPDATE waitlist")) {
+        const [notifiedAt, email] = args;
+        const row = state.waitlist.get(email);
+        const changed = Boolean(row && row.notifiedAt == null);
+        if (changed) row.notifiedAt = notifiedAt;
+        return { meta: { changes: changed ? 1 : 0 } };
+      }
+      if (sql.startsWith("UPDATE isp_inquiries")) {
+        const [notifiedAt, email] = args;
+        const exists = state.isp.some((row) => row[0] === email);
+        const changed = exists && !state.ispNotified.has(email);
+        if (changed) state.ispNotified.set(email, notifiedAt);
+        return { meta: { changes: changed ? 1 : 0 } };
+      }
+      throw new Error("unexpected sql");
+    },
+    async first() {
+      state.sql.push(sql);
+      if (sql.includes("FROM waitlist WHERE email")) {
+        const row = state.waitlist.get(args[0]);
+        if (!row) return null;
+        return {
+          email: row.email,
+          created_at: row.createdAt,
+          source_page: row.sourcePage,
+          notified_at: row.notifiedAt,
+        };
+      }
+      if (sql.includes("FROM isp_inquiries WHERE email")) {
+        const found = state.isp.find((row) => row[0] === args[0]);
+        if (!found) return null;
+        return {
+          email: found[0],
+          name: found[1],
+          company: found[2],
+          subscribers: found[3],
+          message: found[4],
+          created_at: found[5],
+          source_page: found[6],
+          notified_at: state.ispNotified.get(found[0]) || null,
+        };
+      }
+      throw new Error("unexpected sql");
+    },
+    async all() {
+      state.sql.push(sql);
+      if (sql.includes("FROM waitlist WHERE notified_at IS NULL")) {
+        const results = [...state.waitlist.values()]
+          .filter((row) => row.notifiedAt == null)
+          .sort((left, right) => String(left.createdAt).localeCompare(String(right.createdAt)))
+          .slice(0, 10)
+          .map((row) => ({
+            email: row.email,
+            created_at: row.createdAt,
+            source_page: row.sourcePage,
+          }));
+        return { results };
+      }
+      if (sql.includes("FROM isp_inquiries WHERE notified_at IS NULL")) {
+        const results = state.isp
+          .filter((row) => !state.ispNotified.has(row[0]))
+          .map((row) => ({
+            email: row[0],
+            name: row[1],
+            company: row[2],
+            subscribers: row[3],
+            message: row[4],
+            created_at: row[5],
+            source_page: row[6],
+          }))
+          .sort((left, right) => String(left.created_at).localeCompare(String(right.created_at)))
+          .slice(0, 10);
+        return { results };
+      }
+      throw new Error("unexpected sql");
+    },
+  };
+}
 
 function fakeEnv(state) {
   return {
@@ -12,29 +109,14 @@ function fakeEnv(state) {
     TURNSTILE_HOSTNAMES: "www.honestping.com,honestping.com",
     DB: {
       prepare(sql) {
+        const unbound = statement(state, sql, []);
         return {
           bind(...args) {
-            return {
-              async run() {
-                state.sql.push(sql);
-                if (sql.includes("INSERT INTO waitlist")) {
-                  const [email, createdAt, sourcePage, userAgentHash] = args;
-                  const duplicate = state.waitlist.has(email);
-                  if (!duplicate) {
-                    state.waitlist.set(email, { email, createdAt, sourcePage, userAgentHash, args });
-                  }
-                  return { meta: { changes: duplicate ? 0 : 1 } };
-                }
-                if (sql.includes("INSERT INTO isp_inquiries")) {
-                  const email = args[0];
-                  const duplicate = state.isp.some((row) => row[0] === email);
-                  if (!duplicate) state.isp.push(args);
-                  return { meta: { changes: duplicate ? 0 : 1 } };
-                }
-                throw new Error("unexpected sql");
-              },
-            };
+            return statement(state, sql, args);
           },
+          run: () => unbound.run(),
+          first: () => unbound.first(),
+          all: () => unbound.all(),
         };
       },
     },
@@ -48,7 +130,7 @@ function fakeEnv(state) {
 }
 
 function state() {
-  return { waitlist: new Map(), isp: [], emails: [], sql: [] };
+  return { waitlist: new Map(), isp: [], ispNotified: new Map(), emails: [], sql: [] };
 }
 
 function post(path, fields, { host = "www.honestping.com", headers = {} } = {}) {
@@ -276,6 +358,7 @@ test("a saved sign-up still thanks the visitor when email fails", async () => {
     assert.equal(response.status, 200);
     assert.match((await response.json()).message, /You're on the list/);
     assert.equal(saved.waitlist.size, 1);
+    assert.equal(saved.waitlist.get("a@example.com").notifiedAt, null);
     assert.equal(saved.emails.length, 0);
     assert.match(errors.join("\n"), /email_send_failed/);
     assert.equal(errors.join("\n").includes("a@example.com"), false);
@@ -283,6 +366,138 @@ test("a saved sign-up still thanks the visitor when email fails", async () => {
     console.error = originalError;
     restore();
   }
+});
+
+test("a repeat submit retries an unsent waitlist notice once", async () => {
+  const saved = state();
+  const env = fakeEnv(saved);
+  env.EMAIL.send = async () => {
+    throw new Error("mailbox unavailable");
+  };
+  const restore = mockVerify(pass, { calls: [] });
+  const originalError = console.error;
+  console.error = () => {};
+  try {
+    const first = await handleSubmit(post("/api/waitlist", {
+      email: "a@example.com",
+      source_page: "/",
+    }), env);
+    assert.equal(first.status, 200);
+    assert.equal(saved.waitlist.get("a@example.com").notifiedAt, null);
+    env.EMAIL.send = async (message) => {
+      saved.emails.push(message);
+    };
+    const second = await handleSubmit(post("/api/waitlist", { email: "a@example.com" }), env);
+    assert.equal(second.status, 200);
+    assert.match((await second.json()).message, /You're on the list/);
+    assert.equal(saved.emails.length, 1);
+    assert.match(saved.emails[0].text, /a@example.com/);
+    assert.notEqual(saved.waitlist.get("a@example.com").notifiedAt, null);
+    const third = await handleSubmit(post("/api/waitlist", { email: "a@example.com" }), env);
+    assert.equal(third.status, 200);
+    assert.equal(saved.emails.length, 1);
+  } finally {
+    console.error = originalError;
+    restore();
+  }
+});
+
+test("a repeat ISP submit retries the saved note, not the new one", async () => {
+  const saved = state();
+  const env = fakeEnv(saved);
+  let failSend = true;
+  env.EMAIL.send = async (message) => {
+    if (failSend) throw new Error("mailbox unavailable");
+    saved.emails.push(message);
+  };
+  const restore = mockVerify(
+    { success: true, action: "isp", hostname: "www.honestping.com" },
+    { calls: [] },
+  );
+  const originalError = console.error;
+  console.error = () => {};
+  const fields = {
+    name: "Ada",
+    company: "Example ISP",
+    email: "ada@isp.example",
+    subscribers: "1200",
+    source_page: "/isp",
+  };
+  try {
+    const first = await handleSubmit(post("/api/isp", {
+      ...fields,
+      message: "The saved note.",
+    }), env);
+    assert.equal(first.status, 200);
+    failSend = false;
+    const second = await handleSubmit(post("/api/isp", {
+      ...fields,
+      message: "A later note that is not stored.",
+    }), env);
+    assert.equal(second.status, 200);
+    assert.match((await second.json()).message, /partnering/);
+    assert.equal(saved.isp.length, 1);
+    assert.equal(saved.isp[0][4], "The saved note.");
+    assert.equal(saved.emails.length, 1);
+    assert.match(saved.emails[0].text, /The saved note/);
+    assert.equal(saved.emails[0].text.includes("A later note"), false);
+    const third = await handleSubmit(post("/api/isp", {
+      ...fields,
+      message: "The saved note.",
+    }), env);
+    assert.equal(third.status, 200);
+    assert.equal(saved.emails.length, 1);
+  } finally {
+    console.error = originalError;
+    restore();
+  }
+});
+
+test("the cron sends a small batch of unsent notices", async () => {
+  const saved = state();
+  for (let index = 0; index < 11; index += 1) {
+    const email = `p${String(index).padStart(2, "0")}@example.com`;
+    saved.waitlist.set(email, {
+      email,
+      createdAt: `2026-10-08T00:${String(index).padStart(2, "0")}:00.000Z`,
+      sourcePage: "/",
+      userAgentHash: "abc",
+      args: [],
+      notifiedAt: null,
+    });
+  }
+  saved.waitlist.set("done@example.com", {
+    email: "done@example.com",
+    createdAt: "2026-10-07T00:00:00.000Z",
+    sourcePage: "/",
+    userAgentHash: "abc",
+    args: [],
+    notifiedAt: "2026-10-07T00:01:00.000Z",
+  });
+  saved.isp.push([
+    "isp@example.com",
+    "Ada",
+    "Example ISP",
+    null,
+    "Saved note",
+    "2026-10-08T00:00:00.000Z",
+    "/isp",
+    null,
+  ]);
+  const env = fakeEnv(saved);
+  const ctx = { waitUntil() {} };
+  await worker.scheduled({ cron: "*/15 * * * *" }, env, ctx);
+  const waitlistMail = () => saved.emails.filter((message) => message.subject === "HonestPing waitlist");
+  const ispMail = () => saved.emails.filter((message) => message.subject === "ISP partnership");
+  assert.equal(waitlistMail().length, 10);
+  assert.equal(ispMail().length, 1);
+  assert.equal(saved.emails.some((message) => message.replyTo === "done@example.com"), false);
+  assert.match(ispMail()[0].text, /Saved note/);
+  assert.deepEqual(await retryUnsent({}), { waitlist: 0, isp: 0 });
+  await worker.scheduled({ cron: "*/15 * * * *" }, env, ctx);
+  assert.equal(waitlistMail().length, 11);
+  assert.equal(ispMail().length, 1);
+  assert.equal([...saved.waitlist.values()].every((row) => row.notifiedAt), true);
 });
 
 test("missing Turnstile config fails closed", async () => {
@@ -335,6 +550,8 @@ test("preview worker config is separate from production and Pages mail", () => {
   assert.match(preview, /honestping-web-preview\.honestping\.workers\.dev/);
   assert.match(preview, /ORIGIN_BASE/);
   assert.match(preview, /cursor\/waitlist-d1-bbe4/);
+  assert.match(preview, /"crons": \["\*\/15 \* \* \* \*"\]/);
+  assert.match(workerConfig.slice(0, workerConfig.indexOf('"env"')), /"crons": \["\*\/15 \* \* \* \*"\]/);
   assert.match(workerConfig, /"name": "honestping-web"/);
   assert.equal(workerConfig.includes("hello@honestping.com"), true);
   assert.equal(workerConfig.includes("ansonmitchell@gmail.com"), false);

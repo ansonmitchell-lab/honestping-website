@@ -37,6 +37,10 @@
   "secrets": {
     "required": ["TURNSTILE_SECRET"]
   },
+  // env.preview sets the same cron again so a preview deploy does not depend on inheritance.
+  "triggers": {
+    "crons": ["*/15 * * * *"]
+  },
   "previews": {
     "d1_databases": [
       {
@@ -87,6 +91,9 @@
       },
       "secrets": {
         "required": ["TURNSTILE_SECRET"]
+      },
+      "triggers": {
+        "crons": ["*/15 * * * *"]
       }
     }
   }
