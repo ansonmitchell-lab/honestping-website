@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>HonestPing · Network health, explained</title>
-  <meta name="description" content="HonestPing is a Windows app that explains whether your internet is actually working, in plain language, with clear status, evidence, and history. Not bars. Not a vanity speed number.">
+  <meta name="description" content="See if your internet is really working, and if you’re getting the speed you pay for. Plain language, for Windows.">
   <meta name="theme-color" content="#07131f">
   <link rel="canonical" href="https://www.honestping.com/">
 
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.honestping.com/">
   <meta property="og:title" content="HonestPing · Network health, explained">
-  <meta property="og:description" content="Plain-language network health for Windows. Clear status, real evidence, and history, filling the gap between Wi-Fi bars and opaque enterprise tools.">
+  <meta property="og:description" content="See if your internet is really working, and if you’re getting the speed you pay for. Plain language, for Windows.">
   <meta property="og:image" content="https://www.honestping.com/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -20,14 +20,14 @@
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="HonestPing · Network health, explained">
-  <meta name="twitter:description" content="Plain-language network health for Windows. Clear status, real evidence, and history.">
+  <meta name="twitter:description" content="See if your internet is really working, and if you’re getting the speed you pay for. Plain language, for Windows.">
   <meta name="twitter:image" content="https://www.honestping.com/assets/og-image.png">
 
   <link rel="icon" href="assets/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20261005c">
+  <link rel="stylesheet" href="styles.css?v=20261008c">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -44,10 +44,10 @@
       <nav class="nav" aria-label="Primary">
         <a class="nav-link" href="#gamers">For gamers</a>
         <a class="nav-link" href="#wfh">For work</a>
-        <a class="nav-link" href="#streaming">In-Home Streaming</a>
-        <a class="nav-link" href="#value">What you get</a>
-        <a class="nav-link" href="#gap">The gap</a>
-        <a class="nav-link" href="#preview">Preview</a>
+        <a class="nav-link" href="#streaming">For streaming</a>
+        <a class="nav-link" href="#isp">Speed you pay for</a>
+        <a class="nav-link" href="#preview">Inside the app</a>
+        <a class="nav-link" href="isp.html">For ISPs</a>
         <a class="nav-link" href="about.html">About Us</a>
         <a class="btn btn-primary" href="#waitlist">Join the waitlist</a>
       </nav>
@@ -78,7 +78,7 @@
             <a class="btn btn-primary btn-lg" href="#waitlist">Join the waitlist</a>
             <a class="btn btn-ghost btn-lg" href="#gamers">For gamers</a>
           </div>
-          <p class="hero-note">Free Windows download coming soon · No public installer yet</p>
+          <p class="hero-note">Free for Windows. Coming soon.</p>
         </div>
 
         <div class="hero-gauge card" role="img" aria-label="Example reading: simulated HonestPing Overview dial. Demo ping around 28 milliseconds, jitter about 3 milliseconds, packet loss usually 0 percent with small blips. Not measuring this visitor.">
@@ -95,7 +95,7 @@
                 <span class="gauge-label">Current ping</span>
               </div>
             </div>
-            <span class="gauge-src">Internet target · ICMP</span>
+            <span class="gauge-src">Live ping (example)</span>
           </div>
           <div class="gauge-metrics">
             <div><span>Jitter</span><strong id="hero-jitter">3</strong><small>ms</small></div>
@@ -127,18 +127,18 @@
           <div class="gamers-showcase">
             <div class="gamers-points">
               <article class="gamers-card">
-                <span class="plan-tag">Free plan</span>
+                <span class="plan-tag">Free</span>
                 <h3>Know if you’re dead before they do</h3>
                 <p>
-                  Free plan puts a plain status in the ring: Healthy or Degraded.
+                  Free puts a plain status in the ring: Healthy or Degraded.
                   One glance mid-fight. No menus. No excuses when the trash talk starts.
                 </p>
               </article>
               <article class="gamers-card">
-                <span class="plan-tag plan-tag-pro">Pro plan</span>
+                <span class="plan-tag plan-tag-pro">Pro</span>
                 <h3>See the number that costs you the round</h3>
                 <p>
-                  Pro plan puts live ping in the center of the ring, with jitter and packet loss beside it.
+                  Pro puts live ping in the center of the ring, with jitter and packet loss beside it.
                   When ranked is on the line, you see the spike that just killed you.
                 </p>
               </article>
@@ -152,7 +152,7 @@
               </article>
             </div>
 
-            <figure class="gamers-visual" aria-label="Example HonestPing dial comparison for gamers: Free plan shows Healthy in the ring center, Pro plan shows sample ping with jitter and packet loss. Animated abstract controller and keys. No game or brand marks.">
+            <figure class="gamers-visual" aria-label="Example HonestPing dial comparison for gamers: Free shows Healthy in the ring center, Pro shows sample ping with jitter and packet loss. Animated abstract controller and keys. No game or brand marks.">
               <div class="gamers-hud" aria-hidden="true">
                 <span class="hud-sweep"></span>
                 <svg class="gamers-controller" viewBox="0 0 120 72" focusable="false">
@@ -179,7 +179,7 @@
 
               <div class="gamers-dials">
                 <div class="gamer-dial-card">
-                  <span class="gamer-tier">Free plan</span>
+                  <span class="gamer-tier">Free</span>
                   <div class="gamer-dial">
                     <div class="hp-dial-rim gamer-ring">
                       <div class="hp-dial-face">
@@ -191,7 +191,7 @@
                   <p class="gamer-dial-note">Status in the ring</p>
                 </div>
                 <div class="gamer-dial-card pro">
-                  <span class="gamer-tier">Pro plan</span>
+                  <span class="gamer-tier">Pro</span>
                   <div class="gamer-dial">
                     <div class="hp-dial-rim gamer-ring">
                       <div class="hp-dial-face">
@@ -218,12 +218,13 @@
       <div class="wrap">
         <div class="isp-panel">
           <div class="isp-head">
-            <span class="section-label">Are you getting what you pay for?</span>
-            <h2 class="isp-title" id="isp-heading">Your plan says one speed. HonestPing tells you the real one.</h2>
+            <div class="isp-label-row"><span class="section-label">Are you getting what you pay for?</span> <span class="plan-tag plan-tag-pro">Pro</span></div>
+            <h2 class="isp-title" id="isp-heading">Your plan says one speed. Your <span class="nowrap">7-day report</span> shows the real one.</h2>
             <p class="isp-intro">
-              Type in the download speed your provider advertises. HonestPing tests your real connection
-              over time, compares the results to that promise, and gives you a straight answer:
-              you’re getting what you pay for, or you’re getting ripped off.
+              Type in the download speed on your bill. HonestPing Pro tests your real connection three times
+              a day for a week and turns it into a 7-day report: a straight answer, you’re getting what you
+              pay for or you’re not, with dated evidence you can bring to your provider. If you’re short,
+              it can also show what that gap could be worth.
             </p>
           </div>
 
@@ -240,7 +241,7 @@
                 <span class="isp-step">02</span>
                 <div>
                   <h3>Test it for real, over time</h3>
-                  <p>HonestPing runs realistic speed tests across mornings, evenings, and weekends, not one lucky test at 3 a.m.</p>
+                  <p>Pro runs three short tests a day for 7 days, morning to evening plus a weekend day, while HonestPing is open. Not one lucky test at 3 a.m.</p>
                 </div>
               </li>
               <li class="isp-card">
@@ -253,16 +254,16 @@
               <li class="isp-card">
                 <span class="isp-step">04</span>
                 <div>
-                  <h3>Get a clear verdict</h3>
-                  <p>Getting what you pay for, or getting ripped off. Plain words, backed by a dated report you can export and send your provider.</p>
+                  <h3>Get your 7-day report</h3>
+                  <p>Getting what you pay for, Close to plan, or Under-delivering. Plain words, with every test dated, ready to copy or export.</p>
                 </div>
               </li>
             </ol>
 
-            <figure class="verdict-card" data-verdict-demo aria-label="Example HonestPing verdict: advertised 500 megabits per second, measured average 212 megabits per second over 7 days, 42 percent of advertised, verdict: you are not getting what you pay for">
+            <figure class="verdict-card" data-verdict-demo aria-label="Example HonestPing verdict: advertised 500 megabits per second, typical speed 212 megabits per second from 19 tests over 7 days, 42 percent of the plan, verdict: under-delivering">
               <div class="verdict-top">
                 <span class="status bad verdict-pill">Under-delivering</span>
-                <span class="verdict-period">Last 7 days · <span data-count="168">168</span> tests</span>
+                <span class="verdict-period">Example · 7-day test · <span data-count="19">19</span> tests</span>
               </div>
               <div class="verdict-compare">
                 <div class="verdict-stat">
@@ -271,29 +272,31 @@
                 </div>
                 <div class="verdict-stat measured">
                   <span>You actually get</span>
-                  <strong><span data-count="212">212</span><small>Mbps avg</small></strong>
+                  <strong><span data-count="212">212</span><small>Mbps typical</small></strong>
                 </div>
               </div>
               <div class="verdict-bar" aria-hidden="true">
                 <span class="verdict-fill" data-fill="42" style="width:42%"></span>
-                <span class="verdict-mark">Advertised</span>
               </div>
               <p class="verdict-pct"><strong><span data-count="42">42</span>%</strong> of the speed you pay for</p>
-              <p class="verdict-text verdict-reveal">You’re not getting what you pay for. Evenings drop as low as 96 Mbps. Here’s the evidence to send your provider.</p>
-              <p class="verdict-isp verdict-reveal">Provider detected automatically: <strong>Your ISP</strong>, tied to every result</p>
+              <p class="verdict-text verdict-reveal">You’re not getting what you pay for. Evenings drop as low as 96 Mbps. Copy the dated results and send them to your provider.</p>
+              <p class="verdict-isp verdict-reveal">Your provider’s name, filled in automatically: <strong>Your ISP</strong> (example)</p>
               <figcaption class="verdict-caption">Example verdict. Your numbers will be your own.</figcaption>
             </figure>
 
             <div class="isp-proof">
               <h3 class="isp-proof-label">
                 <svg class="isp-proof-icon" width="22" height="22" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 2 3.5 4.5v5c0 4 2.8 7.2 6.5 8.5 3.7-1.3 6.5-4.5 6.5-8.5v-5L10 2Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m7 10 2.2 2.2L13.3 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Solid proof to bring to your ISP
+                A dated record to bring to your provider
               </h3>
               <p class="isp-proof-intro">Let HonestPing build your case before disputing your bill or switching ISPs. Have the proof that you need. When you call your provider, you won’t be arguing from a feeling.</p>
+              <p class="isp-partner-line">Same tests and same results, whoever your provider is. <a href="isp.html">For ISPs</a></p>
               <ul class="isp-checklist">
-                <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Every test dated and timed, mornings, evenings, and weekends</span></li>
-                <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Your plan speed beside what you actually got, with the percentage</span></li>
-                <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Export as PDF or CSV, ready to attach to an email or a support chat</span></li>
+                <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Every test dated and timed, morning to evening, plus a weekend day</span></li>
+                <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Typical (median) speed beside your plan speed, with the percentage, so one bad test can’t skew it</span></li>
+                <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Home-side causes ruled out: a test on weak Wi-Fi, a busy PC, or a VPN is marked not counted</span></li>
+                <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>A report fingerprint, so anyone can check the numbers weren’t changed (coming soon)</span></li>
+                <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copy a summary, ready to paste into an email or a support chat</span></li>
               </ul>
             </div>
 
@@ -306,8 +309,8 @@
                   <path d="M10.5 13h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
                 </svg>
                 <div class="report-head-text">
-                  <strong class="report-title">HonestPing speed report</strong>
-                  <span class="report-meta"><span class="report-nowrap">Plan: 500 Mbps advertised</span> · <span class="report-nowrap">Provider: <span class="report-isp">Your ISP</span></span></span>
+                  <strong class="report-title">HonestPing 7-day report (example)</strong>
+                  <span class="report-meta"><span class="report-nowrap">Plan speed: 500 Mbps</span> · <span class="report-nowrap">Sep 28 to Oct 4</span></span>
                 </div>
               </div>
               <table class="report-table">
@@ -317,21 +320,73 @@
                 <tbody>
                   <tr class="report-row is-bad"><td>Mon Sep 28, 8:12 PM</td><td>118 Mbps</td><td><span class="report-pct">24%</span></td></tr>
                   <tr class="report-row is-warn"><td>Tue Sep 29, 7:05 AM</td><td>286 Mbps</td><td><span class="report-pct">57%</span></td></tr>
-                  <tr class="report-row is-ok"><td>Wed Sep 30, 1:30 PM</td><td>341 Mbps</td><td><span class="report-pct">68%</span></td></tr>
+                  <tr class="report-row is-warn"><td>Wed Sep 30, 1:30 PM</td><td>341 Mbps</td><td><span class="report-pct">68%</span></td></tr>
                   <tr class="report-row is-bad"><td>Thu Oct 1, 9:04 PM</td><td>96 Mbps</td><td><span class="report-pct">19%</span></td></tr>
                   <tr class="report-row is-bad"><td>Sat Oct 3, 7:48 PM</td><td>152 Mbps</td><td><span class="report-pct">30%</span></td></tr>
                 </tbody>
               </table>
-              <p class="report-summary"><strong>168 tests</strong> over 7 days · average <strong class="report-avg">212 Mbps</strong> (42% of plan)</p>
+              <p class="report-summary"><strong>19 tests</strong> over 7 days (5 shown) · typical speed <strong class="report-avg">212 Mbps</strong> (42% of plan) · evening low 96 Mbps</p>
+              <p class="report-method">Measured from your PC. Typical speed is the median of counted tests. Weak Wi-Fi and busy-PC tests are marked and left out.</p>
               <div class="report-export">
                 <span class="report-btn">
-                  <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 3v9m0 0-3.5-3.5M10 12l3.5-3.5M4 14.5V16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  Export report
+                  <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 12.5V3m0 0L6.5 6.5M10 3l3.5 3.5M6 9.5H5a1 1 0 0 0-1 1V16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-5.5a1 1 0 0 0-1-1h-1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Share report
                 </span>
-                <span class="report-export-note">Timestamped and ready to send your provider</span>
+                <span class="report-export-note">Copy a summary today. PDF coming soon.</span>
               </div>
-              <figcaption class="report-caption">Example report. Your numbers will be your own.</figcaption>
+              <figcaption class="report-caption">Example data. Your numbers will be your own. <a href="r/example/">See a full example 7-day report</a></figcaption>
             </figure>
+
+            <div class="isp-value">
+              <form class="savings-card" data-savings-demo aria-labelledby="savings-heading" novalidate>
+                <div class="savings-head">
+                  <h3 id="savings-heading">What could you be overpaying?</h3>
+                  <span class="draft-chip">Estimate</span>
+                </div>
+                <p class="savings-intro">Try your own numbers. The 7-day report uses this same estimate.</p>
+                <div class="savings-inputs">
+                  <label>Monthly bill
+                    <span class="savings-field"><span aria-hidden="true">$</span><input id="sv-bill" type="number" inputmode="decimal" min="0" max="1000" step="1" value="70" disabled></span>
+                  </label>
+                  <label>Plan speed
+                    <span class="savings-field"><input id="sv-plan" type="number" inputmode="numeric" min="1" max="10000" step="1" value="500" disabled><span aria-hidden="true">Mbps</span></span>
+                  </label>
+                  <label class="savings-wide">Typical speed from your 7-day report
+                    <span class="savings-slider"><input id="sv-typical-range" type="range" min="0" max="500" step="1" value="212" aria-label="Typical speed, slider" disabled><span class="savings-field savings-field-sm"><input id="sv-typical" type="number" inputmode="numeric" min="0" max="10000" step="1" value="212" disabled><span aria-hidden="true">Mbps</span></span></span>
+                  </label>
+                </div>
+                <div class="savings-result" aria-live="polite">
+                  <p class="savings-big"><span>About</span> <strong id="sv-month">$40</strong><span>/month</span></p>
+                  <p class="savings-year">about <strong id="sv-year">$484</strong> a year for speed you’re not getting (estimate)</p>
+                  <p class="savings-share" id="sv-share">Typical speed is 42% of your plan.</p>
+                </div>
+                <p class="savings-formula">Monthly bill × (1 minus typical speed ÷ plan speed). Zero when you get your plan speed or better.</p>
+                <p class="savings-fine">Example values: a $70 bill, a 500 Mbps plan, and 212 Mbps typical, the same week as the report above. An estimate, not a bill and not a refund. Your provider decides whether to offer any credit.</p>
+              </form>
+
+              <div class="uses-card">
+                <h3>How people use their 7-day report</h3>
+                <ul class="uses-list">
+                <li>
+                  <svg class="uses-icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="15" height="10" rx="2"/><path d="M2.5 8.5h15M6 12h3"/></svg>
+                  <div><h4>Ask for a credit or a fix</h4><p>Send the dated results with your request. Your provider decides what, if anything, to offer.</p></div>
+                </li>
+                <li>
+                  <svg class="uses-icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10l-3-3M16 13H6l3 3"/></svg>
+                  <div><h4>Ask for a plan that matches</h4><p>Ask to move to a plan priced for the speed you actually get.</p></div>
+                </li>
+                <li>
+                  <svg class="uses-icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4H4.5A1.5 1.5 0 0 0 3 5.5v9A1.5 1.5 0 0 0 4.5 16H8"/><path d="m12 6 4 4-4 4M16 10H8"/></svg>
+                  <div><h4>Back up a cancellation or a switch</h4><p>Show why you’re leaving with dates and times, not a hunch.</p></div>
+                </li>
+                <li>
+                  <svg class="uses-icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 4.5a3.5 3.5 0 0 0-4.6 4.4L3.5 13.3a1.4 1.4 0 0 0 2 2l4.4-4.4a3.5 3.5 0 0 0 4.4-4.6l-2 2-1.8-.4-.4-1.8 2.4-1.6Z"/></svg>
+                  <div><h4>Ask for a tech visit</h4><p>Show that Wi-Fi, your PC, and a VPN were ruled out, instead of starting over with a router restart.</p></div>
+                </li>
+                </ul>
+                <p class="uses-fine">Ways to use it, not promised outcomes.</p>
+              </div>
+            </div>
 
             <div class="isp-cta">
               <a class="btn btn-primary btn-lg" href="#waitlist">Join the waitlist</a>
@@ -358,28 +413,30 @@
           <div class="wfh-showcase">
             <div class="wfh-features">
               <article class="wfh-card">
-                <h3>Live connection-quality ring</h3>
-                <p>A clear ring on the desktop shows whether your path looks healthy right now, while the call is still going.</p>
+                <h3>Live status in your taskbar</h3>
+                <p>A color-coded tray icon shows whether your connection looks healthy, while the call is still going.</p>
               </article>
               <article class="wfh-card">
                 <h3>Jitter and packet-loss tracking</h3>
-                <p>See the chop and drops that make voices break up, not just a speed number from earlier this morning.</p>
+                <p>See the jitter and dropped packets that make voices break up, not just a speed number from earlier this morning.</p>
               </article>
               <article class="wfh-card">
                 <h3>“Is it just me?” check</h3>
-                <p>Confirm whether the trouble is on your side before you apologize to the room or reboot half the house.</p>
+                <p>Swap a quick code with a coworker or friend to see whose side the problem is on, before you apologize to the room.</p>
               </article>
               <article class="wfh-card">
+                <span class="plan-tag plan-tag-pro">Pro</span>
                 <h3>Trace</h3>
                 <p>Shows where along the path it slows down, so you can tell a local Wi-Fi hiccup from something further out.</p>
               </article>
               <article class="wfh-card">
+                <span class="plan-tag plan-tag-pro">Pro</span>
                 <h3>Wi-Fi details</h3>
-                <p>Signal and link facts when the problem might be the wireless hop, not the wider internet.</p>
+                <p>Signal facts for your PC’s Wi-Fi, for when the problem might be the wireless link, not the wider internet.</p>
               </article>
               <article class="wfh-card">
-                <h3>History &amp; evidence</h3>
-                <p>Keep timed results you can show IT, your ISP, or yourself, instead of “it felt bad for a while.”</p>
+                <h3>History</h3>
+                <p>Keep timed results to show IT or your provider. 24 hours free, 7 days and export in Pro.</p>
               </article>
             </div>
 
@@ -414,7 +471,7 @@
             <h2 class="streaming-title" id="streaming-heading">In-Home Streaming</h2>
             <p class="streaming-intro">
               When your favorite streaming service glitches, the spinner doesn’t tell you whose fault it is.
-              HonestPing helps you know whether the problem is your internet or the service, so you can wait it out or fix your setup.
+              HonestPing helps you know whether the problem is your internet or the service, so you can wait it out or fix your setup. It runs on your Windows PC and checks your home connection from there.
             </p>
           </div>
 
@@ -422,15 +479,16 @@
             <div class="streaming-features">
               <article class="streaming-card">
                 <h3>“Is it just me?” check</h3>
-                <p>One tap tells you if the problem is on your end or out on the service, before you restart the router.</p>
+                <p>Compare with another PC at home or a friend’s, so you know whose side it’s on before you restart the router.</p>
               </article>
               <article class="streaming-card">
-                <h3>Streaming-service status</h3>
-                <p>Simple status icons for popular services sit next to your own results, so a bad night on their side is easy to spot.</p>
+                <span class="plan-tag plan-tag-pro">Pro</span>
+                <h3>Service checks</h3>
+                <p>See if popular streaming services are answering from your home, right next to your own results.</p>
               </article>
               <article class="streaming-card">
-                <h3>Live connection-quality ring</h3>
-                <p>A clear ring shows whether your connection looks healthy right now, while the show is still on screen.</p>
+                <h3>Live status ring</h3>
+                <p>The ring in the app and the tray icon show whether your connection looks healthy right now, while the show is still on screen.</p>
               </article>
               <article class="streaming-card">
                 <h3>Packet loss</h3>
@@ -438,15 +496,16 @@
               </article>
               <article class="streaming-card">
                 <h3>Speed test</h3>
-                <p>Check whether you have enough bandwidth for HD or 4K, measured on your connection, not someone else’s.</p>
+                <p>See your real download speed, measured on your connection, not someone else’s.</p>
               </article>
               <article class="streaming-card">
+                <span class="plan-tag plan-tag-pro">Pro</span>
                 <h3>Wi-Fi details</h3>
-                <p>Signal and link facts for when the weak spot is the wireless hop to the TV room, not the wider internet.</p>
+                <p>Signal facts for your PC’s Wi-Fi, a quick clue when the weak spot is the wireless link.</p>
               </article>
             </div>
 
-            <figure class="streaming-visual" aria-label="Abstract in-home streaming visual: an unbranded video frame with a buffering spinner, a row of generic status icons, and a HonestPing quality ring reading Healthy with packet loss and speed.">
+            <figure class="streaming-visual" aria-label="Abstract in-home streaming visual: an unbranded video frame with a buffering spinner, a row of generic service-check icons, and a HonestPing ring reading Healthy with packet loss and speed.">
               <div class="streaming-screen" aria-hidden="true">
                 <span class="streaming-spinner"></span>
                 <span class="streaming-progress"><i></i></span>
@@ -487,8 +546,8 @@
                 </div>
               </div>
 
-              <p class="streaming-visual-status"><span class="status warn">Not just you: the service is having issues</span></p>
-              <figcaption class="streaming-caption">Abstract player and generic status icons.</figcaption>
+              <p class="streaming-visual-status"><span class="status warn">Your connection looks fine. One service is slow to answer.</span></p>
+              <figcaption class="streaming-caption">Example readings · Abstract player and generic service icons.</figcaption>
             </figure>
           </div>
         </div>
@@ -502,7 +561,7 @@
         <h2 class="section-title" id="value-heading">Answers you can act on, not numbers to stare at</h2>
         <p class="section-intro">
           When a call stutters or a stream stalls, you need to know if it’s your Wi-Fi, your router,
-          or the wider internet. HonestPing checks real reachability and tells you what it found,
+          or the wider internet. HonestPing checks whether the internet is actually answering and tells you what it found,
           in language you’d say to a friend.
         </p>
 
@@ -511,8 +570,8 @@
             <span class="status warn">Full bars · no usable path</span>
             <h3>When the bars look fine and nothing works</h3>
             <p>
-              Signal strength is not the same as a working internet path. HonestPing probes independent
-              targets and separates “Wi-Fi is up” from “the internet is answering.” You stop guessing
+              Signal strength is not the same as a working internet path. HonestPing checks several
+              independent internet services and separates “Wi-Fi is up” from “the internet is answering.” You stop guessing
               whether to reboot the laptop, the router, or wait it out.
             </p>
             <p class="next"><strong>You get:</strong> a plain verdict plus the checks that back it up.</p>
@@ -522,7 +581,7 @@
             <span class="status good">Evidence, not vibes</span>
             <h3>Status you can point at</h3>
             <p>
-              “Your internet is responding.” Or it isn’t. Reply time, jitter, and packet loss sit next
+              “Your internet is responding.” Or it isn’t. Ping, jitter, and packet loss sit next
               to the verdict, so you (or whoever’s helping you) can see the same evidence without
               translating jargon first.
             </p>
@@ -537,7 +596,7 @@
               story than an afternoon of red. HonestPing keeps recent connection history so you can
               see what actually happened.
             </p>
-            <p class="next"><strong>You get:</strong> context before you change cables, ISPs, or plans.</p>
+            <p class="next"><strong>You get:</strong> context before you change cables, providers, or plans.</p>
           </article>
 
           <article class="card value-card">
@@ -557,12 +616,12 @@
     <!-- MARKET GAP -->
     <section class="section" id="gap" aria-labelledby="gap-heading">
       <div class="wrap">
-        <span class="section-label">The gap on the market</span>
-        <h2 class="section-title" id="gap-heading">There isn’t really anything like this</h2>
+        <span class="section-label">The gap in the market</span>
+        <h2 class="section-title" id="gap-heading">Built for the space in between</h2>
         <div class="card gap-panel">
           <p class="gap-lead">
             Most people are stuck between three incomplete options: the Wi-Fi icon on the taskbar,
-            a one-shot speed test that looks impressive and goes stale in a minute, or heavy
+            a one-time speed test that shows a single moment, or heavy
             monitoring built for IT desks, not for someone trying to finish a video call at home.
             <strong style="font-weight:600">HonestPing fills that middle:</strong>
             consumer-friendly, continuously honest, and explained in plain language.
@@ -574,15 +633,15 @@
               <h3>Radio bars &amp; “Connected”</h3>
               <p>
                 Show signal to the access point, not whether packets reach the internet.
-                Full bars can still mean dead DNS, a captive portal, or an upstream outage.
+                Full bars can still mean the internet isn’t answering: a sign-in page, a name-lookup failure, or an outage past your router.
               </p>
             </div>
             <div class="gap-col" role="listitem">
-              <span class="tag">What people Google</span>
-              <h3>Vanity speed tests</h3>
+              <span class="tag">What people search for</span>
+              <h3>One-time speed tests</h3>
               <p>
-                A peak megabit number under ideal conditions. Useful once; silent about jitter,
-                dropouts, and whether your path was healthy five minutes ago.
+                A single number from a single moment. Silent about jitter, dropouts, and whether
+                your connection was healthy five minutes ago.
               </p>
             </div>
             <div class="gap-col" role="listitem">
@@ -597,7 +656,7 @@
               <span class="tag">HonestPing</span>
               <h3>Explained network health</h3>
               <p>
-                Live reachability, plain-language status, evidence beside the verdict, and history
+                Live checks, plain-language status, ping, jitter, and packet loss beside the verdict, and history
                 in a Windows app that feels like a product, not a lab console.
               </p>
             </div>
@@ -618,15 +677,15 @@
         <div class="benefits">
           <article class="card benefit">
             <h3>Before you blame the call app</h3>
-            <p>Check whether internet targets are answering. If they are, the problem may be the app, not your pipe.</p>
+            <p>Check whether the internet is answering. If they are, the problem may be the app, not your pipe.</p>
           </article>
           <article class="card benefit">
             <h3>Before you reboot everything</h3>
             <p>See if the failure is local Wi-Fi, the router hop, or further upstream, so you reboot the right box.</p>
           </article>
           <article class="card benefit">
-            <h3>When you call the ISP</h3>
-            <p>Bring times, reply-time spikes, and loss, not “it felt slow.” History turns a vague complaint into a ticket.</p>
+            <h3>When you call your provider</h3>
+            <p>Bring times, ping spikes, and dropped packets, not “it felt slow.” History turns a vague complaint into a ticket.</p>
           </article>
         </div>
       </div>
@@ -639,22 +698,22 @@
           <span class="section-label">Inside the app</span>
           <h2 class="section-title" id="preview-heading">Status first. Numbers second.</h2>
           <p class="section-intro">
-            Overview leads with a human verdict, the green→cyan dial for live ping, jitter and loss,
-            then recent history, exactly the layout you’ll see in the Windows build.
+            Overview leads with a plain verdict, then live ping, jitter, and packet loss, then recent
+            history. Same layout as the app.
           </p>
         </div>
         <figure class="card window" aria-label="HonestPing Overview screenshot">
           <div class="window-chrome" aria-hidden="true">
             <span class="dots"><i></i><i></i><i></i></span>
-            <span class="window-title">HonestPing · Overview · navy Neon</span>
+            <span class="window-title">HonestPing Overview (Pro view, example)</span>
           </div>
           <picture>
-            <source srcset="assets/app-preview.webp?v=20261005d" type="image/webp">
+            <source srcset="assets/app-preview.webp?v=20261008c" type="image/webp">
             <img
-              src="assets/app-preview.png?v=20261005d"
+              src="assets/app-preview.png?v=20261008c"
               width="1068"
               height="971"
-              alt="HonestPing Overview: Healthy badge, Your internet is responding, 28 ms ping dial, jitter and packet loss, and a 15-minute reply-time chart"
+              alt="HonestPing Overview: Healthy badge, Your internet is responding, example 28 ms ping in the ring, jitter and packet loss, and a 15-minute ping chart"
               loading="lazy"
               decoding="async">
           </picture>
@@ -679,8 +738,8 @@
         <div class="card waitlist-panel">
           <h2 id="waitlist-heading">Join the waitlist</h2>
           <p>
-            There’s no public download URL yet. Leave your email and we’ll tell you when the
-            Windows build is ready. Honest network health, explained.
+            There’s no public download yet. Leave your email and we’ll tell you when HonestPing
+            for Windows is ready. Honest network health, explained.
           </p>
           <form class="waitlist-form" id="waitlist-form" action="mailto:hello@honestping.com" method="get">
             <input type="hidden" name="subject" value="HonestPing waitlist">
@@ -695,12 +754,14 @@
               inputmode="email">
             <button class="btn btn-primary btn-lg" type="submit">Join the waitlist</button>
           </form>
+          <p class="waitlist-tiers">Free for Windows. Pro adds the 7-day speed test, longer history, and export.</p>
           <p class="waitlist-alt">
             Or email
             <a href="mailto:hello@honestping.com?subject=HonestPing%20waitlist">hello@honestping.com</a>
             ·
             <a href="about.html">About Us</a>
           </p>
+          <p class="waitlist-privacy">Your results stay on your PC. To show your provider’s name, HonestPing asks a public lookup service. You can turn that off.</p>
         </div>
       </div>
     </section>
@@ -708,15 +769,16 @@
 
   <footer class="site-footer">
     <div class="wrap">
-      <p>© <span id="year">2026</span> <span class="footer-creator">Anson Mitchell</span> and <span class="footer-creator">Matt Lewis</span></p>
-      <p><a href="about.html">About Us</a> · <a href="https://www.honestping.com">www.honestping.com</a></p>
+      <p>© <span id="year">2026</span> Honest Ping LLC</p>
+      <p><a href="about.html">About Us</a> · <a href="isp.html">For ISPs</a> · <a href="https://www.honestping.com">www.honestping.com</a></p>
       <p class="footer-privacy">Waitlist mail is only used to notify you when HonestPing is available. No extra newsletters unless you ask.</p>
     </div>
   </footer>
 
-  <script src="waitlist.js?v=20261005c" defer></script>
-  <script src="gauge.js?v=20261005c" defer></script>
-  <script src="trace-demo.js?v=20261005c" defer></script>
-  <script src="verdict-demo.js?v=20261005c" defer></script>
+  <script src="waitlist.js?v=20261008c" defer></script>
+  <script src="gauge.js?v=20261008c" defer></script>
+  <script src="trace-demo.js?v=20261008c" defer></script>
+  <script src="verdict-demo.js?v=20261008c" defer></script>
+  <script src="savings-demo.js?v=20261008c" defer></script>
 </body>
 </html>
