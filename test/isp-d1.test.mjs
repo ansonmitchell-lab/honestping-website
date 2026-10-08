@@ -48,9 +48,19 @@ async function clear(db) {
   }
 }
 
+test("isp preview config does not bind a waitlist database", () => {
+  const text = readFileSync(new URL("../isp/wrangler.jsonc", import.meta.url), "utf8");
+  assert.equal(text.includes("c732d15a-f4c9-4f7d-8588-41f7774d41d1"), false);
+  assert.equal(text.includes("834af7c2-165f-4fb4-92b9-49b1aa0b3eb6"), false);
+  assert.equal(text.includes("honestping-waitlist"), false);
+  assert.match(text, /"database_name": "honestping-isp-preview-example"/);
+  assert.match(text, /"database_id": "7b86c7ad-3c6b-4af4-8d17-8b5a55bbb692"/);
+});
+
 test("isp migrations, isolation, k-min, and ingest", async (t) => {
   const proxy = await getPlatformProxy({
     configPath: "isp/wrangler.jsonc",
+    environment: "preview",
     remoteBindings: false,
     envFiles: [],
     persist: { path: ".wrangler/state/isp-trace-test" },

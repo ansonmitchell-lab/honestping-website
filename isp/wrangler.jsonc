@@ -4,23 +4,14 @@
   "main": "src/index.js",
   "compatibility_date": "2026-10-08",
   "account_id": "4e7e5db788ca85b49af0442d922ebc6e",
-  // Preview only. Do not deploy the top level config. It has no public route
-  // and the handler stays closed unless ALLOW_ISP_PREVIEW is set on env.preview.
+  // Preview only. Do not deploy this file without --env preview.
+  // The top level has no D1 binding, so a default deploy cannot reach a database.
   "workers_dev": false,
   "observability": {
     "enabled": true,
     "logs": { "enabled": true, "head_sampling_rate": 1 },
     "traces": { "enabled": true, "head_sampling_rate": 1 }
   },
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "honestping-waitlist",
-      "database_id": "c732d15a-f4c9-4f7d-8588-41f7774d41d1",
-      "preview_database_id": "834af7c2-165f-4fb4-92b9-49b1aa0b3eb6",
-      "migrations_dir": "migrations"
-    }
-  ],
   // K_MIN is the single group minimum for area counts, node alerts, and
   // node suggestions. Default 10. The owner has not decided the final value.
   "vars": {
@@ -34,8 +25,8 @@
       "d1_databases": [
         {
           "binding": "DB",
-          "database_name": "honestping-waitlist-preview",
-          "database_id": "834af7c2-165f-4fb4-92b9-49b1aa0b3eb6",
+          "database_name": "honestping-isp-preview-example",
+          "database_id": "7b86c7ad-3c6b-4af4-8d17-8b5a55bbb692",
           "migrations_dir": "migrations"
         }
       ],
