@@ -102,7 +102,7 @@ test("waitlist saves a lowercased email and notifies Anson", async () => {
     assert.equal(row.args.includes(IP), false);
     assert.equal(saved.emails.length, 1);
     assert.equal(saved.emails[0].subject, "HonestPing waitlist");
-    assert.equal(saved.emails[0].to, "ansonmitchell@gmail.com");
+    assert.equal(saved.emails[0].to, "hello@honestping.com");
     assert.equal(saved.emails[0].from.email, "waitlist@honestping.com");
     assert.equal(saved.emails[0].replyTo, "person@example.com");
     assert.equal(saved.emails[0].text.includes(IP), false);
@@ -336,6 +336,8 @@ test("preview worker config is separate from production and Pages mail", () => {
   assert.match(preview, /ORIGIN_BASE/);
   assert.match(preview, /cursor\/waitlist-d1-bbe4/);
   assert.match(workerConfig, /"name": "honestping-web"/);
+  assert.equal(workerConfig.includes("hello@honestping.com"), true);
+  assert.equal(workerConfig.includes("ansonmitchell@gmail.com"), false);
   assert.equal(pagesConfig.includes("\"send_email\""), false);
   assert.match(pagesConfig, /Pages Functions cannot use a send_email binding/);
 });

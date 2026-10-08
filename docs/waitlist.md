@@ -12,7 +12,7 @@ Nothing in this repo deploys itself. Preview and production stay on separate D1 
 - No raw IP is stored. The connecting IP is sent only to Turnstile siteverify, then dropped.
 - Turnstile action is `waitlist` or `isp`. The token must match that action and a hostname in `TURNSTILE_HOSTNAMES`. On `honestping.com` and `www.honestping.com`, `localhost` and `127.0.0.1` are ignored even if they are listed.
 - The visitor is not emailed. The footer line stays true: waitlist mail is only used to notify them when HonestPing is available.
-- If JavaScript does not run, the link under the form still opens a message to `hello@honestping.com`, which already forwards to `ansonmitchell@gmail.com`.
+- If JavaScript does not run, the link under the form still opens a message to `hello@honestping.com`.
 - `isp-contact.js` matches the form on draft PR #16 (`isp-contact-form`, `ic-name`, `ic-company`, `ic-email`, `ic-subs`, `ic-message`). That page is not on `main`. When the two PRs merge, keep this `isp-contact.js`.
 
 `functions/lib/submit.js` is the handler. `worker/index.js` calls it for `/api/waitlist` and `/api/isp`. Every other path proxies GitHub raw. The proxy base comes from `ORIGIN_BASE`. When that var is unset, the base is `https://raw.githubusercontent.com/ansonmitchell-lab/honestping-website/main`.
@@ -64,7 +64,7 @@ Account `4e7e5db788ca85b49af0442d922ebc6e`.
 | Binding | Name | Preview Worker `honestping-web-preview` | Production Worker `honestping-web` |
 | --- | --- | --- | --- |
 | D1 | `DB` | `834af7c2-165f-4fb4-92b9-49b1aa0b3eb6` | `c732d15a-f4c9-4f7d-8588-41f7774d41d1` |
-| Send email | `EMAIL` | From `waitlist@honestping.com` only, to `ansonmitchell@gmail.com` only | Same |
+| Send email | `EMAIL` | From `waitlist@honestping.com` only, to `hello@honestping.com` only | Same |
 | Var | `TURNSTILE_HOSTNAMES` | `honestping-web-preview.honestping.workers.dev` | `www.honestping.com,honestping.com` |
 | Var | `ORIGIN_BASE` | `https://raw.githubusercontent.com/ansonmitchell-lab/honestping-website/cursor/waitlist-d1-bbe4` | Unset. The script defaults to the `main` raw URL above. |
 | Secret | `TURNSTILE_SECRET` | Secret for sitekey `0x4AAAAAAFQof7EbIcyPa73s`. Not in git. | Same secret. Not in git. |
@@ -77,7 +77,13 @@ Do not put `localhost` on the production hostname list.
 
 `preview_database_id` on the production D1 binding is only for local `wrangler dev --remote` and `d1 ... --preview`. A dry-run binding table can print `834af7c2-165f-4fb4-92b9-49b1aa0b3eb6` because that display prefers `preview_database_id`. The id `wrangler deploy` uploads for production is `database_id` `c732d15a-f4c9-4f7d-8588-41f7774d41d1`.
 
-`ansonmitchell@gmail.com` is already a verified Email Routing destination, and `hello@honestping.com` already forwards there. Before the first real submit, open Compute, Email Service, Email Sending, and onboard `honestping.com` if it is not listed. The from address has to be on a domain that can send.
+The binding sends only to the verified destination `hello@honestping.com`. That address was added on 2026-10-08 and is not verified yet. Cloudflare mailed a verification link to the Google Workspace inbox for `hello@honestping.com`. Open that message and choose Verify email address. Until that click, sends do not deliver.
+
+Email Routing for `honestping.com` is enabled and its status is `misconfigured` because the root MX records are Google's (`mx.foreign`). Do not use the dashboard repair that replaces those MX records with `route1.mx.cloudflare.net`, `route2.mx.cloudflare.net`, and `route3.mx.cloudflare.net`. Leave the Google MX, the root SPF record, `google._domainkey`, and the Google site verification TXT as they are.
+
+The previous Email Routing rule for `hello@honestping.com` is disabled. It does not receive mail while MX stays on Google.
+
+A send to a verified destination is outbound from Cloudflare. It does not need Cloudflare to receive mail for the domain. The root SPF record already includes `_spf.mx.cloudflare.net`. This path is not confirmed until the verification click is done and a preview submit actually arrives at `hello@honestping.com`. If that send fails while routing stays misconfigured, the next option is Cloudflare Email Sending on the Workers Paid plan, which adds records only under `cf-bounce.honestping.com` (`MX`, SPF, and `cf-bounce._domainkey`) and can also add a `_dmarc` TXT. That is a paid plan (3,000 sends a month, then $0.35 per 1,000). Do not onboard it unless the verified-destination send fails, and review the records before accepting them so the root MX is not replaced.
 
 In Turnstile, the existing widget must allow `www.honestping.com`, `honestping.com`, and `honestping-web-preview.honestping.workers.dev`. Do not create a second widget. If the deploy prints a different workers.dev host, put that host in `TURNSTILE_HOSTNAMES` and deploy the preview env again before submitting.
 
@@ -104,7 +110,7 @@ printf '%s' "$TURNSTILE_SECRET" | npx wrangler secret put TURNSTILE_SECRET --con
 ```
 
 4. Open `https://honestping-web-preview.honestping.workers.dev/`. The pages come from this branch because `ORIGIN_BASE` points at `cursor/waitlist-d1-bbe4` on GitHub raw. `main` is unchanged.
-5. Submit the waitlist form. You should see "You're on the list. We'll email you when HonestPing is ready." and no mail app. A new row emails Anson from `waitlist@honestping.com` with the subject `HonestPing waitlist`. Submit the same address again: the thank-you shows, and no second email arrives.
+5. Submit the waitlist form. You should see "You're on the list. We'll email you when HonestPing is ready." and no mail app. A new row emails `hello@honestping.com` from `waitlist@honestping.com` with the subject `HonestPing waitlist`. Submit the same address again: the thank-you shows, and no second email arrives. The first real send waits on the destination verification click described above.
 6. The row should be in `honestping-waitlist-preview`, not `honestping-waitlist`.
 
 `secret put` and `deploy` for this env publish the preview Worker immediately. They do not publish the live site when `--env preview` is present.
