@@ -91,7 +91,7 @@
       <h2 id="short-version">The short version</h2>
       <ul>
         <li><strong>Your results stay on your PC unless you share them. One thing is sent automatically, and you can turn it off: a lookup of your provider's name.</strong> Ping history, speed tests, incidents, your device list and your settings are stored on your PC. We don't have a copy. To show your provider, HonestPing asks a public lookup service, which sees your public IP address. We don't receive it.</li>
-        <li><strong>Everything else is sent only when you choose:</strong> joining the waitlist. In this version, bug reports and feature requests are not sent to us.</li>
+        <li><strong>Everything else is sent only when you choose:</strong> joining the waitlist. The public version of the app doesn't send bug reports or feature requests to us.</li>
         <li><strong>We don't sell your personal data, show ads, or use advertising trackers.</strong></li>
         <li><strong>You can ask us</strong> to see or delete what we hold. Write to <a href="mailto:hello@honestping.com">hello@honestping.com</a>.</li>
       </ul>
@@ -124,7 +124,9 @@
       <p>In this version, crash reports are saved on your PC and aren't sent to us.</p>
 
       <h3 id="bug-reports">3.3 Bug reports and feature requests</h3>
-      <p><strong>Bug reports and feature requests.</strong> In this version, this website does not receive bug reports or feature requests.</p>
+      <p><strong>Bug reports and feature requests.</strong> The public version of the app doesn't send bug reports or feature requests to us. If you email us instead, your message stays in our email (Google) until we no longer need it, and we'll delete it if you ask.</p>
+      <!-- Keep identical to the app's in-form notice (app PR 37). If the feedback service retention or redactor changes, update this text in the same PR. -->
+      <p><strong>Preview features.</strong> If you turn on preview features and send a bug report or feature request from the app, it goes to our feedback service, which runs on Cloudflare. It includes what you type, any screenshot you add, and only the details you tick: app version, Windows version, recent log lines, and the screen you were on. We try to remove personal details such as email addresses, IP addresses, and computer and Wi-Fi names from the text. We don't check screenshots, and we can't catch everything you type, so please leave out names, phone numbers and street addresses. We delete reports and screenshots after 12 months, or sooner if you ask at hello@honestping.com.</p>
 
       <h3 id="provider-lookup">3.4 Provider name lookup</h3>
       <p>To show your provider, HonestPing asks a public lookup service, which sees your public IP address. We don't receive it. In order, HonestPing tries api.ipify.org, Cloudflare (1.1.1.1/cdn-cgi/trace) and icanhazip.com for your public IP address, then ipapi.co and ipwho.is for the provider name. These services receive your public IP address and handle it under their own privacy policies. HonestPing doesn't show your IP address, save it, or send it to us. On by default in the US and most other regions. In the EEA, the UK, Switzerland and Canada, or if your region is unknown, it runs only if you allow it. Turn it off with <strong>Settings → Privacy → Show my provider's name</strong> (or set <code>Isp=0</code> in settings.txt), and it stops right away.</p>
@@ -161,7 +163,11 @@
             </tr>
             <tr>
               <td>Bug reports and feature requests</td>
-              <td>Not received in this version</td>
+              <td>Public version: not sent to us</td>
+            </tr>
+            <tr>
+              <td>Feedback service</td>
+              <td>12 months</td>
             </tr>
             <tr>
               <td>Waitlist email</td>

@@ -113,14 +113,17 @@ def main():
             "stores these only on your PC",
             "One thing is sent automatically, and you can turn it off: a lookup of your provider's name.",
             "In this version, crash reports are saved on your PC and aren't sent to us.",
-            "In this version, this website does not receive bug reports or feature requests.",
+            "The public version of the app doesn't send bug reports or feature requests to us.",
+            "If you email us instead, your message stays in our email (Google) until we no longer need it, and we'll delete it if you ask.",
             "In the EEA, the UK, Switzerland and Canada, or if your region is unknown, it runs only if you allow it.",
             "Provider name lookup",
             "Show my provider's name",
             "We don't receive it.",
             "LAN compare is off until you turn it on.",
             "on your home network",
-            "Not received in this version",
+            "Public version: not sent to us",
+            "<td>Feedback service</td>",
+            "<td>12 months</td>",
             "Last updated:",
             "October 8, 2026",
             "Cloudflare, which hosts our website, processes standard connection data such as your IP address and browser type to deliver the site and protect it from attacks.",
@@ -150,6 +153,20 @@ def main():
         check("90 days" not in body, "/privacy still states a 90-day retention period")
         check("Two things are sent automatically" not in body, "/privacy still says two things are sent automatically")
         check("personal details masked" not in body, "/privacy still says personal details are masked")
+        check(
+            "In this version, this website does not receive bug reports or feature requests." not in body,
+            "old bug-report sentence is still on /privacy",
+        )
+        preview = re.sub(r"\s+", " ", visible_text(body)).strip()
+        preview_paragraph = (
+            "Preview features. If you turn on preview features and send a bug report or feature request from the app, "
+            "it goes to our feedback service, which runs on Cloudflare. It includes what you type, any screenshot you add, "
+            "and only the details you tick: app version, Windows version, recent log lines, and the screen you were on. "
+            "We try to remove personal details such as email addresses, IP addresses, and computer and Wi-Fi names from the text. "
+            "We don't check screenshots, and we can't catch everything you type, so please leave out names, phone numbers and street addresses. "
+            "We delete reports and screenshots after 12 months, or sooner if you ask at hello@honestping.com."
+        )
+        check(preview_paragraph in preview, "/privacy is missing the Preview features paragraph")
 
         updated_js = (ROOT / "privacy-updated.js").read_text(encoding="utf-8")
         date_match = re.search(r'HONESTPING_POLICY_UPDATED = "([^"]+)"', updated_js)
