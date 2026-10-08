@@ -720,7 +720,7 @@ input:focus-visible {
   grid-template-columns: 1fr;
 }
 @media (min-width: 640px) {
-  .creators-grid { grid-template-columns: 1fr 1fr; }
+  .creators-grid { grid-template-columns: minmax(0, 360px); }
 }
 .creator-card {
   padding: 22px;
