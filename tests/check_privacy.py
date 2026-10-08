@@ -89,6 +89,7 @@ def main():
             "Provider (ISP name) lookup",
             "the UK and Quebec",
             "the UK, and Quebec",
+            "Quebec",
         )
         for phrase in absent:
             check(phrase not in body, f"/privacy still contains: {phrase}")
