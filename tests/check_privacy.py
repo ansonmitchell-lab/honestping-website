@@ -126,6 +126,9 @@ def main():
             "<td>12 months</td>",
             "Last updated:",
             "October 10, 2026",
+            "bug reports you've written but haven't sent yet, which you can delete",
+            "an app log, which stays on your PC unless you choose to attach recent lines to a bug report",
+            "Cloudflare (website hosting, security, and our feedback service's servers and storage)",
             "Cloudflare, which hosts our website, processes standard connection data such as your IP address and browser type to deliver the site and protect it from attacks.",
             "We don't use this data to identify visitors.",
             "We use your email only to tell you when HonestPing is available.",
@@ -161,9 +164,9 @@ def main():
         preview_paragraph = (
             "Preview features. If you turn on preview features and send a bug report or feature request from the app, "
             "it goes to our feedback service, which runs on Cloudflare. It includes what you type, any screenshot you add, "
-            "and only the details you tick: app version, Windows version, recent log lines, and the screen you were on. "
-            "We try to remove personal details such as email addresses, IP addresses, and computer and Wi-Fi names from the text. "
-            "We don't check screenshots, and we can't catch everything you type, so please leave out names, phone numbers and street addresses. "
+            "and only the details you tick: app version, Windows version, and the screen you were on. "
+            "Recent log lines are attached only if you tick the box. We try to remove personal details from them, and you can preview them before sending. "
+            "We don't check screenshots, and we can't catch everything you type, so please leave out passwords, account numbers, names, phone numbers and street addresses. "
             "We delete reports and screenshots after 12 months, or sooner if you ask at hello@honestping.com."
         )
         check(preview_paragraph in preview, "/privacy is missing the Preview features paragraph")
@@ -189,7 +192,7 @@ def main():
 
         with urlopen(f"http://127.0.0.1:{port}/privacy/subprocessors") as response:
             sub_body = response.read().decode("utf-8")
-        check("Cloudflare (website hosting and security)" in sub_body, "subprocessors page is missing Cloudflare")
+        check("Cloudflare (website hosting, security, and our feedback service's servers and storage)" in sub_body, "subprocessors page is missing Cloudflare")
         check("Google (email)" in sub_body, "subprocessors page is missing Google")
         check("GitHub" not in sub_body, "subprocessors page names GitHub")
         check(
