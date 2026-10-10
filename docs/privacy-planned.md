@@ -17,6 +17,8 @@ Before enabling: the scrubber removes file names under user folders, not just th
 - **US and most other regions:** on by default. You can turn it off at any time. When you do, HonestPing shows "Crash reports are off. Any report waiting to be sent was deleted." and nothing is sent after that.
 - **The EEA, the UK, Switzerland and Canada, or if your region is unknown:** Crash reports and provider name lookup happen only if you allow them. HonestPing asks the first time it starts. HonestPing decides this on your PC from your Windows region setting. It doesn't look up your location.
 
+Two things are sent automatically, and you can turn off both: crash reports and provider name lookup.
+
 **What a crash report contains**
 
 - HonestPing version and Windows version
@@ -110,7 +112,7 @@ Short version, parked phrase:
 
 > sharing a report with your internet provider
 
-The live page says: "Everything else is sent only when you choose: bug reports, feature requests, and joining the waitlist."
+The live page says: "Everything else is sent only when you choose: joining the waitlist."
 
 Your choices, parked sentence:
 
