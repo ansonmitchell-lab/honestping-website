@@ -15,7 +15,7 @@ Before enabling: the scrubber removes file names under user folders, not just th
 **Your choice.** Crash reports are controlled by **Settings → Privacy → Send crash reports automatically**. You can change this anytime in Settings → Privacy.
 
 - **US and most other regions:** on by default. You can turn it off at any time. When you do, HonestPing shows "Crash reports are off. Any report waiting to be sent was deleted." and nothing is sent after that.
-- **The EEA, the UK, Switzerland and Canada, or if your region is unknown:** Crash reports and provider name lookup happen only if you allow them. HonestPing asks the first time it starts. HonestPing decides this on your PC from your Windows region setting. It doesn't look up your location.
+- **The EEA, the UK, Switzerland and Canada, or if your region is unknown:** Crash reports and provider name lookup happen only if you allow them. In these regions they stay off until you turn them on in Settings. HonestPing decides this on your PC from your Windows region setting. It doesn't look up your location.
 
 Two things are sent automatically, and you can turn off both: crash reports and provider name lookup.
 
