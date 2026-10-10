@@ -6,6 +6,10 @@ Not published. These sections and sentences are marked planned in the privacy dr
 
 Not on the live page. In this version, crash reports are saved on the PC and are not sent.
 
+**Before enabling**
+
+Before enabling: the scrubber removes file names under user folders, not just the username segment.
+
 **What happens.** If HonestPing closes unexpectedly, it sends us a short report the next time it starts, so we can fix the problem. Personal and network details are removed first. If sending fails, it tries once more on the next launch. Then the file is deleted either way.
 
 **Your choice.** Crash reports are controlled by **Settings → Privacy → Send crash reports automatically**. You can change this anytime in Settings → Privacy.
@@ -32,7 +36,7 @@ Raw reports are deleted within 90 days.
 
 **How we use crash reports.** Only to find and fix bugs, group similar crashes, and check whether a new version is more stable. An AI service helps us sort reports. It works only for us and can't train on them. Reports aren't used for decisions about you. The AI service can't use reports to train its models and keeps them for no more than 30 days. People at HonestPing review its suggestions.
 
-**How long we keep them.** Raw reports are deleted within 90 days. We keep short crash "signatures" (the error type, where it happened in our code, the app version, and a count of how many installs hit it) for up to 24 months. They contain no log text or messages.
+**How long we keep them.** Raw reports are deleted within 90 days. We keep short crash "signatures" (the error type, where it happened in our code, the app version, and a count of how many installs hit it) for up to 24 months, but only if they contain no file paths, usernames, computer names or IP addresses. Otherwise we delete them within 90 days. They contain no log text or messages.
 
 If a report can't be sent, HonestPing tries once more the next time it starts, then deletes it. Turning crash reports off deletes any report waiting to be sent.
 

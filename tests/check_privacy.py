@@ -126,8 +126,8 @@ def main():
             "<td>12 months</td>",
             "Last updated:",
             "October 10, 2026",
-            "bug reports you've written but haven't sent yet, which you can delete",
-            "an app log, which stays on your PC unless you choose to attach recent lines to a bug report",
+            "bug reports you've written but haven't sent yet",
+            "an app log, which stays on your PC unless you choose to attach recent lines to a bug report or feature request",
             "Cloudflare (website hosting, security, and our feedback service's servers and storage)",
             "Cloudflare, which hosts our website, processes standard connection data such as your IP address and browser type to deliver the site and protect it from attacks.",
             "We don't use this data to identify visitors.",
@@ -155,6 +155,10 @@ def main():
         check("An AI service" not in body, "/privacy still describes an AI service")
         check("90 days" not in body, "/privacy still states a 90-day retention period")
         check("Two things are sent automatically" not in body, "/privacy still says two things are sent automatically")
+        check(
+            "bug reports you've written but haven't sent yet, which you can delete" not in body,
+            "/privacy still has the old unsent bug report list item",
+        )
         check("personal details masked" not in body, "/privacy still says personal details are masked")
         check(
             "In this version, this website does not receive bug reports or feature requests." not in body,
@@ -229,6 +233,15 @@ def main():
         check("The AI service can't use reports to train its models and keeps them for no more than 30 days." in planned, "planned doc is missing the AI retention line")
         check("We'll add our AI service here before any reports are shared with it." in planned, "planned doc is missing the subprocessors AI line")
         check("Raw reports are deleted within 90 days." in planned, "planned doc is missing the 90-day crash deletion line")
+        check(
+            'We keep short crash "signatures" (the error type, where it happened in our code, the app version, and a count of how many installs hit it) for up to 24 months, but only if they contain no file paths, usernames, computer names or IP addresses. Otherwise we delete them within 90 days.' in planned,
+            "planned doc is missing the crash signatures sentence",
+        )
+        check(
+            "Before enabling: the scrubber removes file names under user folders, not just the username segment." in planned,
+            "planned doc is missing the auto-send scrubber gate",
+        )
+        check("We keep reports for 12 months." not in planned, "planned doc still keeps crash or bug reports for 12 months")
         check("We don't store it." in planned, "planned doc is missing the IP not stored line")
         check("If a report can't be sent, HonestPing tries once more the next time it starts, then deletes it." in planned, "planned doc is missing the retry line")
         for heading in (
