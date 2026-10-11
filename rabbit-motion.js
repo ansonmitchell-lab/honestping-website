@@ -157,7 +157,9 @@
     rest(slot);
     el.addEventListener("mouseenter", function () { replay(slot); });
     el.addEventListener("focus", function () {
-      if (el.matches(":focus-visible")) replay(slot);
+      requestAnimationFrame(function () {
+        if (document.activeElement === el && el.matches(":focus-visible")) replay(slot);
+      });
     });
   });
 
