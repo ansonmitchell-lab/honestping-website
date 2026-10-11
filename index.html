@@ -27,7 +27,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20261011a">
+  <link rel="stylesheet" href="styles.css?v=20261011b">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -139,23 +139,24 @@
           <div class="gamers-showcase">
             <div class="tier-row" aria-label="Example gamer tiers">
               <figure class="tier-card tier-s">
-                <svg class="tier-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-                  <path d="M32 6 52 14v16c0 12-8 20-20 24C20 50 12 42 12 30V14L32 6Z" fill="none" stroke="currentColor" stroke-width="2.4"/>
-                  <path d="M24 26h16c0 6-4 8-8 8h-4v4h12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <figcaption><strong>Esports Ready</strong><span>Top tier. Example mark.</span></figcaption>
+                <img class="tier-mark" src="assets/esports-medal-mark-s.svg?v=20261011b" width="72" height="72" alt="">
+                <figcaption><strong>Esports Ready</strong><span>90 to 100. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-silver">
-                <svg class="tier-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="32" cy="32" r="18" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
-                <figcaption><strong>Silver</strong><span>Example mark.</span></figcaption>
+                <img class="tier-mark" src="assets/tier-silver.svg?v=20261011b" width="72" height="72" alt="">
+                <figcaption><strong>Silver</strong><span>80 to 89. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-bronze">
-                <svg class="tier-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="32" cy="32" r="18" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="32" cy="32" r="8" fill="currentColor"/></svg>
-                <figcaption><strong>Bronze</strong><span>Example mark.</span></figcaption>
+                <img class="tier-mark" src="assets/tier-bronze.svg?v=20261011b" width="72" height="72" alt="">
+                <figcaption><strong>Bronze</strong><span>65 to 79. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-steel">
-                <svg class="tier-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect x="16" y="16" width="32" height="32" rx="6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
-                <figcaption><strong>Steel</strong><span>Example mark.</span></figcaption>
+                <img class="tier-mark" src="assets/tier-steel.svg?v=20261011b" width="72" height="72" alt="">
+                <figcaption><strong>Steel</strong><span>50 to 64. Example data.</span></figcaption>
+              </figure>
+              <figure class="tier-card tier-steel">
+                <img class="tier-mark" src="assets/tier-steel-low.svg?v=20261011b" width="72" height="72" alt="">
+                <figcaption><strong>Steel</strong><span>0 to 49. Example data.</span></figcaption>
               </figure>
             </div>
             <p class="tier-note">Example data. Tiers are a reading of that test, not a promise about the next match.</p>
@@ -223,10 +224,33 @@
               with a day-by-day strip and the hours that ran slow. A PDF to bring to your provider is coming soon.
               If the week is short, you may be overpaying. That is an estimate. Your provider decides.
             </p>
-            <p class="isp-peace">The point is peace of mind. You can see the week instead of wondering after one slow evening.</p>
+            <p class="isp-peace">Even if the week comes back good, that is peace of mind. You can see you are getting what you pay for, and you can run it again if something starts to feel off.</p>
+            <p class="isp-actions">
+              <a href="#week-demo">Watch a 7-day example</a>
+              <a href="#week-demo">See 7-day report demo</a>
+              <a href="#waitlist">Start a 7-day Pro report</a>
+            </p>
+            <p class="isp-pro-note">Get unlimited 7-day reports with Pro. Pro checkout is coming soon.</p>
           </div>
 
           <div class="isp-showcase">
+            <figure class="week-demo" id="week-demo">
+              <div class="week-demo-head">
+                <h3>Watch a 7-day example</h3>
+                <span class="draft-chip">Example data</span>
+              </div>
+              <div class="week-demo-frame">
+                <video id="week-demo-video" muted playsinline preload="metadata" width="966" height="640">
+                  <source src="assets/demo-timelapse-light.mp4?v=20261011b" type="video/mp4">
+                  <img src="assets/demo-timelapse-light.gif?v=20261011b" alt="Example data. A sample 7-day report filling in across the week.">
+                </video>
+              </div>
+              <div class="week-demo-controls">
+                <button type="button" class="btn btn-ghost" id="week-demo-toggle">Play</button>
+                <a href="#week-demo">See 7-day report demo</a>
+              </div>
+              <p class="week-demo-note">Example data. A sample week, not a test of this PC.</p>
+            </figure>
             <ol class="isp-flow">
               <li class="isp-card">
                 <span class="isp-step">01</span>
@@ -348,10 +372,14 @@
 
             <div class="good-news card">
               <h3>You got what you pay for!</h3>
-              <p>When the week matches the plan, that is a win. Run it again every few months, or whenever something feels off.</p>
+              <p>Even when the report comes back good, that is worth knowing. Run it again every few months, or whenever something feels off.</p>
             </div>
 
             <div class="isp-value">
+              <div class="sourced-overpay">
+                <p class="sourced-line">You may be overpaying by about $20 a month (about $240 a year).</p>
+                <p class="sourced-cite">That is a price gap, not your bill and not a refund. About $20 a month is the published difference between a gigabit plan and the next tier down, October 2026. The <a href="https://www.fcc.gov/reports-research/reports/measuring-broadband-america/measuring-fixed-broadband-thirteenth-report">FCC Measuring Broadband America, Thirteenth Report</a> found most cable and fiber plans delivered close to the advertised speed, so a short week is about one home. Your provider decides.</p>
+              </div>
               <form class="savings-card" data-savings-demo aria-labelledby="savings-heading" novalidate>
                 <div class="savings-head">
                   <h3 id="savings-heading">You may be overpaying by about this much</h3>
@@ -403,8 +431,8 @@
             </div>
 
             <div class="isp-cta">
-              <a class="btn btn-primary btn-lg" href="#waitlist">Join the waitlist</a>
-              <span class="isp-cta-note">Be first to find out if your plan is living up to its promise.</span>
+              <a class="btn btn-primary btn-lg" href="#waitlist">Start a 7-day Pro report</a>
+              <span class="isp-cta-note">Get unlimited 7-day reports with Pro. Pro checkout is coming soon.</span>
             </div>
           </div>
         </div>
@@ -722,9 +750,9 @@
             <span class="window-title">HonestPing Overview (Pro view, example)</span>
           </div>
           <picture>
-            <source srcset="assets/app-preview.webp?v=20261011a" type="image/webp">
+            <source srcset="assets/app-preview.webp?v=20261011b" type="image/webp">
             <img
-              src="assets/app-preview.png?v=20261011a"
+              src="assets/app-preview.png?v=20261011b"
               width="1068"
               height="971"
               alt="HonestPing Overview: Healthy badge, Your internet is responding, example 28 ms ping in the ring, jitter and packet loss, and a 15-minute ping chart"
@@ -739,26 +767,35 @@
       <div class="wrap">
         <span class="section-label">A short guide</span>
         <h2 class="section-title" id="user-types-heading">What type of internet user are you?</h2>
-        <p class="section-intro">Households do not all need the same check. Start with the one that matches how you actually use the connection. Windows only, and the download is still on the waitlist.</p>
+        <p class="section-intro">See what speed a kind of home usually needs, so you can tell whether a plan fits. Most homes are a mix. Pick the one that sounds most like your busiest evening. A 7-day Pro report answers it for your home, and it is not included with Free.</p>
         <div class="user-types">
           <article class="card">
-            <h3>Everyday use</h3>
-            <p>Pages, mail, and the odd video. Quick Check is unlimited, and every result stays on your PC.</p>
+            <h3>Light user</h3>
+            <p>Browsing, email, video calls. A plan around 100 Mbps usually fits.</p>
           </article>
           <article class="card">
-            <h3>Work calls</h3>
-            <p>If a meeting stutters, look at jitter and packet loss, not only the speed number. <a href="#wfh">For work</a>.</p>
+            <h3>Streamer</h3>
+            <p>4K streaming on a few screens. Evenings matter most. 100 to 300 Mbps usually fits. <a href="#streaming">For streaming</a>.</p>
           </article>
           <article class="card">
-            <h3>Streaming at home</h3>
-            <p>A stall can be the connection or the service. HonestPing shows the connection side. <a href="#streaming">For streaming</a>.</p>
+            <h3>Gamer</h3>
+            <p>Online games, voice chat, and game updates. Steady ping matters more than raw speed. 100 to 300 Mbps usually fits. <a href="#gamers">For gamers</a>.</p>
           </article>
           <article class="card">
-            <h3>Play</h3>
-            <p>The gamer test grades ping, jitter, and packet loss for play. <a href="#gamers">For gamers</a>.</p>
+            <h3>Remote worker</h3>
+            <p>Video meetings, cloud files, and work apps. Upload counts. 100 to 300 Mbps usually fits. <a href="#wfh">For work</a>.</p>
+          </article>
+          <article class="card">
+            <h3>Heavy downloader or creator</h3>
+            <p>Big downloads, video uploads, and backups. Faster plans mostly cut waiting time. 500 Mbps to 1 Gig usually fits.</p>
+          </article>
+          <article class="card">
+            <h3>Big household</h3>
+            <p>Five or more people, many screens at once. 300 to 500 Mbps usually fits.</p>
           </article>
         </div>
-        <p class="user-types-note">Want the week, not one test? The 7-day report is in Pro. It is not included with Free.</p>
+        <p class="user-types-note">FCC home broadband benchmark for 2024: 100 Mbps down and 20 up. US median home in 2Q26: about 482 GB a month. A common plan band in 3Q25: 200 to 400 Mbps. These ranges are example guidance, not a quote for your home.</p>
+        <p class="sourced-cite">Sources: <a href="https://www.fcc.gov/consumers/guides/broadband-speed-guide">FCC Broadband Speed Guide</a>, <a href="https://www.fcc.gov/research-reports/guides/household-broadband-guide">FCC Household Broadband Guide</a>, <a href="https://www.fcc.gov/document/fcc-increases-broadband-speed-benchmark-0">FCC 2024 speed benchmark</a>, <a href="https://openvault.com/ovbi-upstream-growth-nears-20-yoy-tops-downstream-increase-by-3x/">OpenVault Broadband Insights, 2Q26</a>, and <a href="https://openvault.com/wp-content/uploads/2025/11/OVBI_3Q25.pdf">OpenVault 3Q25</a>. Figures marked as a usual fit are estimates built from those sources, with room for several activities at once.</p>
         <p><a class="btn btn-primary" href="#waitlist">Join the waitlist</a></p>
       </div>
     </section>
@@ -817,10 +854,11 @@
     </div>
   </footer>
 
-  <script src="waitlist.js?v=20261011a" defer></script>
-  <script src="gauge.js?v=20261011a" defer></script>
-  <script src="trace-demo.js?v=20261011a" defer></script>
-  <script src="verdict-demo.js?v=20261011a" defer></script>
-  <script src="savings-demo.js?v=20261011a" defer></script>
+  <script src="waitlist.js?v=20261011b" defer></script>
+  <script src="gauge.js?v=20261011b" defer></script>
+  <script src="trace-demo.js?v=20261011b" defer></script>
+  <script src="verdict-demo.js?v=20261011b" defer></script>
+  <script src="savings-demo.js?v=20261011b" defer></script>
+  <script src="demo-player.js?v=20261011b" defer></script>
 </body>
 </html>
