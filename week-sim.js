@@ -193,7 +193,7 @@
     if (both) {
       return {
         title: "You got what you pay for!",
-        detail: "Run it again every few months, or whenever something feels off. These are estimates. Your provider decides."
+        detail: "You got what you pay for! Run it again every few months, or whenever something feels off. These are estimates. Your provider decides."
       };
     }
     if (!summary.good) {
