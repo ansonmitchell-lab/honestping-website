@@ -1,4 +1,4 @@
-/* HonestPing: "Try a 7-day example" (preview).
+/* HonestPing: "Try a sample week" (preview).
    Simulated in the browser. No network, no cookies, no storage. */
 (function () {
   var SLOTS = ["morning", "afternoon", "evening"];
@@ -53,21 +53,21 @@
   function planFit(planMbps, use) {
     var next;
     if (planMbps < use.min) {
-      return { kind: "small", text: "Your plan may be on the small side for how you use it." };
+      return { kind: "small", text: "Your plan may be small for what you selected." };
     }
     next = nextTierDown(planMbps);
     if (planMbps > use.max * 2 && next !== null && next >= use.max) {
       return {
         kind: "big",
-        text: "Your plan may be bigger than your home needs. Homes like yours usually do fine with about " + use.about + " Mbps. A smaller plan may save about $20/month."
+        text: "For what you selected, about " + use.about + " Mbps may be enough. A smaller plan may save about $20/month."
       };
     }
-    return { kind: "fit", text: "Your plan looks like a fit for how you use it." };
+    return { kind: "fit", text: "Your plan looks like a fit for what you selected." };
   }
 
   function speedCopy(summary) {
     if (summary.good) return "You got the speed you pay for.";
-    return "You may be overpaying by about " + money(summary.monthly) + "/month for speed you don\u2019t get.";
+    return "You may be paying about " + money(summary.monthly) + "/month for speed you don't get.";
   }
 
   function pick(total, count) {
@@ -193,27 +193,26 @@
     if (both) {
       return {
         title: "You got what you pay for!",
-        detail: "You got what you pay for! Run it again every few months, or whenever something feels off. These are estimates. Your provider decides."
+        detail: "Simulated week. Your own week may differ."
       };
     }
     if (!summary.good) {
       return {
         title: speedCopy(summary),
-        detail: "About " + money(summary.yearly) + " a year for speed you don\u2019t get. These are estimates. Your provider decides."
+        detail: "About " + money(summary.yearly) + " a year. Estimates only. Your provider decides."
       };
     }
     return {
       title: speedCopy(summary),
-      detail: "These are estimates. Your provider decides."
+      detail: "Estimates only. Your provider decides."
     };
   }
 
   function resultAnnouncement(summary, fit) {
     var copy = outcomeCopy(summary, fit);
-    return "Typical speed " + summary.typical + " Mbps, " + summary.pct +
-      "% of plan. Slowest time of day: " + summary.slowLabel + ". Speed: " +
-      speedCopy(summary) + " Plan fit: " + fit.text +
-      " Based on how you said your home uses the internet. " + copy.detail;
+    return "Typical " + summary.typical + " Mbps, " + summary.pct +
+      "% of plan. Slowest: " + summary.slowLabel + ". " +
+      speedCopy(summary) + " " + fit.text + " " + copy.detail;
   }
 
   if (typeof module !== "undefined" && module.exports) {
@@ -304,15 +303,15 @@
     var nextPlan = readNumber(planEl);
     var nextBill = readNumber(billEl);
     if (nextPlan === null || nextPlan < 1 || nextPlan > 10000) {
-      setInvalid(planEl, "Enter a plan speed from 1 to 10000 Mbps.");
+      setInvalid(planEl, "Enter 1 to 10000 Mbps.");
       return false;
     }
     if (nextBill === null || nextBill < 0 || nextBill > 1000) {
-      setInvalid(billEl, "Enter a monthly bill from 0 to 1000.");
+      setInvalid(billEl, "Enter a bill from 0 to 1000.");
       return false;
     }
     if (!USES[useEl.value]) {
-      setInvalid(useEl, "Choose how your home uses the internet.");
+      setInvalid(useEl, "Choose one option.");
       return false;
     }
     clearInvalid();
@@ -351,20 +350,20 @@
   function countLine(count) {
     var day;
     var left;
-    if (count >= 21) return "21 of 21 tests done";
+    if (count >= 21) return "21 of 21 tests";
     day = dayShown(count);
     left = 8 - day;
-    return count + " of 21 tests done · about " + left + " " + (left === 1 ? "day" : "days") + " to go";
+    return count + " of 21 tests · about " + left + " " + (left === 1 ? "day" : "days") + " left";
   }
 
   function nowText(count) {
     var last;
     var next;
-    if (count <= 0) return "Starting. First test Mon morning.";
+    if (count <= 0) return "First test: Mon morning.";
     if (count >= 21) return "All 21 tests done.";
     last = tests[count - 1];
     next = tests[count];
-    return "Saved: " + DAYS[last.day] + " " + last.slot + ", " + pctOf(last.mbps, plan) + "% of plan. Next is " + DAYS[next.day] + " " + next.slot + ".";
+    return DAYS[last.day] + " " + last.slot + ": " + pctOf(last.mbps, plan) + "% of plan. Next: " + DAYS[next.day] + " " + next.slot + ".";
   }
 
   function paintFit() {
@@ -379,11 +378,11 @@
     var slowPct;
     var fit = paintFit();
     if (count <= 0) {
-      soFarEl.textContent = "Waiting for the first test";
+      soFarEl.textContent = "Waiting for first test";
       soFarEl.className = "app7-val";
       slowEl.textContent = "·";
       slowEl.className = "app7-val";
-      speedEl.textContent = "Waiting for the first test";
+      speedEl.textContent = "Waiting for first test";
       speedEl.className = "app7-val";
       detailEl.hidden = true;
       detailEl.textContent = "";
@@ -504,7 +503,7 @@
     setBusy(true);
     render(0);
     showStage("run");
-    live.textContent = "Running a sample week. Day 1 of 7.";
+    live.textContent = "Sample week running. Day 1 of 7.";
     skipBtn.focus();
     timer = window.setTimeout(tick, STEP_MS);
   }
