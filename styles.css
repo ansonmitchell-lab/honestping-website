@@ -2066,3 +2066,97 @@ input:focus-visible {
   .report-card .report-summary { opacity: 1 !important; transform: none !important; transition: none !important; }
   .report-card .report-btn { animation: none !important; }
 }
+
+/* Privacy policy */
+.privacy-main { padding-bottom: 64px; }
+.privacy-doc {
+  max-width: 42rem;
+  padding-top: 40px;
+  padding-bottom: 8px;
+}
+.privacy-doc h1 {
+  font-size: clamp(30px, 4.5vw, 42px);
+  font-weight: 600;
+  letter-spacing: -1px;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.privacy-meta,
+.privacy-doc p,
+.privacy-doc li {
+  font-size: 16px;
+  line-height: 1.65;
+}
+.privacy-meta { margin-bottom: 8px; }
+.privacy-doc h2,
+.privacy-doc h3 {
+  scroll-margin-top: 84px;
+  line-height: 1.3;
+  font-weight: 600;
+}
+.privacy-doc h2 {
+  font-size: clamp(22px, 3vw, 28px);
+  letter-spacing: -0.4px;
+  margin: 36px 0 12px;
+}
+.privacy-doc h3 {
+  font-size: 18px;
+  margin: 28px 0 10px;
+}
+.privacy-doc p { margin: 0 0 12px; }
+.privacy-doc ul,
+.privacy-doc ol { margin: 0 0 14px; padding-left: 1.25rem; }
+.privacy-doc li { margin: 0 0 8px; }
+.privacy-doc li ul,
+.privacy-doc li ol { margin-top: 8px; }
+.privacy-doc strong { font-weight: 600; }
+.privacy-doc code {
+  font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", monospace;
+  font-size: 0.92em;
+  color: var(--hp-blue);
+}
+.privacy-toc {
+  margin: 22px 0 8px;
+  padding: 16px 16px 8px;
+  border: 1px solid var(--hp-line);
+  border-radius: var(--hp-radius);
+  background: var(--hp-surface);
+}
+.privacy-toc h2 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--hp-muted);
+}
+.privacy-toc ol { margin-bottom: 8px; }
+.privacy-toc a { font-weight: 600; }
+.privacy-table-wrap {
+  overflow-x: auto;
+  margin: 0 0 16px;
+  -webkit-overflow-scrolling: touch;
+}
+.privacy-doc table {
+  width: 100%;
+  min-width: 28rem;
+  border-collapse: collapse;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.privacy-doc th,
+.privacy-doc td {
+  text-align: left;
+  vertical-align: top;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--hp-line);
+}
+.privacy-doc th {
+  color: var(--hp-muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+@media (max-width: 560px) {
+  .privacy-doc { padding-top: 28px; }
+  .privacy-toc { padding: 14px 12px 6px; }
+}
