@@ -742,6 +742,30 @@ select:focus-visible {
   .isp-panel { padding: 44px 40px; }
 }
 .isp-head { max-width: 46rem; margin-bottom: 28px; }
+.isp-mark {
+  width: min(180px, 58%);
+  height: auto;
+  display: block;
+  margin: 0 0 12px;
+}
+@media (min-width: 840px) {
+  .isp-head {
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    column-gap: 24px;
+    align-items: center;
+  }
+  .isp-head > :not(.isp-mark) { grid-column: 1; }
+  .isp-mark {
+    grid-column: 2;
+    grid-row: 1 / span 5;
+    width: 200px;
+    margin: 0;
+    justify-self: end;
+    align-self: center;
+  }
+}
 .isp-head .section-label { color: var(--hp-green); }
 .isp-title {
   font-size: clamp(26px, 3.8vw, 36px);
@@ -2219,7 +2243,7 @@ select:focus-visible {
 .pdemo-meta li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--hp-line); }
 .pdemo-meta span { color: var(--hp-muted); }
 
-/* 7-day report value: estimate + uses (index #isp, v=20261011f) */
+/* 7-day report value: estimate + uses (index #isp, v=20261011g) */
 .isp-head .plan-tag { margin-left: 6px; vertical-align: middle; }
 .isp-value { display: grid; gap: 20px; min-width: 0; }
 @media (min-width: 900px) { .isp-value { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; } }
@@ -2261,7 +2285,7 @@ select:focus-visible {
 .isp-head .isp-label-row .plan-tag { margin-left: 0; }
 .nowrap { white-space: nowrap; }
 
-/* Free to start, gamer tiers, 7-day strip, user types (v=20261011f) */
+/* Free to start, gamer tiers, 7-day strip, user types (v=20261011g) */
 .free-band { padding-bottom: 8px; }
 .free-panel {
   max-width: 46rem;
@@ -2283,7 +2307,8 @@ select:focus-visible {
 .free-pro { color: var(--hp-text); font-size: 13px; }
 .gamers-soon { margin-top: 10px; font-size: 13px; color: var(--hp-muted); }
 .gamers-showcase > .tier-row,
-.gamers-showcase > .tier-note { grid-column: 1 / -1; }
+.gamers-showcase > .tier-note,
+.gamers-showcase > .hop-explain { grid-column: 1 / -1; }
 .tier-row {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -2305,6 +2330,33 @@ select:focus-visible {
 .tier-bronze { color: #e2b07a; }
 .tier-steel { color: #b7c6d1; }
 .tier-mark { width: 72px; height: 72px; display: block; }
+.mascot-play {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  display: block;
+  max-width: 100%;
+  line-height: 0;
+}
+.crest-mark { width: 96px; height: 96px; display: block; }
+.hop-explain {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+  padding: 16px 18px;
+  border-radius: var(--hp-radius);
+  background: var(--hp-dial);
+  border: 1px solid var(--hp-line);
+}
+.hop-explain h3 { font-size: 17px; font-weight: 600; }
+.hop-explain p { color: var(--hp-muted); font-size: 14px; max-width: 40rem; }
+.hop-explain .mascot-play { width: min(420px, 100%); }
+.hop-mark { width: 100%; height: auto; display: block; }
 .tier-card figcaption { display: grid; gap: 2px; }
 .tier-card strong { color: var(--hp-text); font-size: 14px; font-weight: 600; }
 .tier-card figcaption span { color: var(--hp-muted); font-size: 12px; }
@@ -2411,7 +2463,7 @@ select:focus-visible {
   .overpay-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* Try a sample week, app panel (index #isp, v=20261011f) */
+/* Try a sample week, app panel (index #isp, v=20261011g) */
 .try-week {
   position: relative;
   margin: 0;

@@ -74,11 +74,11 @@ Only the current product name HonestPing appears in user-facing copy.
 ## Shipped 2026-10-11 (preview: free start, 7-day report, gamer tiers)
 
 - `#free`: Quick Check is unlimited and results stay on the PC. Free also includes 5 Pro speed tests and 3 gamer tests. Quiet line: Unlimited with Pro. No price and no trial.
-- `#gamers`: gamer test grades ping, jitter, and packet loss. Example tier marks: Esports Ready, Silver, Bronze, Steel. Pro Gaming is one coming-soon line. No HUD.
+- `#gamers`: gamer test grades ping, jitter, and packet loss. Example tier marks: Esports Ready, Silver, Bronze, Steel. Esports Ready uses crest B. A short How hops work note sits with the hop loop. Pro Gaming is one coming-soon line. No HUD.
 - `#isp`: tightened copy. 21-test example week, day strip, good-news line. Try a sample week replaces the separate savings estimator. PDF coming soon. Share report kept. The example verdict card and the standalone $20/$240 block are gone. The $20 list-price note stays once, inside the sample-week plan-fit tile.
 - `#user-types`: short guide for everyday use, work calls, streaming, and play.
-- Asset query `v=20261011f`. Single dark theme. The sample week and the static example report use the dark 7-day Pro report panel. Speed shortfall and plan fit are separate results.
+- Asset query `v=20261011g`. Single dark theme. The sample week and the static example report use the dark 7-day Pro report panel. Speed shortfall and plan fit are separate results.
 - Watch an example week: muted playsinline mp4, gif fallback, play/pause button, no autoplay when reduced motion is set. Example data.
-- Gamer tiers use the S crest plus silver, bronze, and steel badges.
+- Gamer tiers: Esports Ready uses crest B (still frame under reduced motion). Silver, bronze, and steel badges stay. The speed header uses the Breakaway hex trail. How hops work uses the hop loop. One loop plays at a time, for two cycles, then rests. A hover or focus replays it once.
 - Try a sample week: plan speed, monthly bill, and how the home uses the internet. A simulated 21-test week stays in the browser. The speed line uses bill times (1 minus typical divided by plan), and only when typical speed is under 90% of plan. Plan fit is a separate line.
 - User types: light user, streamer, gamer, remote worker, heavy downloader or creator, big household.
