@@ -430,15 +430,15 @@
     var u = Math.min(1, (now - cash.t0) / CASH_MS);
     cash.u = u;
     var wp = pts[landI];
-    if (u < 0.46) {
-      var spin = ease(u / 0.46) * 360;
-      var bob = Math.sin((u / 0.46) * Math.PI) * box.size * 0.16;
+    if (u < 0.55) {
+      var spin = ease(u / 0.55) * 360;
+      var bob = Math.sin((u / 0.55) * Math.PI) * box.size * 0.16;
       paint(cash.x, cash.y, bob, 1, 0, spin);
       showPose("leap");
     } else {
       paint(cash.x, cash.y, 0, 0, 0, 0);
       showPose(wp ? wp.pose : "sit");
-      if (pile && u > 0.62) pile.classList.add("is-out");
+      if (pile && u > 0.7) pile.classList.add("is-out");
     }
     report(true);
     if (u < 1) return;

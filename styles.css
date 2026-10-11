@@ -2312,7 +2312,7 @@ select:focus-visible {
 .pdemo-meta li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--hp-line); }
 .pdemo-meta span { color: var(--hp-muted); }
 
-/* 7-day report value: estimate + uses (index #isp, v=20261011k) */
+/* 7-day report value: estimate + uses (index #isp, v=20261011l) */
 .isp-head .plan-tag { margin-left: 6px; vertical-align: middle; }
 .isp-value { display: grid; gap: 20px; min-width: 0; }
 @media (min-width: 900px) { .isp-value { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; } }
@@ -2354,7 +2354,7 @@ select:focus-visible {
 .isp-head .isp-label-row .plan-tag { margin-left: 0; }
 .nowrap { white-space: nowrap; }
 
-/* Free to start, gamer tiers, 7-day strip, user types (v=20261011k) */
+/* Free to start, gamer tiers, 7-day strip, user types (v=20261011l) */
 .free-band { padding-bottom: 8px; }
 .free-panel {
   max-width: 46rem;
@@ -2576,7 +2576,7 @@ select:focus-visible {
   .overpay-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* Try a sample week, app panel (index #isp, v=20261011k) */
+/* Try a sample week, app panel (index #isp, v=20261011l) */
 .try-week {
   position: relative;
   margin: 0;
@@ -2822,7 +2822,7 @@ select:focus-visible {
   .day-strip small { font-size: 9px; }
 }
 
-/* Scroll companion (home only, v=20261011k). Full-viewport layer, no rail. */
+/* Scroll companion (home only, v=20261011l). Full-viewport layer, no rail. */
 .scroll-pal {
   position: fixed;
   inset: 0;
@@ -2870,11 +2870,11 @@ select:focus-visible {
 }
 .pal-cash {
   position: absolute;
-  left: 78%;
-  bottom: -2px;
-  width: 92px;
-  height: 48px;
-  margin-left: -36px;
+  left: 50%;
+  bottom: -8px;
+  width: 120px;
+  height: 64px;
+  margin-left: -60px;
   opacity: 0;
   z-index: 0;
   pointer-events: none;
@@ -2892,15 +2892,15 @@ select:focus-visible {
 .pal-cash.is-on .f3 { animation: pal-flutter-c 0.85s ease-out 0.16s forwards; }
 @keyframes pal-flutter-a {
   0% { transform: translate3d(0, 2px, 0); opacity: 0.95; }
-  100% { transform: translate3d(-12px, -26px, 0); opacity: 0; }
+  100% { transform: translate3d(-14px, -36px, 0); opacity: 0; }
 }
 @keyframes pal-flutter-b {
   0% { transform: translate3d(0, 0, 0); opacity: 0.95; }
-  100% { transform: translate3d(4px, -30px, 0); opacity: 0; }
+  100% { transform: translate3d(6px, -40px, 0); opacity: 0; }
 }
 @keyframes pal-flutter-c {
   0% { transform: translate3d(0, 3px, 0); opacity: 0.9; }
-  100% { transform: translate3d(14px, -22px, 0); opacity: 0; }
+  100% { transform: translate3d(16px, -32px, 0); opacity: 0; }
 }
 @media (max-width: 719px) {
   .scroll-pal-mover,
