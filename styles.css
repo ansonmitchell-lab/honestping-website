@@ -502,17 +502,18 @@ select:focus-visible {
 }
 .value-card-history {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 150px;
+  grid-template-columns: 140px minmax(0, 1fr);
   column-gap: 12px;
   align-items: center;
 }
 .value-card-history .mascot-look {
-  grid-column: 2;
+  grid-column: 1;
   grid-row: 1 / span 4;
-  width: 150px;
+  width: 140px;
   height: auto;
-  justify-self: end;
+  justify-self: start;
 }
+.value-card-history > :not(.mascot-look) { grid-column: 2; }
 .value-card .next strong {
   color: var(--hp-brand);
   font-weight: 600;
@@ -2311,7 +2312,7 @@ select:focus-visible {
 .pdemo-meta li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--hp-line); }
 .pdemo-meta span { color: var(--hp-muted); }
 
-/* 7-day report value: estimate + uses (index #isp, v=20261011j) */
+/* 7-day report value: estimate + uses (index #isp, v=20261011k) */
 .isp-head .plan-tag { margin-left: 6px; vertical-align: middle; }
 .isp-value { display: grid; gap: 20px; min-width: 0; }
 @media (min-width: 900px) { .isp-value { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; } }
@@ -2353,7 +2354,7 @@ select:focus-visible {
 .isp-head .isp-label-row .plan-tag { margin-left: 0; }
 .nowrap { white-space: nowrap; }
 
-/* Free to start, gamer tiers, 7-day strip, user types (v=20261011j) */
+/* Free to start, gamer tiers, 7-day strip, user types (v=20261011k) */
 .free-band { padding-bottom: 8px; }
 .free-panel {
   max-width: 46rem;
@@ -2441,10 +2442,10 @@ select:focus-visible {
   display: block;
 }
 @media (min-width: 720px) {
-  .hop-explain { grid-template-columns: minmax(0, 1fr) 180px; }
-  .hop-explain h3, .hop-explain p { grid-column: 1; }
-  .mascot-sit { grid-column: 2; grid-row: 1 / span 2; justify-self: end; }
-  .hop-trail { grid-column: 2; grid-row: 3; justify-self: center; }
+  .hop-explain { grid-template-columns: 180px minmax(0, 1fr); }
+  .hop-explain h3, .hop-explain p { grid-column: 2; }
+  .mascot-sit { grid-column: 1; grid-row: 1 / span 2; justify-self: start; }
+  .hop-trail { grid-column: 1; grid-row: 3; justify-self: center; }
 }
 .tier-card figcaption { display: grid; gap: 2px; }
 .tier-card strong { color: var(--hp-text); font-size: 14px; font-weight: 600; }
@@ -2528,6 +2529,7 @@ select:focus-visible {
     width: 120px;
     justify-self: start;
   }
+  .value-card-history > :not(.mascot-look) { grid-column: 1; }
 }
 @media (max-width: 719px) {
   .mascot-quarter { display: none; }
@@ -2574,7 +2576,7 @@ select:focus-visible {
   .overpay-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* Try a sample week, app panel (index #isp, v=20261011j) */
+/* Try a sample week, app panel (index #isp, v=20261011k) */
 .try-week {
   position: relative;
   margin: 0;
@@ -2820,51 +2822,31 @@ select:focus-visible {
   .day-strip small { font-size: 9px; }
 }
 
-/* Scroll companion (home only, v=20261011j) */
+/* Scroll companion (home only, v=20261011k). Full-viewport layer, no rail. */
 .scroll-pal {
   position: fixed;
+  inset: 0;
   z-index: 30;
-  right: 12px;
-  top: 76px;
-  bottom: 16px;
-  width: 72px;
   pointer-events: none;
   opacity: 1;
   transition: opacity 180ms ease;
 }
 .scroll-pal.is-away { opacity: 0; }
-.scroll-pal-rail {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  margin-left: -1px;
-  border-radius: 2px;
-  background: rgba(159, 208, 222, 0.55);
-}
-.scroll-pal-dot {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #9fd0de;
-  box-shadow: 0 0 0 2px #07131f;
-}
-.scroll-pal-dot.is-here { background: #05d1e8; }
 .scroll-pal-mover {
   position: absolute;
-  left: 4px;
+  left: 0;
   top: 0;
   width: 64px;
   height: 64px;
+  pointer-events: none;
 }
 .scroll-pal-hop {
   position: relative;
+  z-index: 1;
   width: 64px;
   height: 64px;
+  transform-origin: center center;
+  pointer-events: none;
 }
 .scroll-pal .pal-img {
   position: absolute;
@@ -2877,6 +2859,7 @@ select:focus-visible {
   object-position: center bottom;
   opacity: 0;
   transition: opacity 180ms ease;
+  pointer-events: none;
 }
 .scroll-pal .pal-img.is-on { opacity: 1; }
 .scroll-pal .pal-img[data-pose="leap"] { transform-origin: center center; }
@@ -2885,14 +2868,41 @@ select:focus-visible {
   height: 64px;
   display: block;
 }
+.pal-cash {
+  position: absolute;
+  left: 78%;
+  bottom: -2px;
+  width: 92px;
+  height: 48px;
+  margin-left: -36px;
+  opacity: 0;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 280ms ease;
+}
+.pal-cash.is-on { opacity: 1; }
+.pal-cash.is-out { opacity: 0; }
+.pal-cash .flutter {
+  opacity: 0.95;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.pal-cash.is-on .f1 { animation: pal-flutter-a 0.9s ease-out forwards; }
+.pal-cash.is-on .f2 { animation: pal-flutter-b 0.95s ease-out 0.08s forwards; }
+.pal-cash.is-on .f3 { animation: pal-flutter-c 0.85s ease-out 0.16s forwards; }
+@keyframes pal-flutter-a {
+  0% { transform: translate3d(0, 2px, 0); opacity: 0.95; }
+  100% { transform: translate3d(-12px, -26px, 0); opacity: 0; }
+}
+@keyframes pal-flutter-b {
+  0% { transform: translate3d(0, 0, 0); opacity: 0.95; }
+  100% { transform: translate3d(4px, -30px, 0); opacity: 0; }
+}
+@keyframes pal-flutter-c {
+  0% { transform: translate3d(0, 3px, 0); opacity: 0.9; }
+  100% { transform: translate3d(14px, -22px, 0); opacity: 0; }
+}
 @media (max-width: 719px) {
-  .scroll-pal {
-    top: auto;
-    right: 6px;
-    bottom: 10px;
-    width: 44px;
-    height: 148px;
-  }
   .scroll-pal-mover,
   .scroll-pal-hop,
   .scroll-pal .pal-img,
@@ -2900,7 +2910,6 @@ select:focus-visible {
     width: 40px;
     height: 40px;
   }
-  .scroll-pal-mover { left: 2px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .scroll-pal { display: none; }

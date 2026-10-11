@@ -1,8 +1,8 @@
-/* Scroll companion. Travel is a series of short hops along the rail.
-   Down the page the head points down. Up the page the head points up.
-   When the hops finish it holds the still pose for the section in view.
-   Hidden near money, the sample week, and legal lines. Reduced motion
-   never builds it. */
+/* Scroll companion. No rail. Scroll progress walks a path of perches
+   down the page, and the rabbit hops between the left and right sides.
+   At the 7-day heading it rolls once in a small pile of hex coins.
+   Hidden near money tiles, the sample week, and legal lines.
+   Reduced motion never builds it. */
 (function () {
   var root = document.getElementById("scroll-pal");
   if (!root) return;
@@ -11,19 +11,10 @@
 
   var mover = root.querySelector(".scroll-pal-mover");
   var hopEl = root.querySelector(".scroll-pal-hop");
-  var rail = root.querySelector(".scroll-pal-rail");
+  var pile = root.querySelector(".pal-cash");
   var imgs = root.querySelectorAll(".pal-img");
-  var dots = root.querySelectorAll(".scroll-pal-dot");
   var hero = document.querySelector(".hero");
   var hides = document.querySelectorAll(".pal-hide");
-  var marks = [];
-  var nodes = document.querySelectorAll("[data-pal]");
-  for (var i = 0; i < nodes.length; i++) {
-    var section = nodes[i].closest("section");
-    var dot = nodes[i].id || (section && section.id) || (nodes[i].tagName === "FOOTER" ? "footer" : "");
-    marks.push({ el: nodes[i], pose: nodes[i].getAttribute("data-pal"), dot: dot });
-  }
-
   var crest = document.querySelector(".crest-mark");
   if (crest && hopEl) {
     var clone = crest.cloneNode(true);
@@ -37,28 +28,33 @@
     imgs = root.querySelectorAll(".pal-img");
   }
 
-  var pose = "leap";
-  var face = 1;
-  var landY = 0;
+  var HOP_MS = 340;
+  var REST_MS = 1500;
+  var GAP_MS = 5200;
+  var SIT_MS = 1000;
+  var CASH_MS = 2100;
+  var REPLAY_MS = 30000;
+
+  var pts = [];
+  var landI = 0;
+  var pos = { x: 24, y: 120 };
   var hop = null;
-  var lastHopAt = -1000;
+  var excursion = null;
+  var cash = null;
+  var cashPlayed = false;
+  var cashLeftAt = 0;
   var placed = false;
   var lastY = window.scrollY || 0;
+  var baseY = lastY;
+  var armed = false;
   var lastAt = 0;
+  var nextEx = 0;
   var raf = 0;
   var running = false;
   var reported = false;
-  var activeDot = "";
-  var HOP_MS = 360;
-  var leapImg = hopEl.querySelector("[data-pose='leap']");
-  var trip = null;
-  var tripBack = false;
-  var used = {};
-  var nextTripAt = 0;
-  var REST_MS = 1500;
-  var GAP_MS = 4500;
-  var SIT_MS = 2800;
   var restTimer = 0;
+  var pose = "leap";
+  var leapImg = hopEl.querySelector("[data-pose='leap']");
 
   function report(on) {
     if (reported === on) return;
@@ -66,72 +62,197 @@
     if (window.HonestPingMotion) window.HonestPingMotion.companionMoving(on);
   }
 
-  function maxScroll() {
-    return Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+  function ease(u) {
+    return u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+  }
+
+  function clamp(v, a, b) {
+    return Math.max(a, Math.min(b, v));
+  }
+
+  function pageTop(el) {
+    return el.getBoundingClientRect().top + (window.scrollY || 0);
+  }
+
+  function poseFor(sec) {
+    var name = sec.getAttribute("data-pal");
+    if (!name) {
+      var inner = sec.querySelector("[data-pal]");
+      name = inner ? inner.getAttribute("data-pal") : "rest";
+    }
+    if (name === "crest") name = "sit";
+    return name || "rest";
+  }
+
+  function build() {
+    var list = [];
+    var sections = document.querySelectorAll("main > section[id]");
+    var flip = -1;
+    for (var i = 0; i < sections.length; i++) {
+      var sec = sections[i];
+      if (sec.classList.contains("pal-hide")) continue;
+      var sid = sec.id;
+      var poseName = poseFor(sec);
+      var head = sec.querySelector("h2") || sec;
+      if (sid === "isp") {
+        var mark = sec.querySelector(".isp-mark") || head;
+        list.push({ el: sec, kind: "gap", side: -1, pose: "sit", sid: sid, pageY: pageTop(sec) - 28 });
+        list.push({ el: mark, kind: "cash", side: 1, pose: "sit", sid: sid, pageY: pageTop(mark) + 16 });
+        var extras = [
+          [".week-demo", "sit", -1],
+          [".isp-flow", "rest", 1],
+          [".isp-proof", "look", -1],
+          [".uses-card", "ears", 1]
+        ];
+        for (var e = 0; e < extras.length; e++) {
+          var node = sec.querySelector(extras[e][0]);
+          if (!node) continue;
+          list.push({
+            el: node,
+            kind: "head",
+            side: extras[e][2],
+            pose: extras[e][1],
+            sid: sid,
+            pageY: pageTop(node) + 12
+          });
+        }
+        flip = 1;
+        continue;
+      }
+      flip = -flip;
+      list.push({ el: sec, kind: "gap", side: flip, pose: poseName, sid: sid, pageY: pageTop(sec) - 28 });
+      flip = -flip;
+      list.push({ el: head, kind: "head", side: flip, pose: poseName, sid: sid, pageY: pageTop(head) + 8 });
+      var dots = sec.querySelector("[data-roam='dots']");
+      if (dots) {
+        flip = -flip;
+        list.push({ el: dots, kind: "dots", side: flip, pose: poseName, sid: sid, pageY: pageTop(dots) });
+      }
+    }
+    var foot = document.getElementById("footer");
+    if (foot) {
+      flip = -flip;
+      list.push({ el: foot, kind: "gap", side: flip, pose: "rest", sid: "footer", pageY: pageTop(foot) - 20 });
+    }
+    list.sort(function (a, b) { return a.pageY - b.pageY; });
+    var out = [];
+    for (var j = 0; j < list.length; j++) {
+      var prev = out[out.length - 1];
+      if (!prev || list[j].kind === "cash" || list[j].pageY - prev.pageY > 70 || list[j].side !== prev.side) {
+        out.push(list[j]);
+      }
+    }
+    pts = out.length ? out : [{ el: document.body, kind: "gap", side: 1, pose: "rest", sid: "footer", pageY: 0 }];
+    landI = clamp(landI, 0, pts.length - 1);
   }
 
   function metrics() {
-    var mobile = window.innerWidth < 720;
-    var size = mobile ? 40 : 64;
-    var railH = rail ? rail.getBoundingClientRect().height : window.innerHeight - 96;
-    if (railH < size + 8) railH = size + 8;
-    return { size: size, railH: railH };
+    return { size: window.innerWidth < 720 ? 40 : 64, mobile: window.innerWidth < 720 };
   }
 
-  function blocksView(el) {
-    var r = el.getBoundingClientRect();
-    if (r.width < 1 || r.height < 1) return false;
-    var vh = window.innerHeight || 1;
-    var vis = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
-    if (vis <= 0) return false;
-    if (r.height <= 180) return vis >= r.height * 0.5;
-    var mid = (r.top + r.bottom) / 2;
-    return vis >= 120 && mid > vh * 0.08 && mid < vh * 0.92;
+  function gutters(size) {
+    var col = document.querySelector("main .wrap");
+    var r = col ? col.getBoundingClientRect() : { left: 16, right: window.innerWidth - 16 };
+    var left = r.left - size - 10;
+    var right = r.right + 10;
+    var wide = left >= 6 && right <= window.innerWidth - size - 6;
+    if (!wide) {
+      left = 6;
+      right = window.innerWidth - size - 6;
+    }
+    return { left: left, right: right, wide: wide };
   }
 
-  function heroGone() {
-    if (!hero) return true;
-    return hero.getBoundingClientRect().bottom <= 8;
-  }
-
-  function coversButton() {
-    if (window.innerWidth >= 720) return false;
-    var zoneTop = window.innerHeight - 168;
-    var zoneLeft = window.innerWidth - 64;
-    var buttons = document.querySelectorAll("a.btn, button");
-    for (var b = 0; b < buttons.length; b++) {
-      var r = buttons[b].getBoundingClientRect();
-      if (r.width < 1 || r.height < 1) continue;
-      if (r.bottom > zoneTop && r.top < window.innerHeight && r.right > zoneLeft && r.left < window.innerWidth) return true;
+  function cornerBlocked(x, y, size) {
+    var nodes = document.querySelectorAll("a.btn, button, input, textarea, .waitlist-form, .pal-hide");
+    for (var i = 0; i < nodes.length; i++) {
+      var r = nodes[i].getBoundingClientRect();
+      if (r.width < 2 || r.height < 2) continue;
+      if (r.right > x - 6 && r.left < x + size + 6 && r.bottom > y - 6 && r.top < y + size + 6) return true;
     }
     return false;
   }
 
-  function away() {
-    if (!heroGone()) return true;
-    for (var h = 0; h < hides.length; h++) {
-      if (blocksView(hides[h])) return true;
+  function hits(x, y, size, allowMark) {
+    var samples = [
+      [x + size * 0.5, y + size * 0.62],
+      [x + size * 0.22, y + size * 0.72],
+      [x + size * 0.78, y + size * 0.72],
+      [x + size * 0.5, y + size * 0.28]
+    ];
+    for (var i = 0; i < samples.length; i++) {
+      var el = document.elementFromPoint(samples[i][0], samples[i][1]);
+      if (!el || !el.closest) continue;
+      if (el.closest("#scroll-pal")) continue;
+      if (allowMark && el.closest(".isp-mark")) continue;
+      if (el.closest(".mascot-accent, .crest-mark, .hero-mascot, .mascot-play, .pal-hide, .waitlist-form, button, a, input, textarea, h1, h2, h3, h4, p, li, figcaption, label, .section-label, .card, .tier-card")) return true;
     }
-    if (window.innerWidth < 720) {
-      var wait = document.getElementById("waitlist");
-      if (wait && blocksView(wait)) return true;
-    }
-    return coversButton();
+    return false;
   }
 
-  function focusMark() {
-    var best = null;
-    var bestScore = -1;
-    var vh = window.innerHeight || 1;
-    for (var m = 0; m < marks.length; m++) {
-      var r = marks[m].el.getBoundingClientRect();
-      var vis = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
-      if (vis < 24) continue;
-      var mid = (Math.max(r.top, 0) + Math.min(r.bottom, vh)) / 2;
-      var score = vis - Math.abs(mid - vh * 0.42) * 0.25;
-      if (score > bestScore) {
-        bestScore = score;
-        best = marks[m];
+  function anchorY(wp) {
+    return wp.pageY - (window.scrollY || 0);
+  }
+
+  function rawSpot(wp, size) {
+    var g = gutters(size);
+    var x = wp.side < 0 ? g.left : g.right;
+    if (wp.kind === "cash") x = g.right;
+    var y = anchorY(wp);
+    var lo = 132;
+    var hi = Math.min(window.innerHeight - size - 16, window.innerHeight * 0.7);
+    if (y < lo || y > hi) return null;
+    if (wp.kind === "head" && !g.wide) {
+      var sec = wp.el.closest ? (wp.el.closest("section") || wp.el) : wp.el;
+      var gapY = sec.getBoundingClientRect().top - size * 0.62;
+      if (gapY >= lo && gapY <= hi) y = gapY;
+    }
+    x = clamp(x, 6, window.innerWidth - size - 6);
+    return { x: x, y: y };
+  }
+
+  function spot(wp, box) {
+    if (!wp) return null;
+    if (box.mobile) {
+      var x = wp.side < 0 ? 8 : window.innerWidth - box.size - 8;
+      var y = window.innerHeight - box.size - 14;
+      if (cornerBlocked(x, y, box.size)) {
+        var x2 = wp.side < 0 ? window.innerWidth - box.size - 8 : 8;
+        if (!cornerBlocked(x2, y, box.size)) return { x: x2, y: y };
+        return null;
+      }
+      return { x: x, y: y };
+    }
+    var s = rawSpot(wp, box.size);
+    if (!s) return null;
+    if (!hits(s.x, s.y, box.size, wp.kind === "cash")) return s;
+    var sec = wp.el.closest ? (wp.el.closest("section") || wp.el) : wp.el;
+    var g = gutters(box.size);
+    var hi = Math.min(window.innerHeight - box.size - 16, window.innerHeight * 0.7);
+    var rawGap = sec.getBoundingClientRect().top - box.size * 0.7;
+    if (rawGap < 132 || rawGap > hi) return null;
+    var y2 = rawGap;
+    var x2 = wp.side < 0 ? g.left : g.right;
+    x2 = clamp(x2, 6, window.innerWidth - box.size - 6);
+    if (!hits(x2, y2, box.size, false)) return { x: x2, y: y2 };
+    return null;
+  }
+
+  function goalIndex() {
+    var y = (window.scrollY || 0) + window.innerHeight * 0.4;
+    var best = 0;
+    var bestD = 1e9;
+    for (var i = 0; i < pts.length; i++) {
+      var d = Math.abs(pts[i].pageY - y);
+      if (d < bestD) {
+        bestD = d;
+        best = i;
+      }
+    }
+    var win = pts[best];
+    if (win && win.kind === "gap" && win.sid === "isp") {
+      for (var k = 0; k < pts.length; k++) {
+        if (pts[k].kind === "cash" && Math.abs(pts[k].pageY - win.pageY) < 280) return k;
       }
     }
     return best;
@@ -145,231 +266,209 @@
     }
   }
 
-  function placeDots() {
-    var doc = maxScroll();
-    var box = metrics();
-    for (var d = 0; d < dots.length; d++) {
-      var el = document.getElementById(dots[d].getAttribute("data-for"));
-      if (!el) continue;
-      var y = el.getBoundingClientRect().top + (window.scrollY || 0);
-      var p = Math.max(0, Math.min(1, y / doc));
-      var center = box.size / 2 + p * Math.max(0, box.railH - box.size);
-      dots[d].style.transform = "translate3d(-50%," + (center - 3).toFixed(1) + "px,0)";
+  function paint(x, y, lift, dx, dy, roll) {
+    pos.x = x;
+    pos.y = y;
+    mover.style.transform = "translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px,0)";
+    if (roll != null) {
+      hopEl.style.transform = "translate3d(0," + (-lift).toFixed(1) + "px,0) rotate(" + roll.toFixed(1) + "deg)";
+      if (leapImg) leapImg.style.transform = "none";
+      return;
     }
-  }
-
-  function goalY(box) {
-    var p = Math.max(0, Math.min(1, (window.scrollY || 0) / maxScroll()));
-    return p * Math.max(0, box.railH - box.size);
-  }
-
-  function ease(u) {
-    return u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
-  }
-
-  function paint(x, y, lift, dx, dy) {
-    mover.style.transform = "translate3d(" + x.toFixed(2) + "px," + y.toFixed(2) + "px,0)";
-    hopEl.style.transform = "translate3d(0," + (-lift).toFixed(2) + "px,0)";
+    hopEl.style.transform = "translate3d(0," + (-lift).toFixed(1) + "px,0)";
     if (!leapImg) return;
-    if (Math.abs(dy) > Math.abs(dx) + 6) {
+    if (Math.abs(dy) > Math.abs(dx) + 8) {
       leapImg.style.transform = "rotate(" + (dy > 0 ? 90 : -90) + "deg)";
-    } else if (dx < -6) {
+    } else if (dx < -8) {
       leapImg.style.transform = "scaleX(-1)";
     } else {
       leapImg.style.transform = "none";
     }
   }
 
-  function settle() {
-    var mark = focusMark();
-    showPose(mark ? mark.pose : "rest");
-    var nextDot = mark ? mark.dot : "";
-    if (nextDot !== activeDot) {
-      activeDot = nextDot;
-      for (var k = 0; k < dots.length; k++) {
-        dots[k].classList.toggle("is-here", dots[k].getAttribute("data-for") === activeDot);
-      }
-    }
-    paint(0, landY, 0, 0, 0);
-    report(false);
-  }
-
-  function moverOrigin() {
-    var pal = root.getBoundingClientRect();
-    return { x: pal.left + 4, y: pal.top };
-  }
-
-  function spotFor(el, box) {
-    var r = el.getBoundingClientRect();
-    var origin = moverOrigin();
-    var size = box.size;
-    var vx;
-    var vy;
-    if (el.getAttribute("data-perch") === "hops") {
-      vx = r.left + r.width / 2 - size / 2;
-      vy = r.top - size + 10;
+  function showPile(on) {
+    if (!pile) return;
+    if (on) {
+      pile.classList.remove("is-out");
+      pile.classList.remove("is-on");
+      void pile.offsetWidth;
+      pile.classList.add("is-on");
     } else {
-      vx = r.right - size * 0.82;
-      vy = r.top - size + 16;
+      pile.classList.remove("is-on");
+      pile.classList.remove("is-out");
     }
-    vx = Math.max(12, Math.min(vx, window.innerWidth - size - 8));
-    vy = Math.max(8, Math.min(vy, window.innerHeight - size - 8));
-    return { x: vx - origin.x, y: vy - origin.y, vx: vx, vy: vy };
   }
 
-  function blockedSpot(spot, size) {
-    if (spot.vx < window.innerWidth * 0.42) return true;
-    var nodes = document.querySelectorAll(".pal-hide, a.btn, button, .waitlist-form");
-    for (var i = 0; i < nodes.length; i++) {
-      var r = nodes[i].getBoundingClientRect();
-      if (r.width < 1 || r.height < 1) continue;
-      if (r.right > spot.vx && r.left < spot.vx + size && r.bottom > spot.vy && r.top < spot.vy + size) return true;
+  function cancelCash(mark) {
+    if (!cash) return;
+    if (mark && cash.u > 0.45) cashPlayed = true;
+    cash = null;
+    showPile(false);
+  }
+
+  function blocksView(el) {
+    var r = el.getBoundingClientRect();
+    if (r.width < 1 || r.height < 1) return false;
+    var vh = window.innerHeight || 1;
+    var bandTop = vh * 0.36;
+    var bandBot = vh * 0.52;
+    var overlap = Math.min(r.bottom, bandBot) - Math.max(r.top, bandTop);
+    if (overlap < 36) return false;
+    return overlap >= Math.min(56, r.height * 0.55);
+  }
+
+  function heroGone() {
+    if (!hero) return true;
+    return hero.getBoundingClientRect().bottom <= 8;
+  }
+
+  function away() {
+    if (!heroGone()) return true;
+    for (var h = 0; h < hides.length; h++) {
+      if (blocksView(hides[h])) return true;
+    }
+    if (window.innerWidth < 720) {
+      var wait = document.getElementById("waitlist");
+      if (wait && blocksView(wait)) return true;
+      var box = metrics();
+      var left = cornerBlocked(8, window.innerHeight - box.size - 14, box.size);
+      var right = cornerBlocked(window.innerWidth - box.size - 8, window.innerHeight - box.size - 14, box.size);
+      if (left && right) return true;
     }
     return false;
   }
 
-  function pickPerch(box) {
-    if (window.innerWidth < 720) return null;
-    var mark = focusMark();
-    if (!mark) return null;
-    var section = mark.el.closest("section");
-    var sid = section ? section.id : "";
-    if (!sid || used[sid]) return null;
-    var all = document.querySelectorAll("[data-perch]");
-    var best = null;
-    var bestD = 1e9;
-    var vh = window.innerHeight || 1;
-    var preferHops = mark.el.classList.contains("hop-explain") || (mark.el.closest && mark.el.closest(".hop-explain"));
-    for (var i = 0; i < all.length; i++) {
-      var el = all[i];
-      var host = el.closest("section");
-      if (!host || host.id !== sid) continue;
-      if (preferHops && el.getAttribute("data-perch") !== "hops") continue;
-      if (!preferHops && el.getAttribute("data-perch") === "hops") continue;
-      var r = el.getBoundingClientRect();
-      if (r.width < 1 || r.bottom < 48 || r.top > vh - 36) continue;
-      var mid = (r.top + r.bottom) / 2;
-      var d = Math.abs(mid - vh * 0.46);
-      if (d < bestD) {
-        bestD = d;
-        best = el;
-      }
+  function beginHop(dest, now, box) {
+    var target = spot(pts[dest], box);
+    if (!target) {
+      if (onScreen(pts[dest])) landI = dest;
+      return false;
     }
-    if (!best) return null;
-    var name = best.getAttribute("data-perch");
-    var els = [];
-    for (var j = 0; j < all.length; j++) {
-      if (all[j].getAttribute("data-perch") !== name) continue;
-      var home = all[j].closest("section");
-      if (!home || home.id !== sid) continue;
-      els.push(all[j]);
+    var from = { x: pos.x, y: pos.y };
+    if (Math.abs(target.x - from.x) < 4 && Math.abs(target.y - from.y) < 4) {
+      landI = dest;
+      return false;
     }
-    els.sort(function (a, b) {
-      return (parseInt(a.getAttribute("data-perch-i"), 10) || 0) - (parseInt(b.getAttribute("data-perch-i"), 10) || 0);
-    });
-    var spots = [];
-    for (var s = 0; s < els.length; s++) {
-      var spot = spotFor(els[s], box);
-      if (blockedSpot(spot, box.size)) return null;
-      spots.push(spot);
-    }
-    if (!spots.length) return null;
-    return { sid: sid, pose: mark.pose, spots: spots };
-  }
-
-  function arcDur(count) {
-    return Math.max(420, Math.min(700, Math.floor(2400 / Math.max(1, count))));
-  }
-
-  function beginOut(group) {
-    var from = { x: 0, y: landY };
-    var pts = [from];
-    if (group.spots.length === 1) {
-      var end = group.spots[0];
-      pts.push({ x: from.x + (end.x - from.x) * 0.55, y: Math.min(from.y, end.y) - 26 });
-      pts.push(end);
+    var arcs = [];
+    if (!box.mobile && Math.abs(target.x - from.x) > 220) {
+      var midY = (from.y + target.y) / 2 - box.size * 0.2;
+      var mid = {
+        x: (from.x + target.x) / 2,
+        y: clamp(midY, 150, window.innerHeight * 0.62)
+      };
+      arcs.push({ from: from, to: mid });
+      arcs.push({ from: mid, to: target });
     } else {
-      for (var i = 0; i < group.spots.length; i++) pts.push(group.spots[i]);
+      arcs.push({ from: from, to: target });
     }
-    trip = {
-      phase: "out",
-      pts: pts,
-      i: 0,
-      arc: null,
-      sid: group.sid,
-      pose: group.pose,
-      dur: arcDur(pts.length - 1),
-      sitUntil: 0
-    };
-    used[group.sid] = true;
-    tripBack = false;
-    armArc(performance.now());
+    hop = { arcs: arcs, i: 0, t0: now, dur: HOP_MS, dest: dest };
+    return true;
   }
 
-  function armArc(now) {
-    trip.arc = {
-      from: trip.pts[trip.i],
-      to: trip.pts[trip.i + 1],
-      t0: now,
-      dur: trip.dur
-    };
-  }
-
-  function beginBack(now, goal) {
-    var cur = trip.arc ? atArc(Math.min(1, (now - trip.arc.t0) / trip.arc.dur)) : trip.pts[trip.pts.length - 1];
-    if (trip.phase === "sit") cur = trip.pts[trip.pts.length - 1];
-    var end = { x: 0, y: goal };
-    var mid = { x: cur.x * 0.42, y: Math.min(cur.y, end.y) - 22 };
-    trip.phase = "back";
-    trip.pts = [cur, mid, end];
-    trip.i = 0;
-    trip.dur = 700;
-    trip.sitUntil = 0;
-    tripBack = false;
-    armArc(now);
-  }
-
-  function atArc(u) {
+  function advance(now, box) {
+    var arc = hop.arcs[hop.i];
+    var u = Math.min(1, (now - hop.t0) / hop.dur);
     var e = ease(u);
-    var a = trip.arc.from;
-    var b = trip.arc.to;
-    return { x: a.x + (b.x - a.x) * e, y: a.y + (b.y - a.y) * e };
-  }
-
-  function runTrip(now, box, goal) {
-    if (tripBack && trip.phase !== "back") beginBack(now, goal);
-    if (trip.phase === "sit") {
-      var seat = trip.pts[trip.pts.length - 1];
-      paint(seat.x, seat.y, 0, 0, 0);
-      showPose(trip.pose || "rest");
-      report(true);
-      if (now >= trip.sitUntil) beginBack(now, goal);
-      return;
-    }
-    var u = Math.min(1, (now - trip.arc.t0) / trip.arc.dur);
-    var pos = atArc(u);
-    var lift = Math.sin(Math.PI * u) * box.size * 0.33;
-    var dx = trip.arc.to.x - trip.arc.from.x;
-    var dy = trip.arc.to.y - trip.arc.from.y;
-    paint(pos.x, pos.y, lift, dx, dy);
+    var x = arc.from.x + (arc.to.x - arc.from.x) * e;
+    var y = arc.from.y + (arc.to.y - arc.from.y) * e;
+    var dx = arc.to.x - arc.from.x;
+    var lift = Math.sin(Math.PI * u) * box.size * (Math.abs(dx) > 220 ? 0.48 : 0.33);
+    paint(x, y, lift, dx, arc.to.y - arc.from.y);
     showPose("leap");
     report(true);
+    if (u < 1) return false;
+    hop.i += 1;
+    if (hop.i < hop.arcs.length) {
+      hop.t0 = now;
+      return false;
+    }
+    paint(arc.to.x, arc.to.y, 0, 0, 0);
+    return true;
+  }
+
+  function onScreen(wp) {
+    if (!wp) return false;
+    var y = anchorY(wp);
+    var hi = Math.min(window.innerHeight - 80, window.innerHeight * 0.7);
+    return y >= 132 && y <= hi;
+  }
+
+  function stepToward(goal, scrolling) {
+    if (landI === goal) return landI;
+    var goalOk = onScreen(pts[goal]);
+    if (!scrolling) return goalOk ? goal : landI;
+    var dir = goal > landI ? 1 : -1;
+    var i = landI + dir;
+    var side = pts[landI].side;
+    while (i !== goal && pts[i] && pts[i].side === side) i += dir;
+    if (!pts[i] || !onScreen(pts[i])) return goalOk ? goal : landI;
+    return i;
+  }
+
+  function cashOk(now) {
+    if (window.innerWidth < 720) return false;
+    if (!cashPlayed) return true;
+    if (!cashLeftAt || (now - cashLeftAt) <= REPLAY_MS) return false;
+    cashPlayed = false;
+    cashLeftAt = 0;
+    return true;
+  }
+
+  function noteCashLeave(now) {
+    var here = pts[landI];
+    if (cashPlayed && (!here || here.kind !== "cash") && !cashLeftAt) cashLeftAt = now;
+  }
+
+  function startCash(now) {
+    if (cashPlayed && cashLeftAt && (now - cashLeftAt) > REPLAY_MS) cashPlayed = false;
+    cash = { t0: now, u: 0, x: pos.x, y: pos.y };
+    showPile(true);
+    report(true);
+  }
+
+  function runCash(now, box) {
+    var u = Math.min(1, (now - cash.t0) / CASH_MS);
+    cash.u = u;
+    var wp = pts[landI];
+    if (u < 0.46) {
+      var spin = ease(u / 0.46) * 360;
+      var bob = Math.sin((u / 0.46) * Math.PI) * box.size * 0.16;
+      paint(cash.x, cash.y, bob, 1, 0, spin);
+      showPose("leap");
+    } else {
+      paint(cash.x, cash.y, 0, 0, 0, 0);
+      showPose(wp ? wp.pose : "sit");
+      if (pile && u > 0.62) pile.classList.add("is-out");
+    }
+    report(true);
     if (u < 1) return;
-    trip.i += 1;
-    if (trip.i < trip.pts.length - 1) {
-      armArc(now);
-      return;
+    cashPlayed = true;
+    cash = null;
+    showPile(false);
+    report(false);
+  }
+
+  function nearbyPerch() {
+    if (window.innerWidth < 720) return -1;
+    var box = metrics();
+    var here = pts[landI];
+    if (!here || here.kind === "cash") return -1;
+    var origin = spot(here, box);
+    if (!origin) return -1;
+    var best = -1;
+    var bestD = 240;
+    for (var i = 0; i < pts.length; i++) {
+      if (i === landI || pts[i].kind === "cash") continue;
+      if (Math.abs(pts[i].pageY - here.pageY) > 520) continue;
+      var s = spot(pts[i], box);
+      if (!s) continue;
+      var d = Math.abs(s.x - origin.x) + Math.abs(s.y - origin.y);
+      if (d > 48 && d < bestD) {
+        bestD = d;
+        best = i;
+      }
     }
-    if (trip.phase === "out") {
-      trip.phase = "sit";
-      trip.arc = null;
-      trip.sitUntil = now + SIT_MS;
-      return;
-    }
-    landY = goal;
-    nextTripAt = now + GAP_MS;
-    trip = null;
-    settle();
+    return best;
   }
 
   function frame(now) {
@@ -379,79 +478,112 @@
       running = false;
       return;
     }
+    if (!pts.length) build();
     var box = metrics();
-    var goal = goalY(box);
     var hidden = away();
     root.classList.toggle("is-away", hidden);
-    var mobile = window.innerWidth < 720;
-    var dead = mobile ? 6 : 10;
-    var step = mobile ? 14 : 40;
-
-    if (hidden || !placed) {
-      trip = null;
+    if (hidden) {
+      cancelCash(true);
+      excursion = null;
       hop = null;
-      landY = goal;
+      var snap = spot(pts[goalIndex()], box);
+      if (snap) paint(snap.x, snap.y, 0, 0, 0);
       placed = true;
-      paint(0, landY, 0, 0, 0);
       report(false);
       raf = 0;
       running = false;
       return;
     }
-    if (mobile) {
-      trip = null;
-      tripBack = false;
-    }
 
-    if (trip && !mobile) {
-      runTrip(now, box, goal);
-      if (trip) {
+    if (cash) {
+      runCash(now, box);
+      if (cash) {
         raf = requestAnimationFrame(frame);
         return;
       }
     }
 
     if (hop) {
-      var u = Math.min(1, (now - hop.t0) / hop.dur);
-      var along = hop.from + (hop.to - hop.from) * ease(u);
-      var lift = Math.sin(Math.PI * u) * box.size * 0.33;
-      paint(0, along, lift, 0, (hop.to - hop.from) || hop.dir);
-      showPose("leap");
-      report(true);
-      if (u < 1) {
+      if (!advance(now, box)) {
         raf = requestAnimationFrame(frame);
         return;
       }
-      landY = hop.to;
-      face = hop.dir;
+      landI = hop.dest;
       hop = null;
+      if (excursion && excursion.phase === "go") {
+        excursion.phase = "sit";
+        excursion.sitUntil = now + SIT_MS;
+      } else if (excursion && excursion.phase === "back") {
+        excursion = null;
+        nextEx = now + GAP_MS;
+      }
     }
 
-    var gap = goal - landY;
-    var abs = Math.abs(gap);
-    var scrolling = (now - lastAt) < 160;
-    var ready = (now - lastHopAt) >= HOP_MS;
-    if (ready && abs >= (scrolling ? step * 0.85 : dead)) {
-      var dir = gap > 0 ? 1 : -1;
-      var mag = abs;
-      if (abs > step) mag = Math.min(abs, step + Math.min(step, (abs - step) * 0.35));
-      hop = { from: landY, to: landY + dir * mag, t0: now, dur: HOP_MS, dir: dir };
-      lastHopAt = now;
-      face = dir;
+    var scrolling = (now - lastAt) < 170;
+    var goal = goalIndex();
+    noteCashLeave(now);
+
+    if (excursion && excursion.phase === "sit") {
+      var seat = pts[landI];
+      showPose(seat ? seat.pose : "rest");
+      paint(pos.x, pos.y, 0, 0, 0);
+      report(true);
+      if (scrolling) excursion = null;
+      else if (now >= excursion.sitUntil) {
+        excursion.phase = "back";
+        beginHop(excursion.home, now, box);
+      }
+      if (hop || (excursion && excursion.phase === "sit")) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
+    }
+
+    if (!hop && landI !== goal && (armed || !placed)) {
+      var dest = (scrolling && placed) ? stepToward(goal, true) : goal;
+      if (dest !== landI) beginHop(dest, now, box);
+      placed = true;
+      if (hop) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
+    }
+    if (!scrolling && landI === goal) {
+      armed = false;
+      baseY = window.scrollY || 0;
+    }
+
+    if (!placed) {
+      var first = spot(pts[goal], box);
+      landI = goal;
+      if (first) paint(first.x, first.y, 0, 0, 0);
+      placed = true;
+    }
+
+    var here = pts[landI];
+    if (!hop && !scrolling && here && here.kind === "cash" && cashOk(now)) {
+      startCash(now);
       raf = requestAnimationFrame(frame);
       return;
     }
 
-    if (abs < dead) landY = goal;
-    settle();
-    if (!mobile && !scrolling) {
-      var due = Math.max(lastAt + REST_MS, nextTripAt);
+    showPose(here ? here.pose : "rest");
+    paint(pos.x, pos.y, 0, 0, 0);
+    report(false);
+
+    if (!scrolling && !excursion && window.innerWidth >= 720) {
+      var due = Math.max(lastAt + REST_MS, nextEx);
       if (now >= due) {
-        var group = pickPerch(box);
-        if (group) {
-          beginOut(group);
-          raf = requestAnimationFrame(frame);
-          return;
+        var n = nearbyPerch();
+        if (n >= 0) {
+          excursion = { dest: n, home: landI, phase: "go", sitUntil: 0 };
+          nextEx = now + GAP_MS;
+          beginHop(n, now, box);
+          if (hop) {
+            raf = requestAnimationFrame(frame);
+            return;
+          }
+          excursion = null;
         }
       } else {
         armRest(due - now);
@@ -481,21 +613,20 @@
 
   window.addEventListener("scroll", function () {
     var y = window.scrollY || 0;
-    var delta = y - lastY;
-    if (Math.abs(delta) >= 6) {
-      if (delta > 0) face = 1;
-      else face = -1;
+    if (Math.abs(y - baseY) >= 8) {
       lastAt = performance.now();
-      if (trip) tripBack = true;
+      armed = true;
+      if (cash) cancelCash(false);
+      if (excursion && excursion.phase === "sit") excursion = null;
     }
     lastY = y;
     kick();
   }, { passive: true });
 
   window.addEventListener("resize", function () {
-    placeDots();
-    trip = null;
-    tripBack = false;
+    build();
+    cancelCash(false);
+    excursion = null;
     hop = null;
     placed = false;
     kick();
@@ -509,18 +640,16 @@
       raf = 0;
       running = false;
       if (hop) hop.hold = t;
-      if (trip) trip.hold = t;
+      if (cash) cash.hold = t;
       return;
     }
     if (hop && hop.hold) {
       hop.t0 += t - hop.hold;
       hop.hold = 0;
     }
-    if (trip && trip.hold) {
-      var slipped = t - trip.hold;
-      if (trip.arc) trip.arc.t0 += slipped;
-      if (trip.sitUntil) trip.sitUntil += slipped;
-      trip.hold = 0;
+    if (cash && cash.hold) {
+      cash.t0 += t - cash.hold;
+      cash.hold = 0;
     }
     kick();
   });
@@ -528,12 +657,13 @@
   if (mq.addEventListener) mq.addEventListener("change", function () {
     if (mq.matches) {
       report(false);
+      cancelCash(false);
       if (raf) cancelAnimationFrame(raf);
       raf = 0;
       running = false;
     }
   });
 
-  placeDots();
+  build();
   kick();
 })();
