@@ -77,7 +77,7 @@ Only the current product name HonestPing appears in user-facing copy.
 - `#gamers`: gamer test grades ping, jitter, and packet loss. Example tier marks: Esports Ready, Silver, Bronze, Steel. Pro Gaming is one coming-soon line. No HUD.
 - `#isp`: 21-test example week, day strip, hour note, good-news win. Try a 7-day example replaces the separate savings estimator. PDF coming soon. Share report kept.
 - `#user-types`: short guide for everyday use, work calls, streaming, and play.
-- Asset query `v=20261011c`. Single dark theme. The sample week and the static example report use the light 7-day Pro report panel.
+- Asset query `v=20261011d`. Single dark theme. The sample week and the static example report use the dark 7-day Pro report panel.
 - Watch a 7-day example: muted playsinline mp4, gif fallback, play/pause button, no autoplay when reduced motion is set. Example data.
 - Gamer tiers use the S crest plus silver, bronze, and steel badges.
 - Sourced line: you may be overpaying by about $20 a month (about $240 a year), cited as a gigabit tier price gap, with the FCC Measuring Broadband America Thirteenth Report.
