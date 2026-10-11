@@ -44,7 +44,8 @@ a { color: var(--hp-blue); text-decoration: none; }
 a:hover { text-decoration: underline; }
 a:focus-visible,
 button:focus-visible,
-input:focus-visible {
+input:focus-visible,
+select:focus-visible {
   outline: 3px solid var(--hp-blue);
   outline-offset: 3px;
 }
@@ -755,8 +756,9 @@ input:focus-visible {
 .isp-showcase {
   display: grid;
   gap: 20px;
-  grid-template-areas: "demo" "try" "flow" "verdict" "proof" "report" "news" "value" "cta";
+  grid-template-areas: "ways" "demo" "try" "flow" "verdict" "proof" "report" "news" "value" "cta";
 }
+.isp-showcase > .overpay-ways { grid-area: ways; }
 .isp-showcase > .week-demo { grid-area: demo; }
 .isp-showcase > .try-week { grid-area: try; }
 .isp-flow { grid-area: flow; }
@@ -770,8 +772,9 @@ input:focus-visible {
   .isp-showcase {
     grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr);
     /* Demo, then the sample week. Steps beside the verdict. Proof copy beside the report. Then the good-news line, the sourced note, and the CTA. */
-    grid-template-rows: auto auto auto auto auto auto auto;
+    grid-template-rows: auto auto auto auto auto auto auto auto;
     grid-template-areas:
+      "ways ways"
       "demo demo"
       "try try"
       "flow verdict"
@@ -2221,7 +2224,7 @@ input:focus-visible {
 .pdemo-meta li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--hp-line); }
 .pdemo-meta span { color: var(--hp-muted); }
 
-/* 7-day report value: estimate + uses (index #isp, v=20261011d) */
+/* 7-day report value: estimate + uses (index #isp, v=20261011e) */
 .isp-head .plan-tag { margin-left: 6px; vertical-align: middle; }
 .isp-value { display: grid; gap: 20px; min-width: 0; }
 @media (min-width: 900px) { .isp-value { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; } }
@@ -2263,7 +2266,7 @@ input:focus-visible {
 .isp-head .isp-label-row .plan-tag { margin-left: 0; }
 .nowrap { white-space: nowrap; }
 
-/* Free to start, gamer tiers, 7-day strip, user types (v=20261011d) */
+/* Free to start, gamer tiers, 7-day strip, user types (v=20261011e) */
 .free-band { padding-bottom: 8px; }
 .free-panel {
   max-width: 46rem;
@@ -2395,7 +2398,25 @@ input:focus-visible {
 .week-demo-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
 .week-demo-note { margin: 0; font-size: 13px; color: var(--hp-muted); }
 
-/* Try a 7-day example, app panel (index #isp, v=20261011d) */
+/* Two ways you could be overpaying (index #isp) */
+.overpay-ways { display: grid; gap: 12px; min-width: 0; }
+.overpay-ways h3 { font-size: 18px; font-weight: 600; }
+.overpay-grid { display: grid; gap: 12px; }
+.overpay-card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  min-width: 0;
+}
+.overpay-card svg { flex: none; margin-top: 2px; color: var(--hp-cyan); }
+.overpay-card h4 { font-size: 15px; font-weight: 650; margin-bottom: 4px; }
+.overpay-card p { margin: 0; font-size: 14px; line-height: 1.45; color: var(--hp-muted); }
+@media (min-width: 700px) {
+  .overpay-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* Try a 7-day example, app panel (index #isp, v=20261011e) */
 .try-week {
   position: relative;
   margin: 0;
@@ -2427,7 +2448,21 @@ input:focus-visible {
   font-size: 16px;
   font-variant-numeric: tabular-nums;
 }
-.try-field input:disabled { opacity: 0.72; }
+.try-field input:disabled,
+.try-field select:disabled { opacity: 0.72; }
+.try-field select {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--hp-line);
+  background: var(--hp-surface);
+  color: var(--hp-text);
+  font: inherit;
+  font-size: 16px;
+  color-scheme: dark;
+}
+.try-field-use { flex: 1 1 240px; }
 .try-error { flex: 1 1 100%; margin: 0; font-size: 14px; color: var(--hp-red); }
 .try-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .try-quiet { margin: 0; font-size: 14px; color: var(--hp-text); }
@@ -2567,7 +2602,15 @@ input:focus-visible {
 .app7-leg .is-g { background: #47e1a8; }
 .app7-leg .is-a { background: #ffc46b; }
 .app7-leg .is-r { background: #ff7d88; }
-.app7-so { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+.app7-so { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+.app7-money { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+.app7-note {
+  margin: 6px 0 0;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #8fa8b6;
+}
 .app7-k { border: 1px solid #23404e; border-radius: 9px; padding: 8px 11px; background: #0a1824; min-width: 0; }
 .app7-k small { display: block; color: #7f98a6; font-size: 11px; }
 .app7-val { font-size: 15px; font-weight: 700; color: #e6f1f6; overflow-wrap: break-word; }
@@ -2590,10 +2633,11 @@ input:focus-visible {
   .app7-hint { display: block; }
   .app7-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .app7-wk { min-width: 336px; }
+  .app7-money { grid-template-columns: 1fr; }
 }
 @media (max-width: 420px) {
   .app7-top, .app7-body { padding-left: 12px; padding-right: 12px; }
-  .app7-so { gap: 6px; }
+  .app7-so, .app7-money { gap: 6px; }
   .app7-k { padding: 8px; }
   .app7-val, .app7-val.is-short { font-size: 12.5px; }
 }

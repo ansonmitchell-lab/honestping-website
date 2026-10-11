@@ -30,6 +30,46 @@
     return "$" + Math.round(v).toLocaleString("en-US");
   }
 
+  /* Ranges match the #user-types guide. Tiers are the usual advertised steps, used only to see whether the next step down still covers that range. */
+  var USES = {
+    light: { min: 100, max: 100, about: 100 },
+    stream: { min: 100, max: 300, about: 300 },
+    gamer: { min: 100, max: 300, about: 300 },
+    remote: { min: 100, max: 300, about: 300 },
+    heavy: { min: 500, max: 1000, about: 1000 },
+    home: { min: 300, max: 500, about: 500 }
+  };
+  var TIERS = [100, 200, 300, 500, 1000, 2000];
+
+  function nextTierDown(planMbps) {
+    var below = null;
+    var i;
+    for (i = 0; i < TIERS.length; i++) {
+      if (TIERS[i] < planMbps) below = TIERS[i];
+    }
+    return below;
+  }
+
+  function planFit(planMbps, use) {
+    var next;
+    if (planMbps < use.min) {
+      return { kind: "small", text: "Your plan may be on the small side for how you use it." };
+    }
+    next = nextTierDown(planMbps);
+    if (planMbps > use.max * 2 && next !== null && next >= use.max) {
+      return {
+        kind: "big",
+        text: "Your plan may be bigger than your home needs. Homes like yours usually do fine with about " + use.about + " Mbps. A smaller plan may save about $20/month."
+      };
+    }
+    return { kind: "fit", text: "Your plan looks like a fit for how you use it." };
+  }
+
+  function speedCopy(summary) {
+    if (summary.good) return "You got the speed you pay for.";
+    return "You may be overpaying by about " + money(summary.monthly) + "/month for speed you don\u2019t get.";
+  }
+
   function pick(total, count) {
     var bag = [];
     var i;
@@ -148,24 +188,32 @@
     };
   }
 
-  function outcomeCopy(summary) {
-    if (summary.good) {
+  function outcomeCopy(summary, fit) {
+    var both = summary.good && fit && fit.kind === "fit";
+    if (both) {
       return {
         title: "You got what you pay for!",
-        detail: "Run it again every few months, or whenever something feels off."
+        detail: "Run it again every few months, or whenever something feels off. These are estimates. Your provider decides."
+      };
+    }
+    if (!summary.good) {
+      return {
+        title: speedCopy(summary),
+        detail: "About " + money(summary.yearly) + " a year for speed you don\u2019t get. These are estimates. Your provider decides."
       };
     }
     return {
-      title: "You may be overpaying by about " + money(summary.monthly) + "/month (about " + money(summary.yearly) + "/year).",
-      detail: "That is an estimate. Your provider decides."
+      title: speedCopy(summary),
+      detail: "These are estimates. Your provider decides."
     };
   }
 
-  function resultAnnouncement(summary) {
-    var copy = outcomeCopy(summary);
+  function resultAnnouncement(summary, fit) {
+    var copy = outcomeCopy(summary, fit);
     return "Typical speed " + summary.typical + " Mbps, " + summary.pct +
-      "% of plan. Slowest time of day: " + summary.slowLabel + ". " +
-      copy.title + " " + copy.detail;
+      "% of plan. Slowest time of day: " + summary.slowLabel + ". Speed: " +
+      speedCopy(summary) + " Plan fit: " + fit.text +
+      " Based on how you said your home uses the internet. " + copy.detail;
   }
 
   if (typeof module !== "undefined" && module.exports) {
@@ -175,7 +223,10 @@
       outcomeCopy: outcomeCopy,
       gap: gap,
       money: money,
-      median: median
+      median: median,
+      planFit: planFit,
+      speedCopy: speedCopy,
+      USES: USES
     };
   }
   if (typeof document === "undefined") return;
@@ -183,6 +234,7 @@
   var form = document.getElementById("try-week-form");
   var planEl = document.getElementById("try-plan");
   var billEl = document.getElementById("try-bill");
+  var useEl = document.getElementById("try-use");
   var errorEl = document.getElementById("try-error");
   var runBtn = document.getElementById("try-run");
   var skipBtn = document.getElementById("try-skip");
@@ -196,18 +248,20 @@
   var nowEl = document.getElementById("try-now");
   var soFarEl = document.getElementById("try-so-far");
   var slowEl = document.getElementById("try-slow");
-  var moneyEl = document.getElementById("try-money");
+  var speedEl = document.getElementById("try-speed");
+  var fitEl = document.getElementById("try-fit");
   var detailEl = document.getElementById("try-detail");
   var strip = document.getElementById("try-strip");
   var againBtn = document.getElementById("try-again");
   var quietEl = document.getElementById("try-quiet");
-  if (!form || !planEl || !billEl || !errorEl || !runBtn || !skipBtn || !live || !stage || !ringNum || !countEl || !dayEl || !ring || !barEl || !nowEl || !soFarEl || !slowEl || !moneyEl || !detailEl || !strip || !againBtn || !quietEl) return;
+  if (!form || !planEl || !billEl || !useEl || !errorEl || !runBtn || !skipBtn || !live || !stage || !ringNum || !countEl || !dayEl || !ring || !barEl || !nowEl || !soFarEl || !slowEl || !speedEl || !fitEl || !detailEl || !strip || !againBtn || !quietEl) return;
 
   ring.style.strokeDasharray = "0 " + RING_C;
 
   var tests = [];
   var plan = 300;
   var bill = 70;
+  var use = USES.stream;
   var revealed = 0;
   var running = false;
   var timer = 0;
@@ -228,7 +282,7 @@
   function clearInvalid() {
     errorEl.textContent = "";
     errorEl.hidden = true;
-    [planEl, billEl].forEach(function (el) {
+    [planEl, billEl, useEl].forEach(function (el) {
       el.removeAttribute("aria-invalid");
       el.removeAttribute("aria-describedby");
     });
@@ -237,7 +291,7 @@
   function setInvalid(el, message) {
     errorEl.textContent = message;
     errorEl.hidden = false;
-    [planEl, billEl].forEach(function (field) {
+    [planEl, billEl, useEl].forEach(function (field) {
       field.removeAttribute("aria-invalid");
       field.removeAttribute("aria-describedby");
     });
@@ -257,9 +311,14 @@
       setInvalid(billEl, "Enter a monthly bill from 0 to 1000.");
       return false;
     }
+    if (!USES[useEl.value]) {
+      setInvalid(useEl, "Choose how your home uses the internet.");
+      return false;
+    }
     clearInvalid();
     plan = nextPlan;
     bill = nextBill;
+    use = USES[useEl.value];
     return true;
   }
 
@@ -268,6 +327,7 @@
     runBtn.disabled = busy;
     planEl.disabled = busy;
     billEl.disabled = busy;
+    useEl.disabled = busy;
     stage.setAttribute("aria-busy", busy ? "true" : "false");
   }
 
@@ -307,16 +367,24 @@
     return "Saved: " + DAYS[last.day] + " " + last.slot + ", " + pctOf(last.mbps, plan) + "% of plan. Next is " + DAYS[next.day] + " " + next.slot + ".";
   }
 
+  function paintFit() {
+    var fit = planFit(plan, use);
+    fitEl.textContent = fit.text;
+    fitEl.className = "app7-val " + (fit.kind === "fit" ? "is-good" : fit.kind === "small" ? "is-mid" : "is-short");
+    return fit;
+  }
+
   function paintTiles(count) {
     var summary;
     var slowPct;
+    var fit = paintFit();
     if (count <= 0) {
       soFarEl.textContent = "Waiting for the first test";
       soFarEl.className = "app7-val";
       slowEl.textContent = "·";
       slowEl.className = "app7-val";
-      moneyEl.textContent = "·";
-      moneyEl.className = "app7-val";
+      speedEl.textContent = "Waiting for the first test";
+      speedEl.className = "app7-val";
       detailEl.hidden = true;
       detailEl.textContent = "";
       return null;
@@ -327,16 +395,11 @@
     soFarEl.className = "app7-val " + tone(summary.pct);
     slowEl.textContent = summary.slowLabel + " · " + slowPct + "%";
     slowEl.className = "app7-val " + tone(slowPct);
-    if (summary.good) {
-      moneyEl.textContent = "You got what you pay for!";
-      moneyEl.className = "app7-val is-good";
-      detailEl.textContent = "Run it again every few months, or whenever something feels off.";
-    } else {
-      moneyEl.textContent = "You may be overpaying by about " + money(summary.monthly) + "/month";
-      moneyEl.className = "app7-val is-short";
-      detailEl.textContent = "About " + money(summary.yearly) + " a year. That is an estimate. Your provider decides.";
-    }
+    speedEl.textContent = speedCopy(summary);
+    speedEl.className = "app7-val " + (summary.good ? "is-good" : "is-short");
+    detailEl.textContent = outcomeCopy(summary, fit).detail;
     detailEl.hidden = false;
+    summary.fit = fit;
     return summary;
   }
 
@@ -404,7 +467,7 @@
     againBtn.hidden = false;
     quietEl.hidden = false;
     summary = render(21);
-    if (announce && summary) live.textContent = resultAnnouncement(summary);
+    if (announce && summary) live.textContent = resultAnnouncement(summary, summary.fit);
     stage.focus();
   }
 

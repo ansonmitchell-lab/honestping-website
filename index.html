@@ -27,7 +27,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20261011d">
+  <link rel="stylesheet" href="styles.css?v=20261011e">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -139,23 +139,23 @@
           <div class="gamers-showcase">
             <div class="tier-row" aria-label="Example gamer tiers">
               <figure class="tier-card tier-s">
-                <img class="tier-mark" src="assets/esports-medal-mark-s.svg?v=20261011d" width="72" height="72" alt="">
+                <img class="tier-mark" src="assets/esports-medal-mark-s.svg?v=20261011e" width="72" height="72" alt="">
                 <figcaption><strong>Esports Ready</strong><span>90 to 100. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-silver">
-                <img class="tier-mark" src="assets/tier-silver.svg?v=20261011d" width="72" height="72" alt="">
+                <img class="tier-mark" src="assets/tier-silver.svg?v=20261011e" width="72" height="72" alt="">
                 <figcaption><strong>Silver</strong><span>80 to 89. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-bronze">
-                <img class="tier-mark" src="assets/tier-bronze.svg?v=20261011d" width="72" height="72" alt="">
+                <img class="tier-mark" src="assets/tier-bronze.svg?v=20261011e" width="72" height="72" alt="">
                 <figcaption><strong>Bronze</strong><span>65 to 79. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-steel">
-                <img class="tier-mark" src="assets/tier-steel.svg?v=20261011d" width="72" height="72" alt="">
+                <img class="tier-mark" src="assets/tier-steel.svg?v=20261011e" width="72" height="72" alt="">
                 <figcaption><strong>Steel</strong><span>50 to 64. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-steel">
-                <img class="tier-mark" src="assets/tier-steel-low.svg?v=20261011d" width="72" height="72" alt="">
+                <img class="tier-mark" src="assets/tier-steel-low.svg?v=20261011e" width="72" height="72" alt="">
                 <figcaption><strong>Steel</strong><span>0 to 49. Example data.</span></figcaption>
               </figure>
             </div>
@@ -235,6 +235,31 @@
           </div>
 
           <div class="isp-showcase">
+            <div class="overpay-ways">
+              <h3>Two ways you could be overpaying</h3>
+              <div class="overpay-grid">
+                <article class="card overpay-card">
+                  <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+                    <path d="M6 18V11M12 18V7M18 18v-3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                    <path d="M7 22h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  <div>
+                    <h4>Getting less than you pay for</h4>
+                    <p>Your speed runs below the plan, especially at busy times.</p>
+                  </div>
+                </article>
+                <article class="card overpay-card">
+                  <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+                    <rect x="4" y="6" width="20" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                    <rect x="9" y="11" width="10" height="6" rx="1.5" fill="currentColor" opacity="0.85"/>
+                  </svg>
+                  <div>
+                    <h4>Paying for more than you use</h4>
+                    <p>Your plan is bigger than how your home actually uses the internet.</p>
+                  </div>
+                </article>
+              </div>
+            </div>
             <figure class="week-demo" id="week-demo">
               <div class="week-demo-head">
                 <h3>Watch a 7-day example</h3>
@@ -242,8 +267,8 @@
               </div>
               <div class="week-demo-frame">
                 <video id="week-demo-video" muted playsinline preload="metadata" width="966" height="640">
-                  <source src="assets/demo-timelapse-light.mp4?v=20261011d" type="video/mp4">
-                  <img src="assets/demo-timelapse-light.gif?v=20261011d" alt="Example data. A sample 7-day report filling in across the week.">
+                  <source src="assets/demo-timelapse-light.mp4?v=20261011e" type="video/mp4">
+                  <img src="assets/demo-timelapse-light.gif?v=20261011e" alt="Example data. A sample 7-day report filling in across the week.">
                 </video>
               </div>
               <div class="week-demo-controls">
@@ -269,6 +294,17 @@
                   <div class="try-field">
                     <label for="try-bill">Monthly internet bill ($)</label>
                     <input id="try-bill" type="number" inputmode="decimal" min="0" max="1000" step="1" value="70">
+                  </div>
+                  <div class="try-field try-field-use">
+                    <label for="try-use">How does your home use the internet?</label>
+                    <select id="try-use">
+                      <option value="light">Light user, about 100 Mbps</option>
+                      <option value="stream" selected>Streamer, 100 to 300 Mbps</option>
+                      <option value="gamer">Gamer, 100 to 300 Mbps</option>
+                      <option value="remote">Remote worker, 100 to 300 Mbps</option>
+                      <option value="heavy">Heavy downloader or creator, 500 Mbps to 1 Gig</option>
+                      <option value="home">Big household, 300 to 500 Mbps</option>
+                    </select>
                   </div>
                 </div>
                 <p class="try-error" id="try-error" role="alert" hidden></p>
@@ -325,7 +361,15 @@
                   <div class="app7-so">
                     <div class="app7-k"><small>So far</small><b class="app7-val" id="try-so-far">Waiting for the first test</b></div>
                     <div class="app7-k"><small>Slow spot so far</small><b class="app7-val" id="try-slow">·</b></div>
-                    <div class="app7-k"><small>Money so far</small><b class="app7-val" id="try-money">·</b></div>
+                  </div>
+                  <div class="app7-money">
+                    <div class="app7-k"><small>Speed</small><b class="app7-val" id="try-speed">Waiting for the first test</b></div>
+                    <div class="app7-k">
+                      <small>Plan fit</small>
+                      <b class="app7-val" id="try-fit">·</b>
+                      <p class="app7-note">Based on how you said your home uses the internet.</p>
+                      <p class="app7-note">About $20/month is the typical standard-price gap between a gigabit plan and the next tier down at major US providers, October 2026. Prices vary by provider and area.</p>
+                    </div>
                   </div>
                   <p class="app7-detail" id="try-detail" hidden></p>
                 </div>
@@ -454,9 +498,17 @@
                   <div class="app7-so">
                     <div class="app7-k"><small>So far</small><b class="app7-val is-mid">78% of your plan</b></div>
                     <div class="app7-k"><small>Slow spot so far</small><b class="app7-val is-mid">Evenings · 66%</b></div>
-                    <div class="app7-k"><small>Money so far</small><b class="app7-val is-short">You may be overpaying by about $15/month</b></div>
                   </div>
-                  <p class="app7-detail">Example data. A $70 bill and a 100 Mbps plan, typical speed 78 Mbps. About $185 a year. That is an estimate. Your provider decides.</p>
+                  <div class="app7-money">
+                    <div class="app7-k"><small>Speed</small><b class="app7-val is-short">You may be overpaying by about $15/month for speed you don’t get</b></div>
+                    <div class="app7-k">
+                      <small>Plan fit</small>
+                      <b class="app7-val is-good">Your plan looks like a fit for how you use it.</b>
+                      <p class="app7-note">Example data. A streamer home, 100 to 300 Mbps. Based on that example, not a measurement of household use.</p>
+                      <p class="app7-note">About $20/month is the typical standard-price gap between a gigabit plan and the next tier down at major US providers, October 2026. Prices vary by provider and area.</p>
+                    </div>
+                  </div>
+                  <p class="app7-detail">Example data. A $70 bill and a 100 Mbps plan, typical speed 78 Mbps. About $185 a year for speed you don’t get. These are estimates. Your provider decides.</p>
                 </div>
               </div>
               <div class="report-export">
@@ -823,9 +875,9 @@
             <span class="window-title">HonestPing Overview (Pro view, example)</span>
           </div>
           <picture>
-            <source srcset="assets/app-preview.webp?v=20261011d" type="image/webp">
+            <source srcset="assets/app-preview.webp?v=20261011e" type="image/webp">
             <img
-              src="assets/app-preview.png?v=20261011d"
+              src="assets/app-preview.png?v=20261011e"
               width="1068"
               height="971"
               alt="HonestPing Overview: Healthy badge, Your internet is responding, example 28 ms ping in the ring, jitter and packet loss, and a 15-minute ping chart"
@@ -927,11 +979,11 @@
     </div>
   </footer>
 
-  <script src="waitlist.js?v=20261011d" defer></script>
-  <script src="gauge.js?v=20261011d" defer></script>
-  <script src="trace-demo.js?v=20261011d" defer></script>
-  <script src="verdict-demo.js?v=20261011d" defer></script>
-  <script src="week-sim.js?v=20261011d" defer></script>
-  <script src="demo-player.js?v=20261011d" defer></script>
+  <script src="waitlist.js?v=20261011e" defer></script>
+  <script src="gauge.js?v=20261011e" defer></script>
+  <script src="trace-demo.js?v=20261011e" defer></script>
+  <script src="verdict-demo.js?v=20261011e" defer></script>
+  <script src="week-sim.js?v=20261011e" defer></script>
+  <script src="demo-player.js?v=20261011e" defer></script>
 </body>
 </html>
