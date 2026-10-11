@@ -266,17 +266,31 @@
     }
   }
 
+  function facePage(x) {
+    var col = document.querySelector("main .wrap");
+    var r = col ? col.getBoundingClientRect() : { left: 0, right: window.innerWidth };
+    var mid = x + metrics().size * 0.5;
+    root.classList.toggle("is-look-left", mid > (r.left + r.right) / 2);
+  }
+
   function paint(x, y, lift, dx, dy, roll) {
     pos.x = x;
     pos.y = y;
     mover.style.transform = "translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px,0)";
+    var traveling = Math.abs(dx) > 8 || Math.abs(dy) > 8;
     if (roll != null) {
+      facePage(x);
       hopEl.style.transform = "translate3d(0," + (-lift).toFixed(1) + "px,0) rotate(" + roll.toFixed(1) + "deg)";
-      if (leapImg) leapImg.style.transform = "none";
+      if (leapImg) leapImg.style.transform = root.classList.contains("is-look-left") ? "scaleX(-1)" : "none";
       return;
     }
     hopEl.style.transform = "translate3d(0," + (-lift).toFixed(1) + "px,0)";
     if (!leapImg) return;
+    if (!traveling) {
+      facePage(x);
+      leapImg.style.transform = "none";
+      return;
+    }
     if (Math.abs(dy) > Math.abs(dx) + 8) {
       leapImg.style.transform = "rotate(" + (dy > 0 ? 90 : -90) + "deg)";
     } else if (dx < -8) {

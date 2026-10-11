@@ -815,6 +815,7 @@ select:focus-visible {
     margin: 0;
     justify-self: end;
     align-self: center;
+    transform: scaleX(-1);
   }
 }
 .isp-head .section-label { color: var(--hp-green); }
@@ -1554,6 +1555,7 @@ select:focus-visible {
     width: 160px;
     margin: 0;
     justify-self: end;
+    transform: scaleX(-1);
   }
 }
 .wfh-showcase {
@@ -2312,7 +2314,7 @@ select:focus-visible {
 .pdemo-meta li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--hp-line); }
 .pdemo-meta span { color: var(--hp-muted); }
 
-/* 7-day report value: estimate + uses (index #isp, v=20261011l) */
+/* 7-day report value: estimate + uses (index #isp, v=20261011m) */
 .isp-head .plan-tag { margin-left: 6px; vertical-align: middle; }
 .isp-value { display: grid; gap: 20px; min-width: 0; }
 @media (min-width: 900px) { .isp-value { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; } }
@@ -2354,7 +2356,7 @@ select:focus-visible {
 .isp-head .isp-label-row .plan-tag { margin-left: 0; }
 .nowrap { white-space: nowrap; }
 
-/* Free to start, gamer tiers, 7-day strip, user types (v=20261011l) */
+/* Free to start, gamer tiers, 7-day strip, user types (v=20261011m) */
 .free-band { padding-bottom: 8px; }
 .free-panel {
   max-width: 46rem;
@@ -2498,7 +2500,7 @@ select:focus-visible {
 .mascot-quarter { width: 101px; height: auto; display: block; justify-self: start; }
 @media (min-width: 720px) {
   .user-types-head { grid-template-columns: minmax(0, 1fr) 120px; }
-  .mascot-quarter { justify-self: end; }
+  .mascot-quarter { justify-self: end; transform: scaleX(-1); }
 }
 .user-types {
   display: grid;
@@ -2576,7 +2578,7 @@ select:focus-visible {
   .overpay-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* Try a sample week, app panel (index #isp, v=20261011l) */
+/* Try a sample week, app panel (index #isp, v=20261011m) */
 .try-week {
   position: relative;
   margin: 0;
@@ -2822,7 +2824,7 @@ select:focus-visible {
   .day-strip small { font-size: 9px; }
 }
 
-/* Scroll companion (home only, v=20261011l). Full-viewport layer, no rail. */
+/* Scroll companion (home only, v=20261011m). Full-viewport layer, no rail. */
 .scroll-pal {
   position: fixed;
   inset: 0;
@@ -2860,6 +2862,12 @@ select:focus-visible {
   opacity: 0;
   transition: opacity 180ms ease;
   pointer-events: none;
+}
+.scroll-pal .pal-img[data-face="right"]:not([data-pose="leap"]) {
+  transition: opacity 180ms ease, transform 120ms ease;
+}
+.scroll-pal.is-look-left .pal-img[data-face="right"]:not([data-pose="leap"]) {
+  transform: scaleX(-1);
 }
 .scroll-pal .pal-img.is-on { opacity: 1; }
 .scroll-pal .pal-img[data-pose="leap"] { transform-origin: center center; }
