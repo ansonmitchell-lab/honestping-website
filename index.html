@@ -27,7 +27,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20261011b">
+  <link rel="stylesheet" href="styles.css?v=20261011c">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -139,23 +139,23 @@
           <div class="gamers-showcase">
             <div class="tier-row" aria-label="Example gamer tiers">
               <figure class="tier-card tier-s">
-                <img class="tier-mark" src="assets/esports-medal-mark-s.svg?v=20261011b" width="72" height="72" alt="">
+                <img class="tier-mark" src="assets/esports-medal-mark-s.svg?v=20261011c" width="72" height="72" alt="">
                 <figcaption><strong>Esports Ready</strong><span>90 to 100. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-silver">
-                <img class="tier-mark" src="assets/tier-silver.svg?v=20261011b" width="72" height="72" alt="">
+                <img class="tier-mark" src="assets/tier-silver.svg?v=20261011c" width="72" height="72" alt="">
                 <figcaption><strong>Silver</strong><span>80 to 89. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-bronze">
-                <img class="tier-mark" src="assets/tier-bronze.svg?v=20261011b" width="72" height="72" alt="">
+                <img class="tier-mark" src="assets/tier-bronze.svg?v=20261011c" width="72" height="72" alt="">
                 <figcaption><strong>Bronze</strong><span>65 to 79. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-steel">
-                <img class="tier-mark" src="assets/tier-steel.svg?v=20261011b" width="72" height="72" alt="">
+                <img class="tier-mark" src="assets/tier-steel.svg?v=20261011c" width="72" height="72" alt="">
                 <figcaption><strong>Steel</strong><span>50 to 64. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-steel">
-                <img class="tier-mark" src="assets/tier-steel-low.svg?v=20261011b" width="72" height="72" alt="">
+                <img class="tier-mark" src="assets/tier-steel-low.svg?v=20261011c" width="72" height="72" alt="">
                 <figcaption><strong>Steel</strong><span>0 to 49. Example data.</span></figcaption>
               </figure>
             </div>
@@ -242,8 +242,8 @@
               </div>
               <div class="week-demo-frame">
                 <video id="week-demo-video" muted playsinline preload="metadata" width="966" height="640">
-                  <source src="assets/demo-timelapse-light.mp4?v=20261011b" type="video/mp4">
-                  <img src="assets/demo-timelapse-light.gif?v=20261011b" alt="Example data. A sample 7-day report filling in across the week.">
+                  <source src="assets/demo-timelapse-light.mp4?v=20261011c" type="video/mp4">
+                  <img src="assets/demo-timelapse-light.gif?v=20261011c" alt="Example data. A sample 7-day report filling in across the week.">
                 </video>
               </div>
               <div class="week-demo-controls">
@@ -275,41 +275,59 @@
                 <div class="try-actions">
                   <button type="submit" class="btn btn-primary" id="try-run">Run a sample week</button>
                   <button type="button" class="btn btn-ghost" id="try-skip" hidden>Skip to results</button>
+                  <button type="button" class="btn btn-ghost" id="try-again" hidden>Run again</button>
                 </div>
               </form>
+              <p class="try-quiet" id="try-quiet" hidden><a href="#waitlist">Start a 7-day Pro report</a> <span>Pro checkout is coming soon.</span></p>
               <div id="try-live" class="try-live" aria-live="polite" aria-atomic="true"></div>
-              <div class="try-stage" id="try-stage" hidden tabindex="-1">
-                <div class="try-progress" id="try-progress" hidden>
-                  <svg class="try-ring" viewBox="0 0 72 72" width="72" height="72" aria-hidden="true" focusable="false">
-                    <circle class="try-ring-track" cx="36" cy="36" r="30"></circle>
-                    <circle class="try-ring-arc" id="try-ring" cx="36" cy="36" r="30"></circle>
-                  </svg>
-                  <div class="try-progress-text">
-                    <p class="try-count" id="try-count" aria-hidden="true">0 of 21 tests</p>
-                    <p class="try-day" id="try-day" aria-hidden="true">Day 1 of 7</p>
+              <div class="app7" id="try-stage" hidden tabindex="-1">
+                <div class="app7-top">
+                  <span class="app7-pill">EXAMPLE REPORT · NOT YOUR DATA</span>
+                  <b class="app7-title">7-day Pro report</b>
+                  <span class="app7-dim app7-grow">How a sample week fills in</span>
+                  <div class="app7-seg" role="group" aria-label="Report type">
+                    <span class="is-on">Speed</span>
+                    <span class="is-off">Gamer</span>
                   </div>
                 </div>
-                <div class="try-result" id="try-result" hidden>
-                  <p class="try-kicker" id="try-result-heading">Typical speed</p>
-                  <p class="try-typical"><strong id="try-typical">0 Mbps</strong></p>
-                  <p class="try-pct" id="try-pct">0% of plan</p>
-                  <p class="try-slow" id="try-slow">Slowest time of day: Evenings</p>
-                  <p class="try-outcome" id="try-outcome"></p>
-                  <p class="try-detail" id="try-detail"></p>
-                </div>
-                <div class="try-strip-block">
-                  <p class="strip-label">Day by day</p>
-                  <div class="try-strip" id="try-strip" aria-hidden="true"></div>
-                  <ul class="try-legend">
-                    <li><span class="try-swatch is-good" aria-hidden="true"></span> 80% or more</li>
-                    <li><span class="try-swatch is-mid" aria-hidden="true"></span> 60 to 79%</li>
-                    <li><span class="try-swatch is-low" aria-hidden="true"></span> under 60%</li>
-                  </ul>
-                </div>
-                <div class="try-done" id="try-done" hidden>
-                  <button type="button" class="btn btn-ghost" id="try-again">Run again</button>
-                  <p class="try-cta"><a href="#waitlist">Start a 7-day Pro report</a></p>
-                  <p class="try-pro">Pro checkout is coming soon.</p>
+                <div class="app7-body">
+                  <div class="app7-status">
+                    <div class="app7-ring">
+                      <svg class="app7-svg" width="120" height="120" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="#c5c8cc" stroke-width="9"></circle>
+                        <circle id="try-ring" cx="60" cy="60" r="50" fill="none" stroke="#00535f" stroke-width="9" stroke-linecap="round" stroke-dasharray="0 314.16" transform="rotate(-90 60 60)"></circle>
+                      </svg>
+                      <div class="app7-ring-c">
+                        <b id="try-ring-num">0</b>
+                        <span>of 21 tests</span>
+                      </div>
+                    </div>
+                    <div class="app7-dayblock">
+                      <div class="app7-day" id="try-day">Day 1 of 7</div>
+                      <div class="app7-count" id="try-count">0 of 21 tests done · about 7 days to go</div>
+                      <div class="app7-bar" aria-hidden="true"><i id="try-bar"></i></div>
+                      <div class="app7-sub">Morning, afternoon and evening tests · % of your plan</div>
+                    </div>
+                    <div class="app7-now">
+                      <b>What's happening now</b>
+                      <p id="try-now">Starting. First test Mon morning.</p>
+                    </div>
+                  </div>
+                  <p class="app7-hint">Scroll sideways to see every day.</p>
+                  <div class="app7-scroll">
+                    <div class="app7-wk" id="try-strip" aria-hidden="true"></div>
+                  </div>
+                  <div class="app7-leg">
+                    <span><i class="is-g"></i>80% or more</span>
+                    <span><i class="is-a"></i>60 to 79%</span>
+                    <span><i class="is-r"></i>under 60%</span>
+                  </div>
+                  <div class="app7-so">
+                    <div class="app7-k"><small>So far</small><b class="app7-val" id="try-so-far">Waiting for the first test</b></div>
+                    <div class="app7-k"><small>Slow spot so far</small><b class="app7-val" id="try-slow">·</b></div>
+                    <div class="app7-k"><small>Money so far</small><b class="app7-val" id="try-money">·</b></div>
+                  </div>
+                  <p class="app7-detail" id="try-detail" hidden></p>
                 </div>
               </div>
             </section>
@@ -385,43 +403,62 @@
             </div>
 
             <figure class="report-card" data-report-demo>
-              <div class="report-head">
-                <svg class="report-icon" width="34" height="34" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-                  <path d="M8 3h11l7 7v17a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-                  <path d="M19 3v5a2 2 0 0 0 2 2h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-                  <path d="M10.5 24v-4M14.5 24v-7M18.5 24v-2.5M22.5 24v-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M10.5 13h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
-                </svg>
-                <div class="report-head-text">
-                  <strong class="report-title">HonestPing 7-day report (example)</strong>
-                  <span class="report-meta"><span class="report-nowrap">Plan speed: 100 Mbps</span> · <span class="report-nowrap">Oct 5 to 11</span> · Example data</span>
+              <div class="app7">
+                <div class="app7-top">
+                  <span class="app7-pill">EXAMPLE REPORT · NOT YOUR DATA</span>
+                  <b class="app7-title">7-day Pro report</b>
+                  <span class="app7-dim app7-grow">Example data · 100 Mbps plan</span>
+                  <div class="app7-seg" role="group" aria-label="Report type">
+                    <span class="is-on">Speed</span>
+                    <span class="is-off">Gamer</span>
+                  </div>
+                </div>
+                <div class="app7-body">
+                  <div class="app7-status">
+                    <div class="app7-ring">
+                      <svg class="app7-svg" width="120" height="120" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="#c5c8cc" stroke-width="9"></circle>
+                        <circle cx="60" cy="60" r="50" fill="none" stroke="#00535f" stroke-width="9" stroke-linecap="round" stroke-dasharray="314.16 314.16" transform="rotate(-90 60 60)"></circle>
+                      </svg>
+                      <div class="app7-ring-c"><b>21</b><span>of 21 tests</span></div>
+                    </div>
+                    <div class="app7-dayblock">
+                      <div class="app7-day">Day 7 of 7</div>
+                      <div class="app7-count">21 of 21 tests done</div>
+                      <div class="app7-bar" aria-hidden="true"><i style="width:100%"></i></div>
+                      <div class="app7-sub">Morning, afternoon and evening tests · % of your plan</div>
+                    </div>
+                    <div class="app7-now">
+                      <b>What's happening now</b>
+                      <p>All 21 tests done.</p>
+                    </div>
+                  </div>
+                  <p class="app7-hint">Scroll sideways to see every day.</p>
+                  <div class="app7-scroll">
+                    <div class="app7-wk" aria-hidden="true">
+                      <div class="app7-d"><div class="app7-cl is-g">96%</div><div class="app7-cl is-g">90%</div><div class="app7-cl is-a">70%</div><div class="app7-h">Mon</div></div>
+                      <div class="app7-d"><div class="app7-cl is-g">94%</div><div class="app7-cl is-g">86%</div><div class="app7-cl is-a">68%</div><div class="app7-h">Tue</div></div>
+                      <div class="app7-d"><div class="app7-cl is-a">78%</div><div class="app7-cl is-a">64%</div><div class="app7-cl is-r">48%</div><div class="app7-h">Wed</div></div>
+                      <div class="app7-d"><div class="app7-cl is-g">98%</div><div class="app7-cl is-g">92%</div><div class="app7-cl is-a">72%</div><div class="app7-h">Thu</div></div>
+                      <div class="app7-d"><div class="app7-cl is-g">88%</div><div class="app7-cl is-a">78%</div><div class="app7-cl is-r">58%</div><div class="app7-h">Fri</div></div>
+                      <div class="app7-d"><div class="app7-cl is-g">82%</div><div class="app7-cl is-a">70%</div><div class="app7-cl is-r">52%</div><div class="app7-h">Sat</div></div>
+                      <div class="app7-d"><div class="app7-cl is-g">92%</div><div class="app7-cl is-g">84%</div><div class="app7-cl is-a">66%</div><div class="app7-h">Sun</div></div>
+                    </div>
+                  </div>
+                  <div class="app7-leg">
+                    <span><i class="is-g"></i>80% or more</span>
+                    <span><i class="is-a"></i>60 to 79%</span>
+                    <span><i class="is-r"></i>under 60%</span>
+                    <span class="app7-dim">Example data</span>
+                  </div>
+                  <div class="app7-so">
+                    <div class="app7-k"><small>So far</small><b class="app7-val is-mid">78% of your plan</b></div>
+                    <div class="app7-k"><small>Slow spot so far</small><b class="app7-val is-mid">Evenings · 66%</b></div>
+                    <div class="app7-k"><small>Money so far</small><b class="app7-val is-short">You may be overpaying by about $15/month</b></div>
+                  </div>
+                  <p class="app7-detail">Example data. A $70 bill and a 100 Mbps plan, typical speed 78 Mbps. About $185 a year. That is an estimate. Your provider decides.</p>
                 </div>
               </div>
-              <p class="strip-label">Day by day. Example data.</p>
-              <div class="day-strip" aria-hidden="true">
-                <span><b style="--bar:90%"></b><small>Mon</small></span>
-                <span><b style="--bar:86%"></b><small>Tue</small></span>
-                <span class="is-slow"><b style="--bar:64%"></b><small>Wed</small></span>
-                <span><b style="--bar:92%"></b><small>Thu</small></span>
-                <span><b style="--bar:78%"></b><small>Fri</small></span>
-                <span class="is-slow"><b style="--bar:70%"></b><small>Sat</small></span>
-                <span><b style="--bar:84%"></b><small>Sun</small></span>
-              </div>
-              <p class="hour-spots">Hour by hour, example data: mornings near the plan, afternoons close, evenings from 7 to 9 slower.</p>
-              <table class="report-table">
-                <thead>
-                  <tr><th scope="col">Tested</th><th scope="col">Download</th><th scope="col">Of plan</th></tr>
-                </thead>
-                <tbody>
-                  <tr class="report-row is-warn"><td>Mon Oct 5, 8:12 PM</td><td>62 Mbps</td><td><span class="report-pct">62%</span></td></tr>
-                  <tr class="report-row"><td>Tue Oct 6, 7:05 AM</td><td>90 Mbps</td><td><span class="report-pct">90%</span></td></tr>
-                  <tr class="report-row"><td>Wed Oct 7, 1:30 PM</td><td>84 Mbps</td><td><span class="report-pct">84%</span></td></tr>
-                  <tr class="report-row is-warn"><td>Thu Oct 8, 9:04 PM</td><td>58 Mbps</td><td><span class="report-pct">58%</span></td></tr>
-                  <tr class="report-row is-warn"><td>Sat Oct 10, 7:48 PM</td><td>70 Mbps</td><td><span class="report-pct">70%</span></td></tr>
-                </tbody>
-              </table>
-              <p class="report-summary"><strong>21 tests</strong> over 7 days (5 shown) · typical speed <strong class="report-avg">78 Mbps</strong> (78% of plan) · example data</p>
-              <p class="report-method">Measured from your PC. Typical speed is the median of counted tests. Weak Wi-Fi and busy-PC tests are marked and left out.</p>
               <div class="report-export">
                 <span class="report-btn">
                   <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 12.5V3m0 0L6.5 6.5M10 3l3.5 3.5M6 9.5H5a1 1 0 0 0-1 1V16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-5.5a1 1 0 0 0-1-1h-1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -786,9 +823,9 @@
             <span class="window-title">HonestPing Overview (Pro view, example)</span>
           </div>
           <picture>
-            <source srcset="assets/app-preview.webp?v=20261011b" type="image/webp">
+            <source srcset="assets/app-preview.webp?v=20261011c" type="image/webp">
             <img
-              src="assets/app-preview.png?v=20261011b"
+              src="assets/app-preview.png?v=20261011c"
               width="1068"
               height="971"
               alt="HonestPing Overview: Healthy badge, Your internet is responding, example 28 ms ping in the ring, jitter and packet loss, and a 15-minute ping chart"
@@ -890,11 +927,11 @@
     </div>
   </footer>
 
-  <script src="waitlist.js?v=20261011b" defer></script>
-  <script src="gauge.js?v=20261011b" defer></script>
-  <script src="trace-demo.js?v=20261011b" defer></script>
-  <script src="verdict-demo.js?v=20261011b" defer></script>
-  <script src="week-sim.js?v=20261011b" defer></script>
-  <script src="demo-player.js?v=20261011b" defer></script>
+  <script src="waitlist.js?v=20261011c" defer></script>
+  <script src="gauge.js?v=20261011c" defer></script>
+  <script src="trace-demo.js?v=20261011c" defer></script>
+  <script src="verdict-demo.js?v=20261011c" defer></script>
+  <script src="week-sim.js?v=20261011c" defer></script>
+  <script src="demo-player.js?v=20261011c" defer></script>
 </body>
 </html>

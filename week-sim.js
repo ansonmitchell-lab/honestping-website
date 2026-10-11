@@ -5,8 +5,7 @@
   var SLOT_LABELS = { morning: "Mornings", afternoon: "Afternoons", evening: "Evenings" };
   var DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   var STEP_MS = 820;
-  var RING_R = 30;
-  var RING_C = 2 * Math.PI * RING_R;
+  var RING_C = 2 * Math.PI * 50;
 
   function rand(lo, hi) {
     return lo + Math.random() * (hi - lo);
@@ -189,23 +188,22 @@
   var skipBtn = document.getElementById("try-skip");
   var live = document.getElementById("try-live");
   var stage = document.getElementById("try-stage");
-  var progress = document.getElementById("try-progress");
+  var ringNum = document.getElementById("try-ring-num");
   var countEl = document.getElementById("try-count");
   var dayEl = document.getElementById("try-day");
   var ring = document.getElementById("try-ring");
-  var result = document.getElementById("try-result");
-  var typicalEl = document.getElementById("try-typical");
-  var pctEl = document.getElementById("try-pct");
+  var barEl = document.getElementById("try-bar");
+  var nowEl = document.getElementById("try-now");
+  var soFarEl = document.getElementById("try-so-far");
   var slowEl = document.getElementById("try-slow");
-  var outcomeEl = document.getElementById("try-outcome");
+  var moneyEl = document.getElementById("try-money");
   var detailEl = document.getElementById("try-detail");
   var strip = document.getElementById("try-strip");
-  var doneEl = document.getElementById("try-done");
   var againBtn = document.getElementById("try-again");
-  if (!form || !planEl || !billEl || !errorEl || !runBtn || !skipBtn || !live || !stage || !progress || !countEl || !dayEl || !ring || !result || !typicalEl || !pctEl || !slowEl || !outcomeEl || !detailEl || !strip || !doneEl || !againBtn) return;
+  var quietEl = document.getElementById("try-quiet");
+  if (!form || !planEl || !billEl || !errorEl || !runBtn || !skipBtn || !live || !stage || !ringNum || !countEl || !dayEl || !ring || !barEl || !nowEl || !soFarEl || !slowEl || !moneyEl || !detailEl || !strip || !againBtn || !quietEl) return;
 
-  ring.style.strokeDasharray = String(RING_C);
-  ring.style.strokeDashoffset = String(RING_C);
+  ring.style.strokeDasharray = "0 " + RING_C;
 
   var tests = [];
   var plan = 300;
@@ -273,81 +271,124 @@
     stage.setAttribute("aria-busy", busy ? "true" : "false");
   }
 
-  function dayNumber(count) {
+  function dayShown(count) {
     if (count <= 0) return 1;
-    return Math.min(7, Math.floor((count - 1) / 3) + 1);
+    return Math.min(7, Math.floor(Math.min(count, 20) / 3) + 1);
   }
 
-  function barClass(pct) {
+  function tone(pct) {
     if (pct >= 80) return "is-good";
     if (pct >= 60) return "is-mid";
     return "is-low";
   }
 
-  function render(count) {
-    var day;
-    var done;
-    var nums;
-    var med;
-    var pct;
-    var height;
-    var cls;
-    var span;
-    var bar;
-    var label;
-    countEl.textContent = count + " of 21 tests";
-    dayEl.textContent = "Day " + dayNumber(count) + " of 7";
-    ring.style.strokeDashoffset = String(RING_C * (1 - count / 21));
-    strip.textContent = "";
-    for (day = 0; day < 7; day++) {
-      done = tests.filter(function (t) { return t.day === day && t.i < count; });
-      span = document.createElement("span");
-      bar = document.createElement("b");
-      label = document.createElement("small");
-      label.textContent = DAYS[day];
-      if (done.length) {
-        nums = done.map(function (t) { return t.mbps; });
-        med = median(nums);
-        pct = pctOf(med, plan);
-        height = Math.max(4, Math.min(100, pct));
-        cls = barClass(pct);
-        span.className = "try-day " + cls;
-        bar.style.height = Math.round(64 * height / 100) + "px";
-      } else {
-        span.className = "try-day";
-        bar.style.height = "0px";
-      }
-      span.appendChild(bar);
-      span.appendChild(label);
-      strip.appendChild(span);
-    }
+  function cellTone(pct) {
+    if (pct >= 80) return "is-g";
+    if (pct >= 60) return "is-a";
+    return "is-r";
   }
 
-  function paintResult() {
-    var summary = summarize(tests, plan, bill);
-    var copy = outcomeCopy(summary);
-    typicalEl.textContent = summary.typical + " Mbps";
-    pctEl.textContent = summary.pct + "% of plan";
-    slowEl.textContent = "Slowest time of day: " + summary.slowLabel;
-    outcomeEl.textContent = copy.title;
-    detailEl.textContent = copy.detail;
-    outcomeEl.className = summary.good ? "try-outcome is-good" : "try-outcome";
+  function countLine(count) {
+    var day;
+    var left;
+    if (count >= 21) return "21 of 21 tests done";
+    day = dayShown(count);
+    left = 8 - day;
+    return count + " of 21 tests done · about " + left + " " + (left === 1 ? "day" : "days") + " to go";
+  }
+
+  function nowText(count) {
+    var last;
+    var next;
+    if (count <= 0) return "Starting. First test Mon morning.";
+    if (count >= 21) return "All 21 tests done.";
+    last = tests[count - 1];
+    next = tests[count];
+    return "Saved: " + DAYS[last.day] + " " + last.slot + ", " + pctOf(last.mbps, plan) + "% of plan. Next is " + DAYS[next.day] + " " + next.slot + ".";
+  }
+
+  function paintTiles(count) {
+    var summary;
+    var slowPct;
+    if (count <= 0) {
+      soFarEl.textContent = "Waiting for the first test";
+      soFarEl.className = "app7-val";
+      slowEl.textContent = "·";
+      slowEl.className = "app7-val";
+      moneyEl.textContent = "·";
+      moneyEl.className = "app7-val";
+      detailEl.hidden = true;
+      detailEl.textContent = "";
+      return null;
+    }
+    summary = summarize(tests.slice(0, count), plan, bill);
+    slowPct = pctOf(summary.slowMbps, plan);
+    soFarEl.textContent = summary.pct + "% of your plan";
+    soFarEl.className = "app7-val " + tone(summary.pct);
+    slowEl.textContent = summary.slowLabel + " · " + slowPct + "%";
+    slowEl.className = "app7-val " + tone(slowPct);
+    if (summary.good) {
+      moneyEl.textContent = "You got what you pay for!";
+      moneyEl.className = "app7-val is-good";
+      detailEl.textContent = "Run it again every few months, or whenever something feels off.";
+    } else {
+      moneyEl.textContent = "You may be overpaying by about " + money(summary.monthly) + "/month";
+      moneyEl.className = "app7-val is-short";
+      detailEl.textContent = "About " + money(summary.yearly) + " a year. That is an estimate. Your provider decides.";
+    }
+    detailEl.hidden = false;
     return summary;
   }
 
-  function showStage(mode) {
-    stage.hidden = false;
-    if (mode === "run") {
-      progress.hidden = false;
-      result.hidden = true;
-      doneEl.hidden = true;
-      skipBtn.hidden = false;
-    } else {
-      progress.hidden = true;
-      result.hidden = false;
-      doneEl.hidden = false;
-      skipBtn.hidden = true;
+  function render(count) {
+    var day;
+    var slot;
+    var index;
+    var col;
+    var cell;
+    var label;
+    var pct;
+    var activeDay;
+    ringNum.textContent = String(count);
+    dayEl.textContent = "Day " + dayShown(count) + " of 7";
+    countEl.textContent = countLine(count);
+    barEl.style.width = (count / 21 * 100) + "%";
+    ring.style.strokeDasharray = (RING_C * count / 21) + " " + RING_C;
+    nowEl.textContent = nowText(count);
+    strip.textContent = "";
+    activeDay = count >= 21 ? -1 : Math.min(6, Math.floor(count / 3));
+    for (day = 0; day < 7; day++) {
+      col = document.createElement("div");
+      col.className = "app7-d";
+      for (slot = 0; slot < 3; slot++) {
+        index = day * 3 + slot;
+        cell = document.createElement("div");
+        if (index < count) {
+          pct = pctOf(tests[index].mbps, plan);
+          cell.className = "app7-cl " + cellTone(pct);
+          cell.textContent = pct + "%";
+        } else if (index === count && running) {
+          cell.className = "app7-cl is-next";
+          cell.textContent = "next";
+        } else {
+          cell.className = "app7-cl is-empty";
+        }
+        col.appendChild(cell);
+      }
+      label = document.createElement("div");
+      label.className = day === activeDay ? "app7-h is-today" : "app7-h";
+      label.textContent = DAYS[day];
+      col.appendChild(label);
+      strip.appendChild(col);
     }
+    return paintTiles(count);
+  }
+
+  function showStage() {
+    stage.hidden = false;
+    skipBtn.hidden = false;
+    againBtn.hidden = true;
+    quietEl.hidden = true;
   }
 
   function finish(announce) {
@@ -358,10 +399,12 @@
     }
     setBusy(false);
     revealed = 21;
-    render(21);
-    summary = paintResult();
-    showStage("done");
-    if (announce) live.textContent = resultAnnouncement(summary);
+    stage.hidden = false;
+    skipBtn.hidden = true;
+    againBtn.hidden = false;
+    quietEl.hidden = false;
+    summary = render(21);
+    if (announce && summary) live.textContent = resultAnnouncement(summary);
     stage.focus();
   }
 
