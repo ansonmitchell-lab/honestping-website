@@ -1,9 +1,14 @@
-/* One mascot moves at a time. The most visible loop plays two cycles, then rests.
-   A hover or keyboard focus replays that loop once. Reduced motion stays on the still frame. */
+/* One mascot moves at a time. A one-shot plays once, then holds its still.
+   A loop plays only while it is the mascot on screen. A hidden tab, an
+   off-screen mascot, or reduced motion stays on the still frame. */
 (function () {
   var mq = window.matchMedia("(prefers-reduced-motion: reduce)");
   var reduce = mq.matches;
-  var apis = { crest: window.HonestPingCrest, hop: window.HonestPingHop };
+  var apis = {
+    crest: window.HonestPingCrest,
+    hero: window.HonestPingHero,
+    turn: window.HonestPingTurn
+  };
   var slots = [];
   var active = null;
   var raf = 0;
@@ -34,10 +39,12 @@
     var bestRank = -1;
     for (var i = 0; i < slots.length; i++) {
       var slot = slots[i];
+      if (slot.once && slot.done) continue;
       var box = measure(slot.el);
       slot.ratio = box.ratio;
       if (box.ratio < MIN) continue;
-      var rank = box.ratio * 10 - box.dist;
+      var rank = box.ratio * 10 - box.dist + slot.priority;
+      if (slot.once) rank += 8;
       if (rank > bestRank) {
         bestRank = rank;
         best = slot;
@@ -49,11 +56,7 @@
   function halt() {
     if (raf) cancelAnimationFrame(raf);
     raf = 0;
-    if (active) {
-      active.playing = false;
-      active.locked = false;
-      active = null;
-    }
+    active = null;
   }
 
   function tick(now) {
@@ -61,9 +64,18 @@
       raf = 0;
       return;
     }
+    if (reduce || document.hidden || measure(active.el).ratio < MIN) {
+      var gone = active;
+      if (gone.once) gone.done = true;
+      halt();
+      rest(gone);
+      reconcile();
+      return;
+    }
     var elapsed = (now - active.t0) / 1000;
-    if (elapsed >= active.cycles * active.api.loop) {
+    if (active.once && elapsed >= active.api.loop) {
       var done = active;
+      done.done = true;
       halt();
       rest(done);
       reconcile();
@@ -73,18 +85,10 @@
     raf = requestAnimationFrame(tick);
   }
 
-  function start(slot, cycles, locked) {
-    slot.introduced = true;
+  function start(slot) {
     for (var i = 0; i < slots.length; i++) {
       if (slots[i] !== slot) rest(slots[i]);
     }
-    if (active && active !== slot) {
-      active.playing = false;
-      active.locked = false;
-    }
-    slot.playing = true;
-    slot.locked = locked;
-    slot.cycles = cycles;
     slot.t0 = performance.now();
     active = slot;
     if (raf) cancelAnimationFrame(raf);
@@ -93,29 +97,19 @@
 
   function reconcile() {
     if (reduce || document.hidden) {
+      if (active && active.once) active.done = true;
       halt();
       for (var i = 0; i < slots.length; i++) rest(slots[i]);
       return;
     }
-    if (active && active.locked) {
-      if (measure(active.el).ratio < MIN) {
-        var gone = active;
-        halt();
-        rest(gone);
-      } else {
-        for (var j = 0; j < slots.length; j++) {
-          if (slots[j] !== active) rest(slots[j]);
-        }
-        return;
-      }
-    }
     var next = winner();
     for (var k = 0; k < slots.length; k++) {
-      if (slots[k] !== next && slots[k] !== active) rest(slots[k]);
+      if (slots[k] !== next) rest(slots[k]);
     }
     if (!next) {
       if (active) {
         var idle = active;
+        if (idle.once) idle.done = true;
         halt();
         rest(idle);
       }
@@ -124,15 +118,11 @@
     if (active === next) return;
     if (active) {
       var prev = active;
+      if (prev.once) prev.done = true;
       halt();
       rest(prev);
     }
-    if (!next.introduced) {
-      next.introduced = true;
-      start(next, 2, false);
-    } else {
-      rest(next);
-    }
+    start(next);
   }
 
   function schedule() {
@@ -144,34 +134,20 @@
     });
   }
 
-  function replay(slot) {
-    if (reduce || slot.playing) return;
-    start(slot, 1, true);
-  }
-
   document.querySelectorAll("[data-mascot]").forEach(function (el) {
     var api = apis[el.getAttribute("data-mascot")];
     if (!api || typeof api.draw !== "function") return;
-    var slot = { el: el, api: api, introduced: false, playing: false, locked: false, cycles: 0, t0: 0, ratio: 0 };
+    var slot = {
+      el: el,
+      api: api,
+      once: !!api.once,
+      done: false,
+      priority: api.once ? 40 : 10,
+      t0: 0,
+      ratio: 0
+    };
     slots.push(slot);
     rest(slot);
-    el.addEventListener("mouseenter", function () { replay(slot); });
-    el.addEventListener("focus", function () {
-      var frames = 0;
-      function tryPlay() {
-        if (document.activeElement !== el || !el.matches(":focus-visible")) return;
-        if (reduce || slot.playing) return;
-        if (measure(el).ratio < MIN) {
-          if (frames < 90) {
-            frames += 1;
-            requestAnimationFrame(tryPlay);
-          }
-          return;
-        }
-        replay(slot);
-      }
-      requestAnimationFrame(tryPlay);
-    });
   });
 
   if (!slots.length) return;

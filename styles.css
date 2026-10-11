@@ -278,6 +278,21 @@ select:focus-visible {
   font-size: 12px;
   color: var(--hp-muted);
 }
+.hero-mascot {
+  width: min(520px, 100%);
+  margin-top: 18px;
+  aspect-ratio: 157.8 / 123.4;
+  position: relative;
+}
+.hero-mascot img {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  display: block;
+}
 
 /* Hero live gauge: mirrors app Overview .hp-dial-rim / .hp-dial-face / .hp-dial-value */
 .hero-gauge {
@@ -484,6 +499,19 @@ select:focus-visible {
   border-top: 1px solid var(--hp-line);
   font-size: 13px;
   color: var(--hp-text);
+}
+.value-card-history {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px;
+  column-gap: 12px;
+  align-items: center;
+}
+.value-card-history .mascot-look {
+  grid-column: 2;
+  grid-row: 1 / span 4;
+  width: 150px;
+  height: auto;
+  justify-self: end;
 }
 .value-card .next strong {
   color: var(--hp-brand);
@@ -713,6 +741,24 @@ select:focus-visible {
   gap: 12px;
 }
 .about-hero .wrap { position: relative; z-index: 1; }
+.about-grid {
+  display: grid;
+  gap: 20px;
+  align-items: start;
+}
+@media (min-width: 720px) {
+  .about-grid { grid-template-columns: 160px minmax(0, 1fr); column-gap: 28px; }
+}
+.about-mascot { width: 160px; height: 160px; }
+.about-still, .turn-mark {
+  width: 160px;
+  height: 160px;
+  display: block;
+  object-fit: contain;
+}
+@media (max-width: 480px) {
+  .about-mascot, .about-still, .turn-mark { width: 120px; height: 120px; }
+}
 
 /* ISP accountability showcase: featured band */
 .isp-band {
@@ -1479,6 +1525,7 @@ select:focus-visible {
   color: var(--hp-blue);
 }
 .wfh-head { max-width: 48rem; margin-bottom: 28px; }
+.mascot-ears { width: 140px; height: auto; display: block; margin: 0 0 12px; }
 .wfh-title {
   font-size: clamp(22px, 3.4vw, 32px);
   font-weight: 600;
@@ -1487,6 +1534,23 @@ select:focus-visible {
   margin-bottom: 12px;
 }
 .wfh-intro { color: var(--hp-muted); font-size: 16px; }
+@media (min-width: 840px) {
+  .wfh-head {
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 160px;
+    column-gap: 28px;
+    align-items: center;
+  }
+  .wfh-head > :not(.mascot-ears) { grid-column: 1; }
+  .mascot-ears {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    width: 160px;
+    margin: 0;
+    justify-self: end;
+  }
+}
 .wfh-showcase {
   display: grid;
   gap: 20px;
@@ -2243,7 +2307,7 @@ select:focus-visible {
 .pdemo-meta li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--hp-line); }
 .pdemo-meta span { color: var(--hp-muted); }
 
-/* 7-day report value: estimate + uses (index #isp, v=20261011g) */
+/* 7-day report value: estimate + uses (index #isp, v=20261011h) */
 .isp-head .plan-tag { margin-left: 6px; vertical-align: middle; }
 .isp-value { display: grid; gap: 20px; min-width: 0; }
 @media (min-width: 900px) { .isp-value { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; } }
@@ -2285,7 +2349,7 @@ select:focus-visible {
 .isp-head .isp-label-row .plan-tag { margin-left: 0; }
 .nowrap { white-space: nowrap; }
 
-/* Free to start, gamer tiers, 7-day strip, user types (v=20261011g) */
+/* Free to start, gamer tiers, 7-day strip, user types (v=20261011h) */
 .free-band { padding-bottom: 8px; }
 .free-panel {
   max-width: 46rem;
@@ -2338,7 +2402,7 @@ select:focus-visible {
   margin: 0;
   color: inherit;
   font: inherit;
-  cursor: pointer;
+  cursor: default;
   display: block;
   max-width: 100%;
   line-height: 0;
@@ -2348,6 +2412,7 @@ select:focus-visible {
   display: grid;
   gap: 10px;
   justify-items: start;
+  align-items: center;
   padding: 16px 18px;
   border-radius: var(--hp-radius);
   background: var(--hp-dial);
@@ -2355,8 +2420,12 @@ select:focus-visible {
 }
 .hop-explain h3 { font-size: 17px; font-weight: 600; }
 .hop-explain p { color: var(--hp-muted); font-size: 14px; max-width: 40rem; }
-.hop-explain .mascot-play { width: min(420px, 100%); }
-.hop-mark { width: 100%; height: auto; display: block; }
+.mascot-sit { width: 180px; height: auto; display: block; }
+@media (min-width: 720px) {
+  .hop-explain { grid-template-columns: minmax(0, 1fr) 180px; }
+  .hop-explain h3, .hop-explain p { grid-column: 1; }
+  .mascot-sit { grid-column: 2; grid-row: 1 / span 2; justify-self: end; }
+}
 .tier-card figcaption { display: grid; gap: 2px; }
 .tier-card strong { color: var(--hp-text); font-size: 14px; font-weight: 600; }
 .tier-card figcaption span { color: var(--hp-muted); font-size: 12px; }
@@ -2400,6 +2469,16 @@ select:focus-visible {
 }
 .good-news h3 { font-size: 18px; font-weight: 600; color: var(--hp-green); }
 .good-news p { font-size: 14.5px; color: var(--hp-text); }
+.user-types-head {
+  display: grid;
+  gap: 16px;
+  align-items: center;
+}
+.mascot-quarter { width: 101px; height: auto; display: block; justify-self: start; }
+@media (min-width: 720px) {
+  .user-types-head { grid-template-columns: minmax(0, 1fr) 120px; }
+  .mascot-quarter { justify-self: end; }
+}
 .user-types {
   display: grid;
   gap: 12px;
@@ -2420,6 +2499,18 @@ select:focus-visible {
 }
 @media (max-width: 640px) {
   .free-panel { padding: 18px 16px; }
+  .mascot-sit { width: 120px; }
+  .mascot-ears { width: 112px; }
+  .value-card-history { grid-template-columns: 1fr; }
+  .value-card-history .mascot-look {
+    grid-column: 1;
+    grid-row: auto;
+    width: 120px;
+    justify-self: start;
+  }
+}
+@media (max-width: 719px) {
+  .mascot-quarter { display: none; }
 }
 .isp-actions { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 12px; font-size: 14px; }
 .isp-pro-note { margin-top: 8px; font-size: 13px; color: var(--hp-muted); }
@@ -2463,7 +2554,7 @@ select:focus-visible {
   .overpay-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* Try a sample week, app panel (index #isp, v=20261011g) */
+/* Try a sample week, app panel (index #isp, v=20261011h) */
 .try-week {
   position: relative;
   margin: 0;
