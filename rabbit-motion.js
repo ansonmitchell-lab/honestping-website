@@ -157,9 +157,20 @@
     rest(slot);
     el.addEventListener("mouseenter", function () { replay(slot); });
     el.addEventListener("focus", function () {
-      requestAnimationFrame(function () {
-        if (document.activeElement === el && el.matches(":focus-visible")) replay(slot);
-      });
+      var frames = 0;
+      function tryPlay() {
+        if (document.activeElement !== el || !el.matches(":focus-visible")) return;
+        if (reduce || slot.playing) return;
+        if (measure(el).ratio < MIN) {
+          if (frames < 90) {
+            frames += 1;
+            requestAnimationFrame(tryPlay);
+          }
+          return;
+        }
+        replay(slot);
+      }
+      requestAnimationFrame(tryPlay);
     });
   });
 
