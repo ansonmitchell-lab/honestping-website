@@ -756,6 +756,10 @@ select:focus-visible {
   display: block;
   object-fit: contain;
 }
+.about-still[hidden],
+.turn-mark[hidden] {
+  display: none;
+}
 @media (max-width: 480px) {
   .about-mascot, .about-still, .turn-mark { width: 120px; height: 120px; }
 }
