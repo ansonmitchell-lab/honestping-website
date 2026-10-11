@@ -43,8 +43,8 @@ function draw(t){
   var still = document.querySelector(".about-still");
   var stage = document.getElementById("turn-stage");
   var host = document.querySelector("[data-mascot='turn']");
-  if (still) still.hidden = true;
-  if (stage) stage.hidden = false;
+  if (still) still.setAttribute("hidden", "");
+  if (stage) stage.removeAttribute("hidden");
   if (host) {
     host.setAttribute("role", "img");
     host.setAttribute("aria-label", "HonestPing rabbit, facing forward");
