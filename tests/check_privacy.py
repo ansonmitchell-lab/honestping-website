@@ -125,7 +125,7 @@ def main():
             "<td>Feedback service</td>",
             "<td>12 months</td>",
             "Last updated:",
-            "October 10, 2026",
+            "October 11, 2026",
             "bug reports you've written but haven't sent yet",
             "an app log, which stays on your PC unless you choose to attach recent lines to a bug report or feature request",
             "Cloudflare (website hosting, security, and our feedback service's servers and storage)",
@@ -178,7 +178,7 @@ def main():
         updated_js = (ROOT / "privacy-updated.js").read_text(encoding="utf-8")
         date_match = re.search(r'HONESTPING_POLICY_UPDATED = "([^"]+)"', updated_js)
         policy_date = date_match.group(1) if date_match else ""
-        check(policy_date == "October 10, 2026", f"policy date constant is {policy_date!r}")
+        check(policy_date == "October 11, 2026", f"policy date constant is {policy_date!r}")
 
         publication_paths = ("/privacy", "/privacy/subprocessors", "/privacy/history")
         for path in publication_paths:
