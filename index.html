@@ -27,7 +27,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20261011h">
+  <link rel="stylesheet" href="styles.css?v=20261011i">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -80,8 +80,8 @@
             <a class="btn btn-ghost btn-lg" href="#gamers">For gamers</a>
           </div>
           <p class="hero-note">Free to start on Windows. No public download yet. <a href="#waitlist">Join the waitlist</a>.</p>
-          <div class="hero-mascot" data-mascot="hero">
-            <img src="assets/mascot/side-leap-dark.svg?v=20261011h" width="520" height="306" alt="HonestPing rabbit, side leap">
+          <div class="hero-mascot">
+            <img src="assets/mascot/side-leap-dark.svg?v=20261011i" width="520" height="306" alt="HonestPing rabbit, side leap">
           </div>
         </div>
 
@@ -112,7 +112,7 @@
     </section>
 
 
-    <section class="section free-band" id="free" aria-labelledby="free-heading">
+    <section class="section free-band" id="free" data-pal="rest" aria-labelledby="free-heading">
       <div class="wrap">
         <div class="free-panel">
           <span class="section-label">Free to start</span>
@@ -140,7 +140,7 @@
           </div>
 
           <div class="gamers-showcase">
-            <div class="tier-row" aria-label="Example gamer tiers">
+            <div class="tier-row" data-pal="crest" aria-label="Example gamer tiers">
               <figure class="tier-card tier-s">
                 <div class="mascot-play" data-mascot="crest" role="img" aria-label="Esports Ready crest. Example data.">
                   <svg class="crest-mark" aria-hidden="true" focusable="false" width="96" height="96" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs>
@@ -157,19 +157,19 @@
                 <figcaption><strong>Esports Ready</strong><span>90 to 100. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-silver">
-                <img class="tier-mark" src="assets/tier-silver.svg?v=20261011h" width="72" height="72" alt="">
+                <img class="tier-mark" src="assets/tier-silver.svg?v=20261011i" width="72" height="72" alt="">
                 <figcaption><strong>Silver</strong><span>80 to 89. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-bronze">
-                <img class="tier-mark" src="assets/tier-bronze.svg?v=20261011h" width="72" height="72" alt="">
+                <img class="tier-mark" src="assets/tier-bronze.svg?v=20261011i" width="72" height="72" alt="">
                 <figcaption><strong>Bronze</strong><span>65 to 79. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-steel">
-                <img class="tier-mark" src="assets/tier-steel.svg?v=20261011h" width="72" height="72" alt="">
+                <img class="tier-mark" src="assets/tier-steel.svg?v=20261011i" width="72" height="72" alt="">
                 <figcaption><strong>Steel</strong><span>50 to 64. Example data.</span></figcaption>
               </figure>
               <figure class="tier-card tier-steel">
-                <img class="tier-mark" src="assets/tier-steel-low.svg?v=20261011h" width="72" height="72" alt="">
+                <img class="tier-mark" src="assets/tier-steel-low.svg?v=20261011i" width="72" height="72" alt="">
                 <figcaption><strong>Steel</strong><span>0 to 49. Example data.</span></figcaption>
               </figure>
             </div>
@@ -220,10 +220,10 @@
               </div>
               <figcaption class="gamers-caption">Example data. Sample dials, not a live test of this PC.</figcaption>
             </figure>
-            <div class="hop-explain">
+            <div class="hop-explain" data-pal="sit">
               <h3>How hops work</h3>
               <p>Your connection passes through several hops between your PC and a server. Trace shows where along the way things slow down. This picture is an example, not a test of this PC.</p>
-              <img class="mascot-accent mascot-sit" src="assets/mascot/side-sit-dark.svg?v=20261011h" width="180" height="221" alt="" decoding="async">
+              <img class="mascot-accent mascot-sit" src="assets/mascot/side-sit-dark.svg?v=20261011i" width="180" height="221" alt="" decoding="async">
             </div>
           </div>
         </div>
@@ -234,8 +234,8 @@
     <section class="section isp-band" id="isp" aria-labelledby="isp-heading">
       <div class="wrap">
         <div class="isp-panel">
-          <div class="isp-head">
-            <img class="isp-mark" src="assets/breakaway.svg?v=20261011h" width="207" height="109" alt="A trail of hex cells running out to the last hop.">
+          <div class="isp-head" data-pal="sit">
+            <img class="isp-mark" src="assets/breakaway.svg?v=20261011i" width="207" height="109" alt="A trail of hex cells running out to the last hop.">
             <div class="isp-label-row"><span class="section-label">Are you getting what you pay for?</span> <span class="plan-tag plan-tag-pro">Pro</span></div>
             <h2 class="isp-title" id="isp-heading">Your plan says one speed. Your <span class="nowrap">7-day report</span> shows the real one.</h2>
             <p class="isp-intro">A week of tests, checked against your plan.</p>
@@ -248,7 +248,7 @@
           </div>
 
           <div class="isp-showcase">
-            <div class="overpay-ways">
+            <div class="overpay-ways pal-hide">
               <h3>Two ways you could be overpaying</h3>
               <div class="overpay-grid">
                 <article class="card overpay-card">
@@ -280,8 +280,8 @@
               </div>
               <div class="week-demo-frame">
                 <video id="week-demo-video" muted playsinline preload="metadata" width="966" height="640">
-                  <source src="assets/demo-timelapse-light.mp4?v=20261011h" type="video/mp4">
-                  <img src="assets/demo-timelapse-light.gif?v=20261011h" alt="Example data. A sample week filling in.">
+                  <source src="assets/demo-timelapse-light.mp4?v=20261011i" type="video/mp4">
+                  <img src="assets/demo-timelapse-light.gif?v=20261011i" alt="Example data. A sample week filling in.">
                 </video>
               </div>
               <div class="week-demo-controls">
@@ -289,7 +289,7 @@
               </div>
             </figure>
 
-            <section class="try-week" id="try-week" aria-labelledby="try-week-heading">
+            <section class="try-week pal-hide" id="try-week" aria-labelledby="try-week-heading">
               <div class="try-week-head">
                 <h3 id="try-week-heading">Try a sample week</h3>
                 <span class="draft-chip">Simulated</span>
@@ -371,7 +371,7 @@
                     <div class="app7-k"><small>So far</small><b class="app7-val" id="try-so-far">Waiting for first test</b></div>
                     <div class="app7-k"><small>Slowest time</small><b class="app7-val" id="try-slow">·</b></div>
                   </div>
-                  <div class="app7-money">
+                  <div class="app7-money pal-hide">
                     <div class="app7-k"><small>Speed</small><b class="app7-val" id="try-speed">Waiting for first test</b></div>
                     <div class="app7-k">
                       <small>Plan fit</small>
@@ -477,7 +477,7 @@
                     <div class="app7-k"><small>So far</small><b class="app7-val is-mid">78% of your plan</b></div>
                     <div class="app7-k"><small>Slowest time</small><b class="app7-val is-mid">Evenings · 66%</b></div>
                   </div>
-                  <div class="app7-money">
+                  <div class="app7-money pal-hide">
                     <div class="app7-k"><small>Speed</small><b class="app7-val is-short">You may be paying about $15/month for speed you don't get</b></div>
                   </div>
                 </div>
@@ -492,7 +492,7 @@
               <figcaption class="report-caption">Your numbers will be your own. <a href="r/example/">See a full example</a></figcaption>
             </figure>
 
-            <div class="good-news card">
+            <div class="good-news card pal-hide">
               <h3>You got what you pay for!</h3>
               <p>A good week is peace of mind, and the report stays in your back pocket for whenever something feels off.</p>
             </div>
@@ -530,11 +530,11 @@
         </div>
       </div>
     </section>
-    <section class="section wfh-band" id="wfh" aria-labelledby="wfh-heading">
+    <section class="section wfh-band" id="wfh" data-pal="ears" aria-labelledby="wfh-heading">
       <div class="wrap">
         <div class="wfh-panel">
           <div class="wfh-head">
-            <img class="mascot-accent mascot-ears" src="assets/mascot/ears-up-dark.svg?v=20261011h" width="160" height="233" alt="" loading="lazy" decoding="async">
+            <img class="mascot-accent mascot-ears" src="assets/mascot/ears-up-dark.svg?v=20261011i" width="160" height="233" alt="" loading="lazy" decoding="async">
             <div class="wfh-label-row">
               <span class="section-label">For work from home</span>
             </div>
@@ -596,7 +596,7 @@
         </div>
       </div>
     </section>
-    <section class="section streaming-band" id="streaming" aria-labelledby="streaming-heading">
+    <section class="section streaming-band" id="streaming" data-pal="ears" aria-labelledby="streaming-heading">
       <div class="wrap">
         <div class="streaming-panel">
           <div class="streaming-head">
@@ -690,7 +690,7 @@
     </section>
 
     <!-- CLIENT VALUE -->
-    <section class="section" id="value" aria-labelledby="value-heading">
+    <section class="section" id="value" data-pal="look" aria-labelledby="value-heading">
       <div class="wrap">
         <span class="section-label">What it does for you</span>
         <h2 class="section-title" id="value-heading">Answers you can act on, not numbers to stare at</h2>
@@ -724,7 +724,7 @@
           </article>
 
           <article class="card value-card value-card-history">
-            <img class="mascot-accent mascot-look" src="assets/mascot/look-back-dark.svg?v=20261011h" width="150" height="191" alt="" loading="lazy" decoding="async">
+            <img class="mascot-accent mascot-look" src="assets/mascot/look-back-dark.svg?v=20261011i" width="150" height="191" alt="" loading="lazy" decoding="async">
             <span class="status good">History that settles arguments</span>
             <h3>Was it a blip, or a pattern?</h3>
             <p>
@@ -750,7 +750,7 @@
     </section>
 
     <!-- MARKET GAP -->
-    <section class="section" id="gap" aria-labelledby="gap-heading">
+    <section class="section" id="gap" data-pal="rest" aria-labelledby="gap-heading">
       <div class="wrap">
         <span class="section-label">The gap in the market</span>
         <h2 class="section-title" id="gap-heading">Built for the space in between</h2>
@@ -802,7 +802,7 @@
     </section>
 
     <!-- HOW YOU BENEFIT (concrete) -->
-    <section class="section" id="benefits" aria-labelledby="benefits-heading">
+    <section class="section" id="benefits" data-pal="ears" aria-labelledby="benefits-heading">
       <div class="wrap">
         <span class="section-label">Day to day</span>
         <h2 class="section-title" id="benefits-heading">Built for the moments that waste your afternoon</h2>
@@ -828,7 +828,7 @@
     </section>
 
     <!-- PREVIEW -->
-    <section class="section" id="preview" aria-labelledby="preview-heading">
+    <section class="section" id="preview" data-pal="ears" aria-labelledby="preview-heading">
       <div class="wrap">
         <div class="preview-head">
           <span class="section-label">Inside the app</span>
@@ -844,9 +844,9 @@
             <span class="window-title">HonestPing Overview (Pro view, example)</span>
           </div>
           <picture>
-            <source srcset="assets/app-preview.webp?v=20261011h" type="image/webp">
+            <source srcset="assets/app-preview.webp?v=20261011i" type="image/webp">
             <img
-              src="assets/app-preview.png?v=20261011h"
+              src="assets/app-preview.png?v=20261011i"
               width="1068"
               height="971"
               alt="HonestPing Overview: Healthy badge, Your internet is responding, example 28 ms ping in the ring, jitter and packet loss, and a 15-minute ping chart"
@@ -857,7 +857,7 @@
       </div>
     </section>
 
-    <section class="section" id="user-types" aria-labelledby="user-types-heading">
+    <section class="section" id="user-types" data-pal="quarter" aria-labelledby="user-types-heading">
       <div class="wrap">
         <div class="user-types-head">
           <div>
@@ -865,7 +865,7 @@
             <h2 class="section-title" id="user-types-heading">What type of internet user are you?</h2>
             <p class="section-intro">See what speed a kind of home usually needs, so you can tell whether a plan fits. Most homes are a mix. Pick the one that sounds most like your busiest evening. A 7-day Pro report answers it for your home, and it is not included with Free.</p>
           </div>
-          <img class="mascot-accent mascot-quarter" src="assets/mascot/three-quarter-dark.svg?v=20261011h" width="101" height="200" alt="" loading="lazy" decoding="async">
+          <img class="mascot-accent mascot-quarter" src="assets/mascot/three-quarter-dark.svg?v=20261011i" width="101" height="200" alt="" loading="lazy" decoding="async">
         </div>
         <div class="user-types">
           <article class="card">
@@ -900,7 +900,7 @@
     </section>
 
     <!-- WAITLIST -->
-    <section class="section punch-band" id="punch" aria-labelledby="punch-heading">
+    <section class="section punch-band pal-hide" id="punch" aria-labelledby="punch-heading">
       <div class="wrap">
         <div class="punch-panel">
           <h2 class="punch-line" id="punch-heading">One disputed internet bill can pay for your entire app.</h2>
@@ -939,28 +939,49 @@
             ·
             <a href="about.html">About Us</a>
           </p>
-          <p class="waitlist-privacy">Your results stay on your PC. To show your provider’s name, HonestPing asks a public lookup service. You can turn that off.</p>
+          <p class="waitlist-privacy pal-hide">Your results stay on your PC. To show your provider’s name, HonestPing asks a public lookup service. You can turn that off.</p>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
+  <footer class="site-footer" id="footer" data-pal="rest">
     <div class="wrap">
       <p>© <span id="year">2026</span> Honest Ping LLC</p>
       <p><a href="about.html">About Us</a> · <a href="isp.html">For ISPs</a> · <a href="https://www.honestping.com">www.honestping.com</a></p>
-      <p class="footer-privacy">Waitlist mail is only used to notify you when HonestPing is available. No extra newsletters unless you ask.</p>
+      <p class="footer-privacy pal-hide">Waitlist mail is only used to notify you when HonestPing is available. No extra newsletters unless you ask.</p>
     </div>
   </footer>
 
-  <script src="waitlist.js?v=20261011h" defer></script>
-  <script src="gauge.js?v=20261011h" defer></script>
-  <script src="trace-demo.js?v=20261011h" defer></script>
-  <script src="verdict-demo.js?v=20261011h" defer></script>
-  <script src="week-sim.js?v=20261011h" defer></script>
-  <script src="demo-player.js?v=20261011h" defer></script>
-  <script src="crest-b.js?v=20261011h" defer></script>
-  <script src="mascot-hero.js?v=20261011h" defer></script>
-  <script src="rabbit-motion.js?v=20261011h" defer></script>
+  <div class="scroll-pal is-away" id="scroll-pal" aria-hidden="true">
+    <div class="scroll-pal-rail">
+      <span class="scroll-pal-dot" data-for="gamers"></span>
+      <span class="scroll-pal-dot" data-for="isp"></span>
+      <span class="scroll-pal-dot" data-for="wfh"></span>
+      <span class="scroll-pal-dot" data-for="value"></span>
+      <span class="scroll-pal-dot" data-for="user-types"></span>
+      <span class="scroll-pal-dot" data-for="footer"></span>
+    </div>
+    <div class="scroll-pal-mover">
+      <div class="scroll-pal-hop">
+        <img class="pal-img is-on" data-pose="leap" src="assets/mascot/side-leap-dark.svg?v=20261011i" width="64" height="64" alt="">
+        <img class="pal-img" data-pose="sit" src="assets/mascot/side-sit-dark.svg?v=20261011i" width="64" height="64" alt="">
+        <img class="pal-img" data-pose="ears" src="assets/mascot/ears-up-dark.svg?v=20261011i" width="64" height="64" alt="">
+        <img class="pal-img" data-pose="look" src="assets/mascot/look-back-dark.svg?v=20261011i" width="64" height="64" alt="">
+        <img class="pal-img" data-pose="quarter" src="assets/mascot/three-quarter-dark.svg?v=20261011i" width="64" height="64" alt="">
+        <img class="pal-img" data-pose="rest" src="assets/mascot/front-calm-dark.svg?v=20261011i" width="64" height="64" alt="">
+      </div>
+    </div>
+  </div>
+
+  <script src="waitlist.js?v=20261011i" defer></script>
+  <script src="gauge.js?v=20261011i" defer></script>
+  <script src="trace-demo.js?v=20261011i" defer></script>
+  <script src="verdict-demo.js?v=20261011i" defer></script>
+  <script src="week-sim.js?v=20261011i" defer></script>
+  <script src="demo-player.js?v=20261011i" defer></script>
+  <script src="crest-b.js?v=20261011i" defer></script>
+  <script src="rabbit-motion.js?v=20261011i" defer></script>
+  <script src="scroll-pal.js?v=20261011i" defer></script>
 </body>
 </html>

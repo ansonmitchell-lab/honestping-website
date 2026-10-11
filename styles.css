@@ -2311,7 +2311,7 @@ select:focus-visible {
 .pdemo-meta li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--hp-line); }
 .pdemo-meta span { color: var(--hp-muted); }
 
-/* 7-day report value: estimate + uses (index #isp, v=20261011h) */
+/* 7-day report value: estimate + uses (index #isp, v=20261011i) */
 .isp-head .plan-tag { margin-left: 6px; vertical-align: middle; }
 .isp-value { display: grid; gap: 20px; min-width: 0; }
 @media (min-width: 900px) { .isp-value { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; } }
@@ -2353,7 +2353,7 @@ select:focus-visible {
 .isp-head .isp-label-row .plan-tag { margin-left: 0; }
 .nowrap { white-space: nowrap; }
 
-/* Free to start, gamer tiers, 7-day strip, user types (v=20261011h) */
+/* Free to start, gamer tiers, 7-day strip, user types (v=20261011i) */
 .free-band { padding-bottom: 8px; }
 .free-panel {
   max-width: 46rem;
@@ -2558,7 +2558,7 @@ select:focus-visible {
   .overpay-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* Try a sample week, app panel (index #isp, v=20261011h) */
+/* Try a sample week, app panel (index #isp, v=20261011i) */
 .try-week {
   position: relative;
   margin: 0;
@@ -2802,4 +2802,89 @@ select:focus-visible {
 @media (max-width: 375px) {
   .day-strip { gap: 4px; }
   .day-strip small { font-size: 9px; }
+}
+
+/* Scroll companion (home only, v=20261011i) */
+.scroll-pal {
+  position: fixed;
+  z-index: 30;
+  right: 12px;
+  top: 76px;
+  bottom: 16px;
+  width: 72px;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 180ms ease;
+}
+.scroll-pal.is-away { opacity: 0; }
+.scroll-pal-rail {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  border-radius: 2px;
+  background: rgba(159, 208, 222, 0.55);
+}
+.scroll-pal-dot {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #9fd0de;
+  box-shadow: 0 0 0 2px #07131f;
+}
+.scroll-pal-dot.is-here { background: #05d1e8; }
+.scroll-pal-mover {
+  position: absolute;
+  left: 4px;
+  top: 0;
+  width: 64px;
+  height: 64px;
+}
+.scroll-pal-hop {
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.scroll-pal .pal-img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 64px;
+  height: 64px;
+  max-width: none;
+  object-fit: contain;
+  object-position: center bottom;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+.scroll-pal .pal-img.is-on { opacity: 1; }
+.scroll-pal .pal-crest {
+  width: 64px;
+  height: 64px;
+  display: block;
+}
+@media (max-width: 719px) {
+  .scroll-pal {
+    top: auto;
+    right: 6px;
+    bottom: 10px;
+    width: 44px;
+    height: 148px;
+  }
+  .scroll-pal-mover,
+  .scroll-pal-hop,
+  .scroll-pal .pal-img,
+  .scroll-pal .pal-crest {
+    width: 40px;
+    height: 40px;
+  }
+  .scroll-pal-mover { left: 2px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-pal { display: none; }
 }

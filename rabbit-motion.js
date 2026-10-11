@@ -13,7 +13,15 @@
   var active = null;
   var raf = 0;
   var pending = false;
+  var blockCrest = false;
   var MIN = 0.25;
+
+  window.HonestPingMotion = {
+    companionMoving: function (on) {
+      blockCrest = !!on;
+      schedule();
+    }
+  };
 
   function rest(slot) {
     if (slot.api && typeof slot.api.draw === "function") slot.api.draw(slot.api.restTime);
@@ -40,6 +48,7 @@
     for (var i = 0; i < slots.length; i++) {
       var slot = slots[i];
       if (slot.once && slot.done) continue;
+      if (blockCrest && slot.el.getAttribute("data-mascot") === "crest") continue;
       var box = measure(slot.el);
       slot.ratio = box.ratio;
       if (box.ratio < MIN) continue;
