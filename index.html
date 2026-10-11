@@ -27,7 +27,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20261008c">
+  <link rel="stylesheet" href="styles.css?v=20261011a">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -46,6 +46,7 @@
         <a class="nav-link" href="#wfh">For work</a>
         <a class="nav-link" href="#streaming">For streaming</a>
         <a class="nav-link" href="#isp">Speed you pay for</a>
+        <a class="nav-link" href="#user-types">Who it’s for</a>
         <a class="nav-link" href="#preview">Inside the app</a>
         <a class="nav-link" href="isp.html">For ISPs</a>
         <a class="nav-link" href="about.html">About Us</a>
@@ -72,13 +73,13 @@
             whether your internet is actually working right now, with evidence you can trust.
           </p>
           <p class="hero-gaming-hook">
-            <a href="#gamers">Your ping is the difference between life and death</a>
+            <a href="#gamers">A gamer test for ping, jitter, and packet loss</a>
           </p>
           <div class="hero-actions">
             <a class="btn btn-primary btn-lg" href="#waitlist">Join the waitlist</a>
             <a class="btn btn-ghost btn-lg" href="#gamers">For gamers</a>
           </div>
-          <p class="hero-note">Free for Windows. Coming soon.</p>
+          <p class="hero-note">Free to start on Windows. No public download yet. <a href="#waitlist">Join the waitlist</a>.</p>
         </div>
 
         <div class="hero-gauge card" role="img" aria-label="Example reading: simulated HonestPing Overview dial. Demo ping around 28 milliseconds, jitter about 3 milliseconds, packet loss usually 0 percent with small blips. Not measuring this visitor.">
@@ -108,7 +109,18 @@
     </section>
 
 
-    <!-- For gamers: page centerpiece after hero -->
+    <section class="section free-band" id="free" aria-labelledby="free-heading">
+      <div class="wrap">
+        <div class="free-panel">
+          <span class="section-label">Free to start</span>
+          <h2 id="free-heading">Quick Check is unlimited</h2>
+          <p>The free speed test, Quick Check, is unlimited, and every result is saved on your PC. Free also includes 5 Pro speed tests and 3 gamer tests.</p>
+          <p class="free-pro">Unlimited with Pro.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- For gamers -->
     <section class="section gamers-band" id="gamers" aria-labelledby="gamers-heading">
       <div class="wrap">
         <div class="gamers-panel">
@@ -116,67 +128,52 @@
             <div class="gamers-label-row">
               <span class="section-label">For gamers</span>
             </div>
-            <h2 class="gamers-title" id="gamers-heading">Your ping is the difference between life and death</h2>
+            <h2 class="gamers-title" id="gamers-heading">A gamer test for how the connection feels in play</h2>
             <p class="gamers-intro">
-              One bad spike and you’re on the floor. That kid across the map didn’t outplay you.
-              Your connection did. HonestPing keeps the truth on your screen while you fight,
-              so lag doesn’t get to steal the round again.
+              The gamer test grades ping, jitter, and packet loss for play. It is a check of the path, not a scoreboard.
+              Free includes 3 gamer tests. Unlimited 7-day reports in Pro cover both regular and gaming reports.
             </p>
+            <p class="gamers-soon">Pro Gaming (coming soon).</p>
           </div>
 
           <div class="gamers-showcase">
+            <div class="tier-row" aria-label="Example gamer tiers">
+              <figure class="tier-card tier-s">
+                <svg class="tier-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+                  <path d="M32 6 52 14v16c0 12-8 20-20 24C20 50 12 42 12 30V14L32 6Z" fill="none" stroke="currentColor" stroke-width="2.4"/>
+                  <path d="M24 26h16c0 6-4 8-8 8h-4v4h12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <figcaption><strong>Esports Ready</strong><span>Top tier. Example mark.</span></figcaption>
+              </figure>
+              <figure class="tier-card tier-silver">
+                <svg class="tier-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="32" cy="32" r="18" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
+                <figcaption><strong>Silver</strong><span>Example mark.</span></figcaption>
+              </figure>
+              <figure class="tier-card tier-bronze">
+                <svg class="tier-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="32" cy="32" r="18" fill="none" stroke="currentColor" stroke-width="2.4"/><circle cx="32" cy="32" r="8" fill="currentColor"/></svg>
+                <figcaption><strong>Bronze</strong><span>Example mark.</span></figcaption>
+              </figure>
+              <figure class="tier-card tier-steel">
+                <svg class="tier-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><rect x="16" y="16" width="32" height="32" rx="6" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
+                <figcaption><strong>Steel</strong><span>Example mark.</span></figcaption>
+              </figure>
+            </div>
+            <p class="tier-note">Example data. Tiers are a reading of that test, not a promise about the next match.</p>
+
             <div class="gamers-points">
               <article class="gamers-card">
                 <span class="plan-tag">Free</span>
-                <h3>Know if you’re dead before they do</h3>
-                <p>
-                  Free puts a plain status in the ring: Healthy or Degraded.
-                  One glance mid-fight. No menus. No excuses when the trash talk starts.
-                </p>
+                <h3>Three gamer tests to start</h3>
+                <p>Each one grades ping, jitter, and packet loss for play. Quick Check, the free speed test, stays unlimited on its own.</p>
               </article>
               <article class="gamers-card">
                 <span class="plan-tag plan-tag-pro">Pro</span>
-                <h3>See the number that costs you the round</h3>
-                <p>
-                  Pro puts live ping in the center of the ring, with jitter and packet loss beside it.
-                  When ranked is on the line, you see the spike that just killed you.
-                </p>
-              </article>
-              <article class="gamers-card gamers-card-wide">
-                <span class="status warn">While you play</span>
-                <h3>Stop guessing. Start knowing.</h3>
-                <p>
-                  Keep it on a second screen. When the round feels unfair, you’ll know if it was you,
-                  your path, or something else. Fear of lag turns into evidence.
-                </p>
+                <h3>A week of play, not one moment</h3>
+                <p>Unlimited 7-day reports in Pro cover both a regular speed report and a gaming report. Same idea: short tests across the week, then one reading.</p>
               </article>
             </div>
 
-            <figure class="gamers-visual" aria-label="Example HonestPing dial comparison for gamers: Free shows Healthy in the ring center, Pro shows sample ping with jitter and packet loss. Animated abstract controller and keys. No game or brand marks.">
-              <div class="gamers-hud" aria-hidden="true">
-                <span class="hud-sweep"></span>
-                <svg class="gamers-controller" viewBox="0 0 120 72" focusable="false">
-                  <path class="ctrl-body" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
-                    d="M28 44c-8 0-16-6-16-16 0-12 8-20 20-20h56c12 0 20 8 20 20 0 10-8 16-16 16h-8l-8 12H44l-8-12h-8z"/>
-                  <circle class="ctrl-stick" cx="40" cy="30" r="4" fill="currentColor"/>
-                  <circle class="ctrl-btn b1" cx="80" cy="28" r="2.8" fill="currentColor"/>
-                  <circle class="ctrl-btn b2" cx="88" cy="34" r="2.8" fill="currentColor"/>
-                  <circle class="ctrl-btn b3" cx="80" cy="40" r="2.8" fill="currentColor"/>
-                  <circle class="ctrl-btn b4" cx="72" cy="34" r="2.8" fill="currentColor"/>
-                  <rect class="ctrl-pad" x="52" y="28" width="16" height="4" rx="2" fill="currentColor" opacity="0.55"/>
-                </svg>
-                <div class="gamers-keys">
-                  <span class="gkey k1"></span>
-                  <span class="gkey k2"></span>
-                  <span class="gkey k3"></span>
-                  <span class="gkey k4"></span>
-                </div>
-                <span class="gamers-dot d1"></span>
-                <span class="gamers-dot d2"></span>
-                <span class="gamers-dot d3"></span>
-                <span class="gamers-dot d4"></span>
-              </div>
-
+            <figure class="gamers-visual" aria-label="Example gamer dials. One shows a sample grade. The other shows sample ping, jitter, and packet loss.">
               <div class="gamers-dials">
                 <div class="gamer-dial-card">
                   <span class="gamer-tier">Free</span>
@@ -206,7 +203,7 @@
                   </div>
                 </div>
               </div>
-              <figcaption class="gamers-caption">Sample comparison · Example UI</figcaption>
+              <figcaption class="gamers-caption">Example data. Sample dials, not a live test of this PC.</figcaption>
             </figure>
           </div>
         </div>
@@ -221,11 +218,12 @@
             <div class="isp-label-row"><span class="section-label">Are you getting what you pay for?</span> <span class="plan-tag plan-tag-pro">Pro</span></div>
             <h2 class="isp-title" id="isp-heading">Your plan says one speed. Your <span class="nowrap">7-day report</span> shows the real one.</h2>
             <p class="isp-intro">
-              Type in the download speed on your bill. HonestPing Pro tests your real connection three times
-              a day for a week and turns it into a 7-day report: a straight answer, you’re getting what you
-              pay for or you’re not, with dated evidence you can bring to your provider. If you’re short,
-              it can also show what that gap could be worth.
+              Type in the download speed on your bill. HonestPing Pro runs 21 short tests across mornings, afternoons, and evenings,
+              then turns them into a 7-day report: a straight answer, you’re getting what you pay for or you’re not,
+              with a day-by-day strip and the hours that ran slow. A PDF to bring to your provider is coming soon.
+              If the week is short, you may be overpaying. That is an estimate. Your provider decides.
             </p>
+            <p class="isp-peace">The point is peace of mind. You can see the week instead of wondering after one slow evening.</p>
           </div>
 
           <div class="isp-showcase">
@@ -241,7 +239,7 @@
                 <span class="isp-step">02</span>
                 <div>
                   <h3>Test it for real, over time</h3>
-                  <p>Pro runs three short tests a day for 7 days, morning to evening plus a weekend day, while HonestPing is open. Not one lucky test at 3 a.m.</p>
+                  <p>Pro runs 21 short tests, mornings, afternoons, and evenings, while HonestPing is open. Not one lucky test in the middle of the night.</p>
                 </div>
               </li>
               <li class="isp-card">
@@ -255,31 +253,31 @@
                 <span class="isp-step">04</span>
                 <div>
                   <h3>Get your 7-day report</h3>
-                  <p>Getting what you pay for, Close to plan, or Under-delivering. Plain words, with every test dated, ready to copy or export.</p>
+                  <p>Getting what you pay for, close to plan, or under-delivering. Plain words, with every test dated. Copy a summary today. PDF coming soon.</p>
                 </div>
               </li>
             </ol>
 
-            <figure class="verdict-card" data-verdict-demo aria-label="Example HonestPing verdict: advertised 500 megabits per second, typical speed 212 megabits per second from 19 tests over 7 days, 42 percent of the plan, verdict: under-delivering">
+            <figure class="verdict-card" data-verdict-demo aria-label="Example HonestPing verdict: advertised 100 megabits per second, typical speed 78 megabits per second from 21 tests over 7 days, 78 percent of the plan, verdict: under-delivering. Example data.">
               <div class="verdict-top">
                 <span class="status bad verdict-pill">Under-delivering</span>
-                <span class="verdict-period">Example · 7-day test · <span data-count="19">19</span> tests</span>
+                <span class="verdict-period">Example data · 21 tests</span>
               </div>
               <div class="verdict-compare">
                 <div class="verdict-stat">
                   <span>You pay for</span>
-                  <strong>500<small>Mbps</small></strong>
+                  <strong>100<small>Mbps</small></strong>
                 </div>
                 <div class="verdict-stat measured">
                   <span>You actually get</span>
-                  <strong><span data-count="212">212</span><small>Mbps typical</small></strong>
+                  <strong><span data-count="78">78</span><small>Mbps typical</small></strong>
                 </div>
               </div>
               <div class="verdict-bar" aria-hidden="true">
-                <span class="verdict-fill" data-fill="42" style="width:42%"></span>
+                <span class="verdict-fill" data-fill="78" style="width:78%"></span>
               </div>
-              <p class="verdict-pct"><strong><span data-count="42">42</span>%</strong> of the speed you pay for</p>
-              <p class="verdict-text verdict-reveal">You’re not getting what you pay for. Evenings drop as low as 96 Mbps. Copy the dated results and send them to your provider.</p>
+              <p class="verdict-pct"><strong><span data-count="78">78</span>%</strong> of the speed you pay for</p>
+              <p class="verdict-text verdict-reveal">Example data. This week is short of the plan. Evenings are the slow spot. Your provider decides whether to offer any credit.</p>
               <p class="verdict-isp verdict-reveal">Your provider’s name, filled in automatically: <strong>Your ISP</strong> (example)</p>
               <figcaption class="verdict-caption">Example verdict. Your numbers will be your own.</figcaption>
             </figure>
@@ -310,22 +308,33 @@
                 </svg>
                 <div class="report-head-text">
                   <strong class="report-title">HonestPing 7-day report (example)</strong>
-                  <span class="report-meta"><span class="report-nowrap">Plan speed: 500 Mbps</span> · <span class="report-nowrap">Sep 28 to Oct 4</span></span>
+                  <span class="report-meta"><span class="report-nowrap">Plan speed: 100 Mbps</span> · <span class="report-nowrap">Oct 5 to 11</span> · Example data</span>
                 </div>
               </div>
+              <p class="strip-label">Day by day. Example data.</p>
+              <div class="day-strip" aria-hidden="true">
+                <span><b style="--bar:90%"></b><small>Mon</small></span>
+                <span><b style="--bar:86%"></b><small>Tue</small></span>
+                <span class="is-slow"><b style="--bar:64%"></b><small>Wed</small></span>
+                <span><b style="--bar:92%"></b><small>Thu</small></span>
+                <span><b style="--bar:78%"></b><small>Fri</small></span>
+                <span class="is-slow"><b style="--bar:70%"></b><small>Sat</small></span>
+                <span><b style="--bar:84%"></b><small>Sun</small></span>
+              </div>
+              <p class="hour-spots">Hour by hour, example data: mornings near the plan, afternoons close, evenings from 7 to 9 slower.</p>
               <table class="report-table">
                 <thead>
                   <tr><th scope="col">Tested</th><th scope="col">Download</th><th scope="col">Of plan</th></tr>
                 </thead>
                 <tbody>
-                  <tr class="report-row is-bad"><td>Mon Sep 28, 8:12 PM</td><td>118 Mbps</td><td><span class="report-pct">24%</span></td></tr>
-                  <tr class="report-row is-warn"><td>Tue Sep 29, 7:05 AM</td><td>286 Mbps</td><td><span class="report-pct">57%</span></td></tr>
-                  <tr class="report-row is-warn"><td>Wed Sep 30, 1:30 PM</td><td>341 Mbps</td><td><span class="report-pct">68%</span></td></tr>
-                  <tr class="report-row is-bad"><td>Thu Oct 1, 9:04 PM</td><td>96 Mbps</td><td><span class="report-pct">19%</span></td></tr>
-                  <tr class="report-row is-bad"><td>Sat Oct 3, 7:48 PM</td><td>152 Mbps</td><td><span class="report-pct">30%</span></td></tr>
+                  <tr class="report-row is-warn"><td>Mon Oct 5, 8:12 PM</td><td>62 Mbps</td><td><span class="report-pct">62%</span></td></tr>
+                  <tr class="report-row"><td>Tue Oct 6, 7:05 AM</td><td>90 Mbps</td><td><span class="report-pct">90%</span></td></tr>
+                  <tr class="report-row"><td>Wed Oct 7, 1:30 PM</td><td>84 Mbps</td><td><span class="report-pct">84%</span></td></tr>
+                  <tr class="report-row is-warn"><td>Thu Oct 8, 9:04 PM</td><td>58 Mbps</td><td><span class="report-pct">58%</span></td></tr>
+                  <tr class="report-row is-warn"><td>Sat Oct 10, 7:48 PM</td><td>70 Mbps</td><td><span class="report-pct">70%</span></td></tr>
                 </tbody>
               </table>
-              <p class="report-summary"><strong>19 tests</strong> over 7 days (5 shown) · typical speed <strong class="report-avg">212 Mbps</strong> (42% of plan) · evening low 96 Mbps</p>
+              <p class="report-summary"><strong>21 tests</strong> over 7 days (5 shown) · typical speed <strong class="report-avg">78 Mbps</strong> (78% of plan) · example data</p>
               <p class="report-method">Measured from your PC. Typical speed is the median of counted tests. Weak Wi-Fi and busy-PC tests are marked and left out.</p>
               <div class="report-export">
                 <span class="report-btn">
@@ -337,31 +346,36 @@
               <figcaption class="report-caption">Example data. Your numbers will be your own. <a href="r/example/">See a full example 7-day report</a></figcaption>
             </figure>
 
+            <div class="good-news card">
+              <h3>You got what you pay for!</h3>
+              <p>When the week matches the plan, that is a win. Run it again every few months, or whenever something feels off.</p>
+            </div>
+
             <div class="isp-value">
               <form class="savings-card" data-savings-demo aria-labelledby="savings-heading" novalidate>
                 <div class="savings-head">
-                  <h3 id="savings-heading">What could you be overpaying?</h3>
+                  <h3 id="savings-heading">You may be overpaying by about this much</h3>
                   <span class="draft-chip">Estimate</span>
                 </div>
-                <p class="savings-intro">Try your own numbers. The 7-day report uses this same estimate.</p>
+                <p class="savings-intro">Try your own numbers. You may be overpaying by about the amount below. The 7-day report uses this same estimate. Example data.</p>
                 <div class="savings-inputs">
                   <label>Monthly bill
                     <span class="savings-field"><span aria-hidden="true">$</span><input id="sv-bill" type="number" inputmode="decimal" min="0" max="1000" step="1" value="70" disabled></span>
                   </label>
                   <label>Plan speed
-                    <span class="savings-field"><input id="sv-plan" type="number" inputmode="numeric" min="1" max="10000" step="1" value="500" disabled><span aria-hidden="true">Mbps</span></span>
+                    <span class="savings-field"><input id="sv-plan" type="number" inputmode="numeric" min="1" max="10000" step="1" value="100" disabled><span aria-hidden="true">Mbps</span></span>
                   </label>
                   <label class="savings-wide">Typical speed from your 7-day report
-                    <span class="savings-slider"><input id="sv-typical-range" type="range" min="0" max="500" step="1" value="212" aria-label="Typical speed, slider" disabled><span class="savings-field savings-field-sm"><input id="sv-typical" type="number" inputmode="numeric" min="0" max="10000" step="1" value="212" disabled><span aria-hidden="true">Mbps</span></span></span>
+                    <span class="savings-slider"><input id="sv-typical-range" type="range" min="0" max="100" step="1" value="78" aria-label="Typical speed, slider" disabled><span class="savings-field savings-field-sm"><input id="sv-typical" type="number" inputmode="numeric" min="0" max="10000" step="1" value="78" disabled><span aria-hidden="true">Mbps</span></span></span>
                   </label>
                 </div>
                 <div class="savings-result" aria-live="polite">
-                  <p class="savings-big"><span>About</span> <strong id="sv-month">$40</strong><span>/month</span></p>
-                  <p class="savings-year">about <strong id="sv-year">$484</strong> a year for speed you’re not getting (estimate)</p>
-                  <p class="savings-share" id="sv-share">Typical speed is 42% of your plan.</p>
+                  <p class="savings-big"><span>About</span> <strong id="sv-month">$15</strong><span>/month</span></p>
+                  <p class="savings-year">about <strong id="sv-year">$185</strong> a year for speed you’re not getting (estimate)</p>
+                  <p class="savings-share" id="sv-share">Typical speed is 78% of your plan.</p>
                 </div>
                 <p class="savings-formula">Monthly bill × (1 minus typical speed ÷ plan speed). Zero when you get your plan speed or better.</p>
-                <p class="savings-fine">Example values: a $70 bill, a 500 Mbps plan, and 212 Mbps typical, the same week as the report above. An estimate, not a bill and not a refund. Your provider decides whether to offer any credit.</p>
+                <p class="savings-fine">Example values: a $70 bill, a 100 Mbps plan, and 78 Mbps typical, the same example week as the report above. An estimate, not a bill and not a refund. Your provider decides whether to offer any credit.</p>
               </form>
 
               <div class="uses-card">
@@ -708,9 +722,9 @@
             <span class="window-title">HonestPing Overview (Pro view, example)</span>
           </div>
           <picture>
-            <source srcset="assets/app-preview.webp?v=20261008c" type="image/webp">
+            <source srcset="assets/app-preview.webp?v=20261011a" type="image/webp">
             <img
-              src="assets/app-preview.png?v=20261008c"
+              src="assets/app-preview.png?v=20261011a"
               width="1068"
               height="971"
               alt="HonestPing Overview: Healthy badge, Your internet is responding, example 28 ms ping in the ring, jitter and packet loss, and a 15-minute ping chart"
@@ -718,6 +732,34 @@
               decoding="async">
           </picture>
         </figure>
+      </div>
+    </section>
+
+    <section class="section" id="user-types" aria-labelledby="user-types-heading">
+      <div class="wrap">
+        <span class="section-label">A short guide</span>
+        <h2 class="section-title" id="user-types-heading">What type of internet user are you?</h2>
+        <p class="section-intro">Households do not all need the same check. Start with the one that matches how you actually use the connection. Windows only, and the download is still on the waitlist.</p>
+        <div class="user-types">
+          <article class="card">
+            <h3>Everyday use</h3>
+            <p>Pages, mail, and the odd video. Quick Check is unlimited, and every result stays on your PC.</p>
+          </article>
+          <article class="card">
+            <h3>Work calls</h3>
+            <p>If a meeting stutters, look at jitter and packet loss, not only the speed number. <a href="#wfh">For work</a>.</p>
+          </article>
+          <article class="card">
+            <h3>Streaming at home</h3>
+            <p>A stall can be the connection or the service. HonestPing shows the connection side. <a href="#streaming">For streaming</a>.</p>
+          </article>
+          <article class="card">
+            <h3>Play</h3>
+            <p>The gamer test grades ping, jitter, and packet loss for play. <a href="#gamers">For gamers</a>.</p>
+          </article>
+        </div>
+        <p class="user-types-note">Want the week, not one test? The 7-day report is in Pro. It is not included with Free.</p>
+        <p><a class="btn btn-primary" href="#waitlist">Join the waitlist</a></p>
       </div>
     </section>
 
@@ -775,10 +817,10 @@
     </div>
   </footer>
 
-  <script src="waitlist.js?v=20261008c" defer></script>
-  <script src="gauge.js?v=20261008c" defer></script>
-  <script src="trace-demo.js?v=20261008c" defer></script>
-  <script src="verdict-demo.js?v=20261008c" defer></script>
-  <script src="savings-demo.js?v=20261008c" defer></script>
+  <script src="waitlist.js?v=20261011a" defer></script>
+  <script src="gauge.js?v=20261011a" defer></script>
+  <script src="trace-demo.js?v=20261011a" defer></script>
+  <script src="verdict-demo.js?v=20261011a" defer></script>
+  <script src="savings-demo.js?v=20261011a" defer></script>
 </body>
 </html>
