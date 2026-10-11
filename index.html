@@ -227,6 +227,7 @@
             <p class="isp-peace">Even if the week comes back good, that is peace of mind. You can see you are getting what you pay for, and you can run it again if something starts to feel off.</p>
             <p class="isp-actions">
               <a href="#week-demo">Watch a 7-day example</a>
+              <a href="#try-week">Try a 7-day example</a>
               <a href="#week-demo">See 7-day report demo</a>
               <a href="#waitlist">Start a 7-day Pro report</a>
             </p>
@@ -251,6 +252,67 @@
               </div>
               <p class="week-demo-note">Example data. A sample week, not a test of this PC.</p>
             </figure>
+
+            <section class="try-week" id="try-week" aria-labelledby="try-week-heading">
+              <div class="try-week-head">
+                <h3 id="try-week-heading">Try a 7-day example</h3>
+                <span class="draft-chip">Simulated example</span>
+              </div>
+              <p class="try-honesty">Simulated example. This does not test your connection. A real 7-day report runs in the app on your own connection.</p>
+              <p class="try-honesty">Nothing you enter leaves this page.</p>
+              <form class="try-form" id="try-week-form" novalidate autocomplete="off">
+                <div class="try-fields">
+                  <div class="try-field">
+                    <label for="try-plan">Plan download speed (Mbps)</label>
+                    <input id="try-plan" type="number" inputmode="numeric" min="1" max="10000" step="1" value="300">
+                  </div>
+                  <div class="try-field">
+                    <label for="try-bill">Monthly internet bill ($)</label>
+                    <input id="try-bill" type="number" inputmode="decimal" min="0" max="1000" step="1" value="70">
+                  </div>
+                </div>
+                <p class="try-error" id="try-error" role="alert" hidden></p>
+                <div class="try-actions">
+                  <button type="submit" class="btn btn-primary" id="try-run">Run a sample week</button>
+                  <button type="button" class="btn btn-ghost" id="try-skip" hidden>Skip to results</button>
+                </div>
+              </form>
+              <div id="try-live" class="try-live" aria-live="polite" aria-atomic="true"></div>
+              <div class="try-stage" id="try-stage" hidden tabindex="-1">
+                <div class="try-progress" id="try-progress" hidden>
+                  <svg class="try-ring" viewBox="0 0 72 72" width="72" height="72" aria-hidden="true" focusable="false">
+                    <circle class="try-ring-track" cx="36" cy="36" r="30"></circle>
+                    <circle class="try-ring-arc" id="try-ring" cx="36" cy="36" r="30"></circle>
+                  </svg>
+                  <div class="try-progress-text">
+                    <p class="try-count" id="try-count" aria-hidden="true">0 of 21 tests</p>
+                    <p class="try-day" id="try-day" aria-hidden="true">Day 1 of 7</p>
+                  </div>
+                </div>
+                <div class="try-result" id="try-result" hidden>
+                  <p class="try-kicker" id="try-result-heading">Typical speed</p>
+                  <p class="try-typical"><strong id="try-typical">0 Mbps</strong></p>
+                  <p class="try-pct" id="try-pct">0% of plan</p>
+                  <p class="try-slow" id="try-slow">Slowest time of day: Evenings</p>
+                  <p class="try-outcome" id="try-outcome"></p>
+                  <p class="try-detail" id="try-detail"></p>
+                </div>
+                <div class="try-strip-block">
+                  <p class="strip-label">Day by day</p>
+                  <div class="try-strip" id="try-strip" aria-hidden="true"></div>
+                  <ul class="try-legend">
+                    <li><span class="try-swatch is-good" aria-hidden="true"></span> 80% or more</li>
+                    <li><span class="try-swatch is-mid" aria-hidden="true"></span> 60 to 79%</li>
+                    <li><span class="try-swatch is-low" aria-hidden="true"></span> under 60%</li>
+                  </ul>
+                </div>
+                <div class="try-done" id="try-done" hidden>
+                  <button type="button" class="btn btn-ghost" id="try-again">Run again</button>
+                  <p class="try-cta"><a href="#waitlist">Start a 7-day Pro report</a></p>
+                  <p class="try-pro">Pro checkout is coming soon.</p>
+                </div>
+              </div>
+            </section>
             <ol class="isp-flow">
               <li class="isp-card">
                 <span class="isp-step">01</span>
@@ -380,32 +442,6 @@
                 <p class="sourced-line">You may be overpaying by about $20 a month (about $240 a year).</p>
                 <p class="sourced-cite">That is a price gap, not your bill and not a refund. About $20 a month is the published difference between a gigabit plan and the next tier down, October 2026. The <a href="https://www.fcc.gov/reports-research/reports/measuring-broadband-america/measuring-fixed-broadband-thirteenth-report">FCC Measuring Broadband America, Thirteenth Report</a> found most cable and fiber plans delivered close to the advertised speed, so a short week is about one home. Your provider decides.</p>
               </div>
-              <form class="savings-card" data-savings-demo aria-labelledby="savings-heading" novalidate>
-                <div class="savings-head">
-                  <h3 id="savings-heading">You may be overpaying by about this much</h3>
-                  <span class="draft-chip">Estimate</span>
-                </div>
-                <p class="savings-intro">Try your own numbers. You may be overpaying by about the amount below. The 7-day report uses this same estimate. Example data.</p>
-                <div class="savings-inputs">
-                  <label>Monthly bill
-                    <span class="savings-field"><span aria-hidden="true">$</span><input id="sv-bill" type="number" inputmode="decimal" min="0" max="1000" step="1" value="70" disabled></span>
-                  </label>
-                  <label>Plan speed
-                    <span class="savings-field"><input id="sv-plan" type="number" inputmode="numeric" min="1" max="10000" step="1" value="100" disabled><span aria-hidden="true">Mbps</span></span>
-                  </label>
-                  <label class="savings-wide">Typical speed from your 7-day report
-                    <span class="savings-slider"><input id="sv-typical-range" type="range" min="0" max="100" step="1" value="78" aria-label="Typical speed, slider" disabled><span class="savings-field savings-field-sm"><input id="sv-typical" type="number" inputmode="numeric" min="0" max="10000" step="1" value="78" disabled><span aria-hidden="true">Mbps</span></span></span>
-                  </label>
-                </div>
-                <div class="savings-result" aria-live="polite">
-                  <p class="savings-big"><span>About</span> <strong id="sv-month">$15</strong><span>/month</span></p>
-                  <p class="savings-year">about <strong id="sv-year">$185</strong> a year for speed you’re not getting (estimate)</p>
-                  <p class="savings-share" id="sv-share">Typical speed is 78% of your plan.</p>
-                </div>
-                <p class="savings-formula">Monthly bill × (1 minus typical speed ÷ plan speed). Zero when you get your plan speed or better.</p>
-                <p class="savings-fine">Example values: a $70 bill, a 100 Mbps plan, and 78 Mbps typical, the same example week as the report above. An estimate, not a bill and not a refund. Your provider decides whether to offer any credit.</p>
-              </form>
-
               <div class="uses-card">
                 <h3>How people use their 7-day report</h3>
                 <ul class="uses-list">
@@ -858,7 +894,7 @@
   <script src="gauge.js?v=20261011b" defer></script>
   <script src="trace-demo.js?v=20261011b" defer></script>
   <script src="verdict-demo.js?v=20261011b" defer></script>
-  <script src="savings-demo.js?v=20261011b" defer></script>
+  <script src="week-sim.js?v=20261011b" defer></script>
   <script src="demo-player.js?v=20261011b" defer></script>
 </body>
 </html>

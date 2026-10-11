@@ -755,9 +755,10 @@ input:focus-visible {
 .isp-showcase {
   display: grid;
   gap: 20px;
-  grid-template-areas: "demo" "flow" "verdict" "proof" "report" "news" "value" "cta";
+  grid-template-areas: "demo" "try" "flow" "verdict" "proof" "report" "news" "value" "cta";
 }
 .isp-showcase > .week-demo { grid-area: demo; }
+.isp-showcase > .try-week { grid-area: try; }
 .isp-flow { grid-area: flow; }
 .isp-showcase > .verdict-card { grid-area: verdict; }
 .isp-proof { grid-area: proof; }
@@ -768,10 +769,11 @@ input:focus-visible {
 @media (min-width: 900px) {
   .isp-showcase {
     grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr);
-    /* Row 1: steps | verdict. Row 2: proof copy beside the report. Then the good-news line, the estimator, and the CTA. */
-    grid-template-rows: auto auto auto auto auto auto;
+    /* Demo, then the sample week. Steps beside the verdict. Proof copy beside the report. Then the good-news line, the sourced note, and the CTA. */
+    grid-template-rows: auto auto auto auto auto auto auto;
     grid-template-areas:
       "demo demo"
+      "try try"
       "flow verdict"
       "proof report"
       "news news"
@@ -2392,6 +2394,147 @@ input:focus-visible {
 .week-demo-frame img { display: block; width: 100%; height: auto; }
 .week-demo-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
 .week-demo-note { margin: 0; font-size: 13px; color: var(--hp-muted); }
+
+/* Try a 7-day example (index #isp, v=20261011b) */
+.try-week {
+  position: relative;
+  margin: 0;
+  min-width: 0;
+  padding: 16px 16px 14px;
+  border-radius: calc(var(--hp-radius) + 2px);
+  background: var(--hp-bg);
+  border: 1px solid #45e5ad55;
+  box-shadow: 0 0 40px #45e5ad12;
+  display: grid;
+  gap: 12px;
+}
+.try-week-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.try-week-head h3 { font-size: 18px; font-weight: 600; }
+.try-honesty { margin: 0; font-size: 14.5px; line-height: 1.45; color: var(--hp-text); }
+.try-form { display: grid; gap: 12px; }
+.try-fields { display: grid; gap: 12px; }
+.try-field { display: grid; gap: 6px; min-width: 0; }
+.try-field label { font-size: 13px; font-weight: 600; color: var(--hp-text); }
+.try-field input {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--hp-line);
+  background: var(--hp-surface);
+  color: var(--hp-text);
+  font: inherit;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.try-field input:disabled { opacity: 0.72; }
+.try-error { margin: 0; font-size: 14px; color: var(--hp-red); }
+.try-actions, .try-done { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.try-progress { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.try-ring { display: block; flex: none; color: var(--hp-green); }
+.try-ring-track, .try-ring-arc { fill: none; stroke-width: 6; }
+.try-ring-track { stroke: var(--hp-line); }
+.try-ring-arc {
+  stroke: currentColor;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 36px 36px;
+}
+.try-count { font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.try-day { font-size: 14px; color: var(--hp-text); }
+.try-stage {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: 14px;
+  border-radius: 10px;
+  background: var(--hp-surface);
+  border: 1px solid var(--hp-line);
+}
+.try-stage:focus {
+  outline: 3px solid var(--hp-blue);
+  outline-offset: 3px;
+}
+.try-kicker { font-size: 13px; font-weight: 600; color: var(--hp-text); }
+.try-typical { font-size: 16px; color: var(--hp-text); }
+.try-typical strong { font-size: 32px; line-height: 1.1; font-weight: 600; font-variant-numeric: tabular-nums; }
+.try-pct, .try-slow, .try-detail { font-size: 15px; color: var(--hp-text); }
+.try-outcome { font-size: 18px; font-weight: 600; line-height: 1.35; color: var(--hp-text); }
+.try-outcome.is-good { color: var(--hp-green); }
+.try-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  align-items: end;
+}
+.try-day {
+  display: grid;
+  grid-template-rows: 64px auto;
+  align-items: end;
+  justify-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+.try-day b {
+  display: block;
+  width: 100%;
+  max-width: 16px;
+  height: var(--bar, 0%);
+  border-radius: 3px 3px 1px 1px;
+  background: var(--hp-line);
+  justify-self: center;
+}
+.try-day.is-good b { background: #4cc394; }
+.try-day.is-mid b { background: #f0b44e; }
+.try-day.is-low b { background: #e9707c; }
+.try-day small { font-size: 10px; line-height: 1.2; color: var(--hp-muted); }
+.try-legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin: 8px 0 0;
+  padding: 0;
+  font-size: 13px;
+  color: var(--hp-text);
+}
+.try-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.try-swatch { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+.try-swatch.is-good { background: #4cc394; }
+.try-swatch.is-mid { background: #f0b44e; }
+.try-swatch.is-low { background: #e9707c; }
+.try-cta { margin: 0; font-size: 14px; }
+.try-pro { margin: 0; font-size: 13px; color: var(--hp-muted); }
+.try-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.try-progress[hidden],
+.try-result[hidden],
+.try-stage[hidden],
+.try-done[hidden],
+.try-error[hidden],
+#try-skip[hidden],
+#try-again[hidden] { display: none !important; }
+@media (min-width: 560px) {
+  .try-fields { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 375px) {
+  .try-week { padding: 14px 12px; }
+  .try-strip { gap: 4px; }
+  .try-day small { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .try-day b { transition: none; }
+}
 .sourced-overpay {
   grid-column: 1 / -1;
   padding: 16px 18px;
@@ -2403,7 +2546,8 @@ input:focus-visible {
 }
 .sourced-line { font-size: 16px; color: var(--hp-text); }
 .sourced-cite { font-size: 12px; color: var(--hp-muted); }
-.isp-value > .sourced-overpay { grid-column: 1 / -1; }
+.isp-value > .sourced-overpay,
+.isp-value > .uses-card { grid-column: 1 / -1; }
 @media (max-width: 375px) {
   .day-strip { gap: 4px; }
   .day-strip small { font-size: 9px; }
