@@ -78,20 +78,25 @@
   var pose = "leap";
   var leapImg = hopEl.querySelector("[data-pose='leap']");
   var IDLES = [
-    { name: "blink", dur: 1200 },
-    { name: "ear", dur: 1400 },
-    { name: "perk", dur: 1600 },
-    { name: "look", dur: 1800 },
-    { name: "stretch", dur: 2200 },
     { name: "groom", dur: 2000 },
-    { name: "hop", dur: 1300 },
-    { name: "scratch", dur: 1800 },
+    { name: "look", dur: 1800 },
+    { name: "sit", dur: 1600 },
+    { name: "stretch", dur: 2200 },
     { name: "yawn", dur: 2400 },
-    { name: "sniff", dur: 1400 }
+    { name: "scratch", dur: 1800 },
+    { name: "screen", dur: 2000 }
   ];
   var idle = null;
   var idleWait = 0;
   var lastIdle = "";
+  var quiet = 0;
+  var scrollV = 0;
+  var velT = 0;
+  var velY = window.scrollY || 0;
+  var lag = 0;
+  var dustUntil = 0;
+  var pointer = { x: 0, y: 0, on: false };
+  var PROPS = ["pad", "headset", "screen", "days", "zzz", "pop", "cards", "tape", "bub", "knob", "hats", "wave"];
 
   function report(on) {
     if (reported === on) return;
@@ -134,14 +139,14 @@
       var sid = sec.id;
       var head = sec.querySelector("h2") || sec;
       if (sid === "free") {
-        add(list, sec, "theme", -1, "leap", "launch", "", sid, pageTop(sec) + 20);
+        add(list, sec, "theme", -1, "leap", "", "", sid, pageTop(sec) + 20);
         add(list, sec, "gap", 1, "leap", "", "", sid, pageTop(sec) - 28);
       } else if (sid === "gamers") {
-        add(list, head, "theme", -1, "sit", "ready", "pad", sid, pageTop(head) + 24);
-        add(list, sec, "gap", 1, "sit", "", "", sid, pageTop(sec) - 28);
+        add(list, head, "theme", -1, "sit", "", "pad", sid, pageTop(head) + 24);
+        add(list, sec, "gap", 1, "sit", "", "pad", sid, pageTop(sec) - 28);
       } else if (sid === "isp") {
         var mark = sec.querySelector(".isp-mark") || head;
-        add(list, sec, "gap", -1, "rest", "", "", sid, pageTop(sec) - 28);
+        add(list, sec, "gap", -1, "rest", "", "days", sid, pageTop(sec) - 28);
         if (COIN_ROLL_ENABLED) {
           add(list, mark, "cash", 1, "rest", "cash", "", sid, pageTop(mark) + 16);
         }
@@ -149,37 +154,37 @@
         for (var e = 0; e < extras.length; e++) {
           var node = sec.querySelector(extras[e]);
           if (!node) continue;
-          add(list, node, "head", e % 2 ? 1 : -1, "rest", "", "", sid, pageTop(node) + 12);
+          add(list, node, "head", e % 2 ? 1 : -1, "rest", "", "days", sid, pageTop(node) + 12);
         }
       } else if (sid === "wfh") {
-        add(list, sec, "theme", -1, "ears", "listen", "headset", sid, pageTop(sec) + 160);
+        add(list, sec, "theme", -1, "rest", "", "zzz", sid, pageTop(sec) + 160);
       } else if (sid === "streaming") {
         var screen = sec.querySelector(".streaming-screen") || head;
-        add(list, screen, "theme", -1, "sit", "watch", "screen", sid, pageTop(screen) - 6);
-        add(list, sec, "gap", 1, "sit", "", "", sid, pageTop(sec) - 28);
+        add(list, screen, "theme", -1, "sit", "", "pop", sid, pageTop(screen) - 6);
+        add(list, sec, "gap", 1, "sit", "", "pop", sid, pageTop(sec) - 28);
       } else if (sid === "value") {
         var hist = sec.querySelector(".value-card-history") || head;
-        add(list, hist, "theme", -1, "look", "glance", "", sid, pageTop(hist) + 8);
-        add(list, sec, "gap", 1, "look", "", "", sid, pageTop(sec) - 28);
+        add(list, hist, "theme", -1, "look", "", "cards", sid, pageTop(hist) + 8);
+        add(list, sec, "gap", 1, "look", "", "cards", sid, pageTop(sec) - 28);
       } else if (sid === "gap") {
-        add(list, head, "theme", 1, "rest", "settle", "", sid, pageTop(head) + 8);
-        add(list, sec, "gap", -1, "rest", "", "", sid, pageTop(sec) - 28);
+        add(list, head, "theme", 1, "rest", "", "tape", sid, pageTop(head) + 8);
+        add(list, sec, "gap", -1, "rest", "", "tape", sid, pageTop(sec) - 28);
       } else if (sid === "benefits") {
-        add(list, head, "theme", -1, "ears", "talk", "headset", sid, pageTop(head) + 8);
-        add(list, sec, "gap", 1, "ears", "", "", sid, pageTop(sec) - 28);
+        add(list, head, "theme", -1, "ears", "", "bub", sid, pageTop(head) + 8);
+        add(list, sec, "gap", 1, "ears", "", "bub", sid, pageTop(sec) - 28);
       } else if (sid === "preview") {
         var frame = sec.querySelector(".window") || head;
-        add(list, frame, "peek", 1, "look", "peek", "", sid, pageTop(frame) + 6);
-        add(list, sec, "gap", -1, "look", "", "", sid, pageTop(sec) - 20);
+        add(list, frame, "peek", 1, "look", "", "knob", sid, pageTop(frame) + 6);
+        add(list, sec, "gap", -1, "look", "", "knob", sid, pageTop(sec) - 20);
       } else if (sid === "user-types") {
-        add(list, head, "theme", 1, "quarter", "turn", "", sid, pageTop(head) + 8);
-        add(list, sec, "gap", -1, "quarter", "", "", sid, pageTop(sec) - 28);
+        add(list, head, "theme", 1, "quarter", "", "hats", sid, pageTop(head) + 8);
+        add(list, sec, "gap", -1, "quarter", "", "hats", sid, pageTop(sec) - 28);
       }
     }
     var foot = document.getElementById("footer");
     if (foot) {
-      add(list, foot, "theme", -1, "rest", "blink", "", "footer", pageTop(foot) - 24);
-      add(list, foot, "gap", 1, "rest", "", "", "footer", pageTop(foot) + 6);
+      add(list, foot, "theme", -1, "rest", "", "wave", "footer", pageTop(foot) - 24);
+      add(list, foot, "gap", 1, "rest", "", "wave", "footer", pageTop(foot) + 6);
     }
     list.sort(function (a, b) { return a.pageY - b.pageY; });
     var out = [];
@@ -394,10 +399,13 @@
     root.classList.toggle("is-look-left", mid > (r.left + r.right) / 2);
   }
 
-  function paint(x, y, lift, dx, dy, roll) {
+  function paint(x, y, lift, dx, dy, roll, body) {
     pos.x = x;
     pos.y = y;
     mover.style.transform = "translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px,0)";
+    var sx = body && body.sx ? body.sx : 1;
+    var sy = body && body.sy ? body.sy : 1;
+    var extra = body && body.rot ? body.rot : 0;
     var traveling = Math.abs(dx) > 8 || Math.abs(dy) > 8;
     if (roll != null) {
       facePage(x);
@@ -405,7 +413,7 @@
       if (leapImg) leapImg.style.transform = root.classList.contains("is-look-left") ? "scaleX(-1)" : "none";
       return;
     }
-    hopEl.style.transform = "translate3d(0," + (-lift).toFixed(1) + "px,0)";
+    hopEl.style.transform = "translate3d(0," + (-lift).toFixed(1) + "px,0) rotate(" + extra.toFixed(1) + "deg) scale(" + sx.toFixed(3) + "," + sy.toFixed(3) + ")";
     if (!leapImg) return;
     if (!traveling) {
       facePage(x);
@@ -515,33 +523,83 @@
       landI = dest;
       return false;
     }
-    var arcs = [];
-    if (!box.mobile && Math.abs(target.x - from.x) > 220) {
-      var midY = (from.y + target.y) / 2 - box.size * 0.2;
-      var mid = {
-        x: (from.x + target.x) / 2,
-        y: clamp(midY, 150, window.innerHeight * 0.62)
-      };
-      arcs.push({ from: from, to: mid });
-      arcs.push({ from: mid, to: target });
-    } else {
-      arcs.push({ from: from, to: target });
-    }
-    hop = { arcs: arcs, i: 0, t0: now, dur: HOP_MS, dest: dest };
+    var dx = target.x - from.x;
+    var dy = target.y - from.y;
+    var speed = Math.min(2.2, Math.abs(scrollV));
+    var cross = Math.abs(dx) > 160;
+    var dur = cross ? 780 : Math.max(260, Math.min(560, 480 - speed * 120));
+    var height = box.size * (cross ? 1.15 : Math.min(0.92, 0.26 + speed * 0.42));
+    var down = scrollV > 0.04 ? true : scrollV < -0.04 ? false : dy >= 0;
+    hop = {
+      arcs: [{ from: from, to: target }],
+      i: 0,
+      t0: now,
+      dur: dur,
+      dest: dest,
+      height: height,
+      cross: cross,
+      down: down,
+      turnUntil: 0,
+      puffed: false,
+      skid: false
+    };
     showProp("");
+    clearIdle();
+    root.classList.remove("is-dust");
     return true;
   }
 
   function advance(now, box) {
     var arc = hop.arcs[hop.i];
     var u = Math.min(1, (now - hop.t0) / hop.dur);
-    var e = ease(u);
-    var x = arc.from.x + (arc.to.x - arc.from.x) * e;
-    var y = arc.from.y + (arc.to.y - arc.from.y) * e;
     var dx = arc.to.x - arc.from.x;
-    var lift = Math.sin(Math.PI * u) * box.size * (Math.abs(dx) > 220 ? 0.48 : 0.33);
-    paint(x, y, lift, dx, arc.to.y - arc.from.y);
-    showPose("leap");
+    var dy = arc.to.y - arc.from.y;
+    var wind = 0.16;
+    var x = arc.from.x;
+    var y = arc.from.y;
+    var lift = 0;
+    var sx = 1;
+    var sy = 1;
+    var rot = 0;
+    if (u < wind) {
+      var s = u / wind;
+      sy = 1 - 0.16 * s;
+      sx = 1 + 0.1 * s;
+      showPose("sit");
+    } else {
+      var p = (u - wind) / (1 - wind);
+      var e = ease(p);
+      x = arc.from.x + dx * e;
+      y = arc.from.y + dy * e;
+      lift = Math.sin(Math.PI * p) * hop.height;
+      if (p < 0.22) {
+        sy = 1.14;
+        sx = 0.9;
+      } else if (p > 0.84) {
+        var land = (p - 0.84) / 0.16;
+        var wave = Math.sin(land * Math.PI);
+        sy = 1 - wave * 0.18;
+        sx = 1 + wave * 0.1;
+        if (!hop.puffed && land > 0.12) {
+          hop.puffed = true;
+          puff(now);
+        }
+      }
+      if (hop.cross && p > 0.28 && p < 0.74) {
+        rot = Math.sin(((p - 0.28) / 0.46) * Math.PI) * (dx >= 0 ? 170 : -170);
+      }
+      if (!hop.turnUntil && Math.abs(dx) > 8) hop.turnUntil = now + 90;
+      if (hop.turnUntil && now < hop.turnUntil) showPose("quarter");
+      else showPose(hop.down ? "leap" : "ears");
+      var want = dx >= 0 ? 7 : -7;
+      lag += (want - lag) * 0.18;
+      rot += lag * (1 - Math.min(1, p));
+    }
+    if (hop.skid && u > 0.7) {
+      var sk = Math.sin(((u - 0.7) / 0.3) * Math.PI);
+      x += (dx >= 0 ? 1 : -1) * sk * 12;
+    }
+    paint(x, y, lift, dx, dy, null, { sx: sx, sy: sy, rot: rot });
     report(true);
     if (u < 1) return false;
     hop.i += 1;
@@ -549,7 +607,7 @@
       hop.t0 = now;
       return false;
     }
-    paint(arc.to.x, arc.to.y, 0, 0, 0);
+    paint(arc.to.x, arc.to.y, 0, 0, 0, null, { sx: 1.04, sy: 0.92, rot: 0 });
     return true;
   }
 
@@ -632,8 +690,16 @@
   }
 
   function showProp(name) {
-    root.classList.remove("is-prop-pad", "is-prop-headset", "is-prop-screen");
-    if (name === "pad" || name === "headset" || name === "screen") root.classList.add("is-prop-" + name);
+    var i;
+    for (i = 0; i < PROPS.length; i++) root.classList.remove("is-prop-" + PROPS[i]);
+    if (PROPS.indexOf(name) >= 0) root.classList.add("is-prop-" + name);
+  }
+
+  function puff(now) {
+    dustUntil = now + 340;
+    root.classList.remove("is-dust");
+    void root.offsetWidth;
+    root.classList.add("is-dust");
   }
 
   function cancelAct() {
@@ -657,21 +723,28 @@
 
   function clearIdle() {
     root.classList.remove("is-idle");
+    actEl.style.transform = "";
     if (!idle) return;
     root.classList.remove("is-idle-" + idle.name);
     idle = null;
   }
 
   function startIdle(now) {
-    var pool = [];
+    var spec;
     var i;
-    for (i = 0; i < IDLES.length; i++) {
-      if (IDLES[i].name !== lastIdle) pool.push(IDLES[i]);
+    if (quiet >= 3) {
+      spec = { name: "nap", dur: 3200 };
+      quiet = 0;
+    } else {
+      var pool = [];
+      for (i = 0; i < IDLES.length; i++) {
+        if (IDLES[i].name !== lastIdle) pool.push(IDLES[i]);
+      }
+      spec = pool[Math.floor(Math.random() * pool.length)];
     }
-    var spec = pool[Math.floor(Math.random() * pool.length)];
     lastIdle = spec.name;
     idle = { name: spec.name, t0: now, dur: spec.dur };
-    root.classList.remove("is-idle");
+    root.classList.remove("is-idle", "is-idle-nap", "is-breathe");
     for (i = 0; i < IDLES.length; i++) root.classList.remove("is-idle-" + IDLES[i].name);
     void root.offsetWidth;
     root.classList.add("is-idle", "is-idle-" + spec.name);
@@ -744,6 +817,10 @@
     if (!pts.length) build();
     var box = metrics();
     root.classList.remove("is-away");
+    if (dustUntil && now > dustUntil) {
+      root.classList.remove("is-dust");
+      dustUntil = 0;
+    }
 
     if (cardHopping()) {
       cancelCash(true);
@@ -783,6 +860,7 @@
     }
 
     if (hop) {
+      if (!scrolling) hop.skid = true;
       if (!advance(now, box)) {
         raf = requestAnimationFrame(frame);
         return;
@@ -807,9 +885,14 @@
         report(false);
       } else if (now >= idle.t0 + idle.dur) {
         clearIdle();
+        quiet += 1;
         idleWait = now + 5000 + Math.random() * 4000;
         report(false);
       } else {
+        if (idle.name === "look" && pointer.on) {
+          var ang = Math.atan2(pointer.y - (pos.y + 32), pointer.x - (pos.x + 32));
+          actEl.style.transform = "rotate(" + clamp(ang * 10, -14, 14).toFixed(1) + "deg)";
+        }
         raf = requestAnimationFrame(frame);
         return;
       }
@@ -870,7 +953,13 @@
 
     showPose(here ? here.pose : "rest");
     showProp(!box.mobile && here ? here.prop : "");
-    paint(pos.x, pos.y, 0, 0, 0);
+    if (Math.abs(lag) > 0.15) lag *= 0.8;
+    paint(pos.x, pos.y, 0, 0, 0, null, { sx: 1, sy: 1, rot: lag });
+    root.classList.toggle("is-breathe", !cardHopping());
+    if (dustUntil && now > dustUntil) {
+      root.classList.remove("is-dust");
+      dustUntil = 0;
+    }
     report(false);
 
     if (!scrolling && landI === goal && !motionBusy()) {
@@ -912,8 +1001,16 @@
 
   window.addEventListener("scroll", function () {
     var y = window.scrollY || 0;
+    var now = performance.now();
+    var dt = now - velT;
+    if (velT && dt > 0 && dt < 90) scrollV = (y - velY) / dt;
+    else if (dt >= 90) scrollV *= 0.4;
+    velT = now;
+    velY = y;
     if (Math.abs(y - baseY) >= 8) {
-      lastAt = performance.now();
+      lastAt = now;
+      quiet = 0;
+      root.classList.remove("is-breathe");
       armed = true;
       if (cash) cancelCash(false);
       cancelAct();
@@ -976,6 +1073,12 @@
       running = false;
     }
   });
+
+  window.addEventListener("pointermove", function (e) {
+    pointer.x = e.clientX;
+    pointer.y = e.clientY;
+    pointer.on = true;
+  }, { passive: true });
 
   build();
   root.classList.remove("is-away");

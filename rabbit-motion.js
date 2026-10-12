@@ -15,15 +15,16 @@
   };
   var ACT = {
     quick: 2.2,
-    listen: 2.4,
-    crouch: 1.8,
-    watch: 2.4,
-    glance: 1.6,
-    face: 2.2,
-    peek: 2.0,
-    blink: 2.0,
-    talk: 2.2,
-    between: 2.0,
+    days: 2.6,
+    watch: 2.6,
+    stack: 2.2,
+    tape: 2.2,
+    wave: 2.2,
+    claim: 2.4,
+    climb: 2.2,
+    hats: 2.8,
+    bye: 2.2,
+    house: 2.4,
     zoomies: 2.2,
     tierhop: 2.5
   };
