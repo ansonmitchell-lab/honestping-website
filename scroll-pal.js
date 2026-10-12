@@ -1,8 +1,9 @@
 /* Scroll companion. No rail. Scroll progress walks a path of perches
    down the page, and the rabbit hops between the left and right sides.
-   At the 7-day heading it rolls once in a small pile of hex coins.
-   Hidden near money tiles, the sample week, and legal lines.
-   Reduced motion never builds it. */
+   Each section has a perch, a pose, a tiny hex prop, and one short
+   landing action. At the 7-day heading it rolls once in hex coins,
+   then holds still. Hidden near money tiles, the sample week, and
+   legal lines. Reduced motion never builds it. */
 (function () {
   var root = document.getElementById("scroll-pal");
   if (!root) return;
@@ -11,6 +12,7 @@
 
   var mover = root.querySelector(".scroll-pal-mover");
   var hopEl = root.querySelector(".scroll-pal-hop");
+  var actEl = root.querySelector(".pal-act") || hopEl;
   var pile = root.querySelector(".pal-cash");
   var imgs = root.querySelectorAll(".pal-img");
   var hero = document.querySelector(".hero");
@@ -24,7 +26,7 @@
     clone.setAttribute("focusable", "false");
     var tagged = clone.querySelectorAll("[id]");
     for (var c = 0; c < tagged.length; c++) tagged[c].removeAttribute("id");
-    hopEl.appendChild(clone);
+    actEl.appendChild(clone);
     imgs = root.querySelectorAll(".pal-img");
   }
 
@@ -34,6 +36,18 @@
   var SIT_MS = 1000;
   var CASH_MS = 2100;
   var REPLAY_MS = 30000;
+  var ACT_MS = {
+    launch: 1150,
+    ready: 1700,
+    listen: 1350,
+    watch: 1600,
+    glance: 1300,
+    turn: 1900,
+    peek: 1350,
+    blink: 1050,
+    nod: 1150,
+    settle: 900
+  };
 
   var pts = [];
   var landI = 0;
@@ -43,6 +57,9 @@
   var cash = null;
   var cashPlayed = false;
   var cashLeftAt = 0;
+  var act = null;
+  var acted = {};
+  var visitSid = "";
   var placed = false;
   var lastY = window.scrollY || 0;
   var baseY = lastY;
@@ -74,65 +91,77 @@
     return el.getBoundingClientRect().top + (window.scrollY || 0);
   }
 
-  function poseFor(sec) {
-    var name = sec.getAttribute("data-pal");
-    if (!name) {
-      var inner = sec.querySelector("[data-pal]");
-      name = inner ? inner.getAttribute("data-pal") : "rest";
-    }
-    if (name === "crest") name = "sit";
-    return name || "rest";
+  function add(list, el, kind, side, poseName, actName, prop, sid, pageY) {
+    list.push({
+      el: el,
+      kind: kind,
+      side: side,
+      pose: poseName,
+      act: actName || "",
+      prop: prop || "",
+      sid: sid,
+      pageY: pageY
+    });
   }
 
   function build() {
     var list = [];
     var sections = document.querySelectorAll("main > section[id]");
-    var flip = -1;
     for (var i = 0; i < sections.length; i++) {
       var sec = sections[i];
       if (sec.classList.contains("pal-hide")) continue;
       var sid = sec.id;
-      var poseName = poseFor(sec);
       var head = sec.querySelector("h2") || sec;
-      if (sid === "isp") {
+      if (sid === "free") {
+        add(list, sec, "theme", -1, "leap", "launch", "", sid, pageTop(sec) + 130);
+        add(list, sec, "gap", 1, "leap", "", "", sid, pageTop(sec) - 28);
+      } else if (sid === "gamers") {
+        var tiers = sec.querySelector(".tier-row") || head;
+        add(list, tiers, "theme", 1, "sit", "ready", "pad", sid, pageTop(tiers) - 8);
+        add(list, sec, "gap", -1, "sit", "", "", sid, pageTop(sec) - 28);
+        var dots = sec.querySelector("[data-roam='dots']");
+        if (dots) add(list, dots, "dots", -1, "sit", "hop", "", sid, pageTop(dots));
+      } else if (sid === "isp") {
         var mark = sec.querySelector(".isp-mark") || head;
-        list.push({ el: sec, kind: "gap", side: -1, pose: "sit", sid: sid, pageY: pageTop(sec) - 28 });
-        list.push({ el: mark, kind: "cash", side: 1, pose: "sit", sid: sid, pageY: pageTop(mark) + 16 });
-        var extras = [
-          [".week-demo", "sit", -1],
-          [".isp-flow", "rest", 1],
-          [".isp-proof", "look", -1],
-          [".uses-card", "ears", 1]
-        ];
+        add(list, sec, "gap", -1, "rest", "", "", sid, pageTop(sec) - 28);
+        add(list, mark, "cash", 1, "rest", "cash", "", sid, pageTop(mark) + 16);
+        var extras = [".isp-flow", ".isp-proof", ".uses-card"];
         for (var e = 0; e < extras.length; e++) {
-          var node = sec.querySelector(extras[e][0]);
+          var node = sec.querySelector(extras[e]);
           if (!node) continue;
-          list.push({
-            el: node,
-            kind: "head",
-            side: extras[e][2],
-            pose: extras[e][1],
-            sid: sid,
-            pageY: pageTop(node) + 12
-          });
+          add(list, node, "head", e % 2 ? 1 : -1, "rest", "", "", sid, pageTop(node) + 12);
         }
-        flip = 1;
-        continue;
-      }
-      flip = -flip;
-      list.push({ el: sec, kind: "gap", side: flip, pose: poseName, sid: sid, pageY: pageTop(sec) - 28 });
-      flip = -flip;
-      list.push({ el: head, kind: "head", side: flip, pose: poseName, sid: sid, pageY: pageTop(head) + 8 });
-      var dots = sec.querySelector("[data-roam='dots']");
-      if (dots) {
-        flip = -flip;
-        list.push({ el: dots, kind: "dots", side: flip, pose: poseName, sid: sid, pageY: pageTop(dots) });
+      } else if (sid === "wfh") {
+        var calls = sec.querySelector(".wfh-call-row") || head;
+        add(list, calls, "theme", 1, "ears", "listen", "headset", sid, pageTop(calls) - 6);
+        add(list, sec, "gap", -1, "ears", "", "", sid, pageTop(sec) - 28);
+      } else if (sid === "streaming") {
+        var screen = sec.querySelector(".streaming-screen") || head;
+        add(list, screen, "theme", -1, "sit", "watch", "screen", sid, pageTop(screen) - 6);
+        add(list, sec, "gap", 1, "sit", "", "", sid, pageTop(sec) - 28);
+      } else if (sid === "value") {
+        var hist = sec.querySelector(".value-card-history") || head;
+        add(list, hist, "theme", -1, "look", "glance", "", sid, pageTop(hist) + 8);
+        add(list, sec, "gap", 1, "look", "", "", sid, pageTop(sec) - 28);
+      } else if (sid === "gap") {
+        add(list, head, "theme", 1, "rest", "settle", "", sid, pageTop(head) + 8);
+        add(list, sec, "gap", -1, "rest", "", "", sid, pageTop(sec) - 28);
+      } else if (sid === "benefits") {
+        add(list, head, "theme", -1, "ears", "nod", "", sid, pageTop(head) + 8);
+        add(list, sec, "gap", 1, "ears", "", "", sid, pageTop(sec) - 28);
+      } else if (sid === "preview") {
+        var frame = sec.querySelector(".window") || head;
+        add(list, frame, "peek", 1, "look", "peek", "", sid, pageTop(frame) + 6);
+        add(list, sec, "gap", -1, "look", "", "", sid, pageTop(sec) - 20);
+      } else if (sid === "user-types") {
+        add(list, head, "theme", 1, "quarter", "turn", "", sid, pageTop(head) + 8);
+        add(list, sec, "gap", -1, "quarter", "", "", sid, pageTop(sec) - 28);
       }
     }
     var foot = document.getElementById("footer");
     if (foot) {
-      flip = -flip;
-      list.push({ el: foot, kind: "gap", side: flip, pose: "rest", sid: "footer", pageY: pageTop(foot) - 20 });
+      add(list, foot, "theme", -1, "rest", "blink", "", "footer", pageTop(foot) - 24);
+      add(list, foot, "gap", 1, "rest", "", "", "footer", pageTop(foot) + 6);
     }
     list.sort(function (a, b) { return a.pageY - b.pageY; });
     var out = [];
@@ -142,7 +171,7 @@
         out.push(list[j]);
       }
     }
-    pts = out.length ? out : [{ el: document.body, kind: "gap", side: 1, pose: "rest", sid: "footer", pageY: 0 }];
+    pts = out.length ? out : [{ el: document.body, kind: "gap", side: 1, pose: "rest", act: "", prop: "", sid: "footer", pageY: 0 }];
     landI = clamp(landI, 0, pts.length - 1);
   }
 
@@ -173,7 +202,7 @@
     return false;
   }
 
-  function hits(x, y, size, allowMark) {
+  function hits(x, y, size, allowMark, allowPeek) {
     var samples = [
       [x + size * 0.5, y + size * 0.62],
       [x + size * 0.22, y + size * 0.72],
@@ -185,9 +214,26 @@
       if (!el || !el.closest) continue;
       if (el.closest("#scroll-pal")) continue;
       if (allowMark && el.closest(".isp-mark")) continue;
+      if (allowPeek) {
+        var win = el.closest("#preview .window");
+        if (win && samples[i][1] <= win.getBoundingClientRect().top + 46) continue;
+      }
       if (el.closest(".mascot-accent, .crest-mark, .hero-mascot, .mascot-play, .pal-hide, .waitlist-form, button, a, input, textarea, h1, h2, h3, h4, p, li, figcaption, label, .section-label, .card, .tier-card")) return true;
     }
     return false;
+  }
+
+  function peekSpot(box) {
+    var frame = document.querySelector("#preview .window");
+    if (!frame) return null;
+    var r = frame.getBoundingClientRect();
+    var size = box.size;
+    var x = r.right - size - 72;
+    var y = r.top - 6;
+    var hi = Math.min(window.innerHeight - size - 16, window.innerHeight * 0.72);
+    if (y < 96 || y > hi) return null;
+    if (x < 8 || x > window.innerWidth - size - 8) return null;
+    return { x: x, y: y };
   }
 
   function anchorY(wp) {
@@ -211,8 +257,29 @@
     return { x: x, y: y };
   }
 
+  function footerSpot(wp, box) {
+    var foot = document.getElementById("footer");
+    if (!foot) return null;
+    var fr = foot.getBoundingClientRect();
+    if (fr.top > window.innerHeight - 24 || fr.bottom < 48) return null;
+    var g = gutters(box.size);
+    var x = wp.side < 0 ? g.left : g.right;
+    var y = clamp(fr.top + 4, 132, window.innerHeight - box.size - 12);
+    x = clamp(x, 6, window.innerWidth - box.size - 6);
+    if (hits(x, y, box.size, false)) return null;
+    return { x: x, y: y };
+  }
+
   function spot(wp, box) {
     if (!wp) return null;
+    if (!box.mobile && wp.sid === "footer") {
+      var fs = footerSpot(wp, box);
+      if (fs) return fs;
+    }
+    if (!box.mobile && wp.kind === "peek") {
+      var pk = peekSpot(box);
+      if (pk && !hits(pk.x, pk.y, box.size, false, true)) return pk;
+    }
     if (box.mobile) {
       var x = wp.side < 0 ? 8 : window.innerWidth - box.size - 8;
       var y = window.innerHeight - box.size - 14;
@@ -249,11 +316,24 @@
         best = i;
       }
     }
+    var freeI = -1;
+    for (var f = 0; f < pts.length; f++) {
+      if (pts[f].sid === "free" && pts[f].act === "launch") freeI = f;
+    }
+    if (freeI >= 0 && ((!acted.free && heroGone() && onScreen(pts[freeI])) || (act && act.sid === "free"))) return freeI;
     var win = pts[best];
-    if (win && win.kind === "gap" && win.sid === "isp") {
+    if (win && !win.act) {
+      var alt = -1;
+      var altD = 360;
       for (var k = 0; k < pts.length; k++) {
-        if (pts[k].kind === "cash" && Math.abs(pts[k].pageY - win.pageY) < 280) return k;
+        if (!pts[k].act || pts[k].sid !== win.sid) continue;
+        var dk = Math.abs(pts[k].pageY - y);
+        if (dk < altD) {
+          altD = dk;
+          alt = k;
+        }
       }
+      if (alt >= 0) return alt;
     }
     return best;
   }
@@ -288,7 +368,7 @@
     if (!leapImg) return;
     if (!traveling) {
       facePage(x);
-      leapImg.style.transform = "none";
+      leapImg.style.transform = (pose === "leap" && root.classList.contains("is-look-left")) ? "scaleX(-1)" : "none";
       return;
     }
     if (Math.abs(dy) > Math.abs(dx) + 8) {
@@ -341,6 +421,8 @@
     for (var h = 0; h < hides.length; h++) {
       if (blocksView(hides[h])) return true;
     }
+    var week = document.getElementById("week-demo");
+    if (week && blocksView(week)) return true;
     if (window.innerWidth < 720) {
       var wait = document.getElementById("waitlist");
       if (wait && blocksView(wait)) return true;
@@ -376,6 +458,7 @@
       arcs.push({ from: from, to: target });
     }
     hop = { arcs: arcs, i: 0, t0: now, dur: HOP_MS, dest: dest };
+    showProp("");
     return true;
   }
 
@@ -402,6 +485,12 @@
 
   function onScreen(wp) {
     if (!wp) return false;
+    if (wp.sid === "footer") {
+      var foot = document.getElementById("footer");
+      if (!foot) return false;
+      var fr = foot.getBoundingClientRect();
+      return fr.top < window.innerHeight - 24 && fr.bottom > 48;
+    }
     var y = anchorY(wp);
     var hi = Math.min(window.innerHeight - 80, window.innerHeight * 0.7);
     return y >= 132 && y <= hi;
@@ -459,6 +548,65 @@
     cashPlayed = true;
     cash = null;
     showPile(false);
+    nextEx = now + GAP_MS;
+    report(false);
+  }
+
+  var ACT_NAMES = ["launch", "ready", "listen", "watch", "glance", "turn", "peek", "blink", "nod", "settle"];
+
+  function clearActClass() {
+    root.classList.remove("is-act");
+    for (var i = 0; i < ACT_NAMES.length; i++) root.classList.remove("is-act-" + ACT_NAMES[i]);
+  }
+
+  function showProp(name) {
+    root.classList.remove("is-prop-pad", "is-prop-headset", "is-prop-screen");
+    if (name === "pad" || name === "headset" || name === "screen") root.classList.add("is-prop-" + name);
+  }
+
+  function cancelAct() {
+    if (!act) return;
+    act = null;
+    clearActClass();
+    report(false);
+  }
+
+  function noteVisit(sid) {
+    if (!sid || sid === visitSid) return;
+    if (visitSid) delete acted[visitSid];
+    visitSid = sid;
+  }
+
+  function canAct(here, box) {
+    if (!here || box.mobile) return false;
+    if (!ACT_MS[here.act] || acted[here.sid]) return false;
+    return true;
+  }
+
+  function startAct(now, here) {
+    act = { name: here.act, pose: here.pose, t0: now, dur: ACT_MS[here.act], sid: here.sid };
+    acted[here.sid] = true;
+    clearActClass();
+    void root.offsetWidth;
+    root.classList.add("is-act", "is-act-" + here.act);
+    showProp(here.prop);
+    showPose(here.pose);
+    paint(pos.x, pos.y, 0, 0, 0);
+    report(true);
+  }
+
+  function runAct(now) {
+    var u = Math.min(1, (now - act.t0) / act.dur);
+    if (act.name === "turn") showPose(u > 0.28 && u < 0.72 ? "rest" : act.pose);
+    else showPose(act.pose);
+    paint(pos.x, pos.y, 0, 0, 0);
+    report(true);
+    if (u < 1) return;
+    var done = act.pose;
+    act = null;
+    clearActClass();
+    showPose(done);
+    nextEx = now + GAP_MS;
     report(false);
   }
 
@@ -498,10 +646,16 @@
     root.classList.toggle("is-away", hidden);
     if (hidden) {
       cancelCash(true);
+      cancelAct();
       excursion = null;
       hop = null;
-      var snap = spot(pts[goalIndex()], box);
-      if (snap) paint(snap.x, snap.y, 0, 0, 0);
+      var goal = goalIndex();
+      var snap = spot(pts[goal], box);
+      if (snap) {
+        showPose(pts[goal] ? pts[goal].pose : "rest");
+        showProp("");
+        paint(snap.x, snap.y, 0, 0, 0);
+      }
       placed = true;
       report(false);
       raf = 0;
@@ -512,6 +666,14 @@
     if (cash) {
       runCash(now, box);
       if (cash) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
+    }
+
+    if (act) {
+      runAct(now);
+      if (act) {
         raf = requestAnimationFrame(frame);
         return;
       }
@@ -540,6 +702,7 @@
     if (excursion && excursion.phase === "sit") {
       var seat = pts[landI];
       showPose(seat ? seat.pose : "rest");
+      showProp(!box.mobile && seat ? seat.prop : "");
       paint(pos.x, pos.y, 0, 0, 0);
       report(true);
       if (scrolling) excursion = null;
@@ -575,13 +738,21 @@
     }
 
     var here = pts[landI];
+    if (!excursion) noteVisit(here && here.sid);
     if (!hop && !scrolling && here && here.kind === "cash" && cashOk(now)) {
+      showProp("");
       startCash(now);
+      raf = requestAnimationFrame(frame);
+      return;
+    }
+    if (!hop && !scrolling && !excursion && canAct(here, box)) {
+      startAct(now, here);
       raf = requestAnimationFrame(frame);
       return;
     }
 
     showPose(here ? here.pose : "rest");
+    showProp(!box.mobile && here ? here.prop : "");
     paint(pos.x, pos.y, 0, 0, 0);
     report(false);
 
@@ -631,6 +802,7 @@
       lastAt = performance.now();
       armed = true;
       if (cash) cancelCash(false);
+      cancelAct();
       if (excursion && excursion.phase === "sit") excursion = null;
     }
     lastY = y;
@@ -640,6 +812,7 @@
   window.addEventListener("resize", function () {
     build();
     cancelCash(false);
+    cancelAct();
     excursion = null;
     hop = null;
     placed = false;
@@ -655,6 +828,7 @@
       running = false;
       if (hop) hop.hold = t;
       if (cash) cash.hold = t;
+      if (act) act.hold = t;
       return;
     }
     if (hop && hop.hold) {
@@ -665,6 +839,10 @@
       cash.t0 += t - cash.hold;
       cash.hold = 0;
     }
+    if (act && act.hold) {
+      act.t0 += t - act.hold;
+      act.hold = 0;
+    }
     kick();
   });
 
@@ -672,6 +850,7 @@
     if (mq.matches) {
       report(false);
       cancelCash(false);
+      cancelAct();
       if (raf) cancelAnimationFrame(raf);
       raf = 0;
       running = false;

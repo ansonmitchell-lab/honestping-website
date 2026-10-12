@@ -607,6 +607,7 @@ select:focus-visible {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px #05d1e814;
 }
 .window-chrome {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -635,6 +636,17 @@ select:focus-visible {
   flex: 1;
   text-align: center;
   padding-right: 40px;
+}
+.mascot-peek {
+  position: absolute;
+  right: 8px;
+  top: 2px;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  object-position: center bottom;
+  transform: scaleX(-1);
+  pointer-events: none;
 }
 .window picture, .window img {
   width: 100%;
@@ -717,6 +729,16 @@ select:focus-visible {
   margin-top: 4px;
   opacity: 0.85;
 }
+.mascot-foot { width: 40px; height: 40px; display: block; flex: 0 0 auto; }
+.pal-kicker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.pal-kicker .section-label { margin-bottom: 0; }
+.mascot-mini { width: 48px; height: auto; display: block; flex: 0 0 auto; }
+#benefits .mascot-mini { transform: scaleX(-1); }
 
 @media (max-width: 560px) {
   .nav .nav-link { display: none; }
@@ -1531,7 +1553,15 @@ select:focus-visible {
   color: var(--hp-blue);
 }
 .wfh-head { max-width: 48rem; margin-bottom: 28px; }
-.mascot-ears { width: 140px; height: auto; display: block; margin: 0 0 12px; }
+.mascot-ears-wrap { position: relative; display: block; width: max-content; margin: 0 0 12px; }
+.mascot-ears { width: 140px; height: auto; display: block; }
+.mascot-ears-wrap .hex-prop {
+  position: absolute;
+  right: 8px;
+  top: 42px;
+  width: 34px;
+  height: 26px;
+}
 .wfh-title {
   font-size: clamp(22px, 3.4vw, 32px);
   font-weight: 600;
@@ -1548,15 +1578,15 @@ select:focus-visible {
     column-gap: 28px;
     align-items: center;
   }
-  .wfh-head > :not(.mascot-ears) { grid-column: 1; }
-  .mascot-ears {
+  .wfh-head > :not(.mascot-ears-wrap) { grid-column: 1; }
+  .mascot-ears-wrap {
     grid-column: 2;
     grid-row: 1 / span 3;
-    width: 160px;
     margin: 0;
     justify-self: end;
     transform: scaleX(-1);
   }
+  .mascot-ears { width: 160px; }
 }
 .wfh-showcase {
   display: grid;
@@ -1737,6 +1767,7 @@ select:focus-visible {
 }
 .streaming-label-row .section-label { margin-bottom: 0; color: var(--hp-cyan); }
 .streaming-head { max-width: 48rem; margin-bottom: 28px; }
+.streaming-watch { display: none; }
 .streaming-title {
   font-size: clamp(22px, 3.4vw, 32px);
   font-weight: 600;
@@ -1745,6 +1776,25 @@ select:focus-visible {
   margin-bottom: 12px;
 }
 .streaming-intro { color: var(--hp-muted); font-size: 16px; }
+@media (min-width: 840px) {
+  .streaming-head {
+    max-width: none;
+    display: grid;
+    grid-template-columns: 148px minmax(0, 1fr);
+    column-gap: 16px;
+    align-items: center;
+  }
+  .streaming-head > :not(.streaming-watch) { grid-column: 2; }
+  .streaming-watch {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    grid-column: 1;
+    grid-row: 1 / span 3;
+  }
+  .mascot-watch { width: 96px; height: auto; display: block; }
+  .streaming-watch .hex-prop { width: 36px; height: 32px; margin: 0 0 22px; }
+}
 .streaming-showcase { display: grid; gap: 20px; align-items: start; }
 @media (min-width: 900px) {
   .streaming-showcase {
@@ -2314,7 +2364,7 @@ select:focus-visible {
 .pdemo-meta li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--hp-line); }
 .pdemo-meta span { color: var(--hp-muted); }
 
-/* 7-day report value: estimate + uses (index #isp, v=20261011m) */
+/* 7-day report value: estimate + uses (index #isp, v=20261011n) */
 .isp-head .plan-tag { margin-left: 6px; vertical-align: middle; }
 .isp-value { display: grid; gap: 20px; min-width: 0; }
 @media (min-width: 900px) { .isp-value { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; } }
@@ -2356,7 +2406,7 @@ select:focus-visible {
 .isp-head .isp-label-row .plan-tag { margin-left: 0; }
 .nowrap { white-space: nowrap; }
 
-/* Free to start, gamer tiers, 7-day strip, user types (v=20261011m) */
+/* Free to start, gamer tiers, 7-day strip, user types (v=20261011n) */
 .free-band { padding-bottom: 8px; }
 .free-panel {
   max-width: 46rem;
@@ -2379,7 +2429,9 @@ select:focus-visible {
 .gamers-soon { margin-top: 10px; font-size: 13px; color: var(--hp-muted); }
 .gamers-showcase > .tier-row,
 .gamers-showcase > .tier-note,
+.gamers-showcase > .tier-ready,
 .gamers-showcase > .hop-explain { grid-column: 1 / -1; }
+.tier-ready { display: none; }
 .tier-row {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -2401,6 +2453,17 @@ select:focus-visible {
 .tier-bronze { color: #e2b07a; }
 .tier-steel { color: #b7c6d1; }
 .tier-mark { width: 72px; height: 72px; display: block; }
+@media (min-width: 720px) {
+  .tier-ready {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 4px;
+    margin: 0 0 6px;
+  }
+  .mascot-ready { width: 72px; height: auto; display: block; transform: scaleX(-1); }
+  .tier-ready .hex-prop { width: 28px; height: 22px; margin-bottom: 12px; }
+}
 .mascot-play {
   appearance: none;
   background: none;
@@ -2578,7 +2641,7 @@ select:focus-visible {
   .overpay-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* Try a sample week, app panel (index #isp, v=20261011m) */
+/* Try a sample week, app panel (index #isp, v=20261011n) */
 .try-week {
   position: relative;
   margin: 0;
@@ -2824,7 +2887,7 @@ select:focus-visible {
   .day-strip small { font-size: 9px; }
 }
 
-/* Scroll companion (home only, v=20261011m). Full-viewport layer, no rail. */
+/* Scroll companion (home only, v=20261011n). Full-viewport layer, no rail. */
 .scroll-pal {
   position: fixed;
   inset: 0;
@@ -2871,6 +2934,125 @@ select:focus-visible {
 }
 .scroll-pal .pal-img.is-on { opacity: 1; }
 .scroll-pal .pal-img[data-pose="leap"] { transform-origin: center center; }
+.pal-act {
+  position: absolute;
+  inset: 0;
+  transform-origin: center 72%;
+  pointer-events: none;
+}
+.pal-symbols { position: absolute; width: 0; height: 0; overflow: hidden; }
+.pal-prop {
+  position: absolute;
+  left: 52px;
+  bottom: 0;
+  width: 36px;
+  height: 32px;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+}
+.scroll-pal.is-look-left .pal-prop { left: auto; right: 52px; }
+.pal-prop svg { display: none; width: 34px; height: 28px; }
+.scroll-pal.is-prop-pad .pal-prop,
+.scroll-pal.is-prop-headset .pal-prop,
+.scroll-pal.is-prop-screen .pal-prop { opacity: 1; }
+.scroll-pal.is-prop-pad .prop-pad,
+.scroll-pal.is-prop-headset .prop-headset,
+.scroll-pal.is-prop-screen .prop-screen { display: block; }
+.scroll-pal.is-act-launch .pal-act { animation: pal-launch 1.15s ease both; }
+.scroll-pal.is-look-left.is-act-launch .pal-act { animation-name: pal-launch-in; }
+.scroll-pal.is-act-ready .pal-act { animation: pal-ready 1.7s ease both; }
+.scroll-pal.is-act-listen .pal-act { animation: pal-twitch 1.35s ease both; }
+.scroll-pal.is-look-left.is-act-listen .pal-act { animation-name: pal-twitch-in; }
+.scroll-pal.is-act-watch .pal-act { animation: pal-watch 1.6s ease both; }
+.scroll-pal.is-look-left.is-act-watch .pal-act { animation-name: pal-watch-in; }
+.scroll-pal.is-act-glance .pal-act { animation: pal-glance 1.3s ease both; }
+.scroll-pal.is-look-left.is-act-glance .pal-act { animation-name: pal-glance-in; }
+.scroll-pal.is-act-turn .pal-act { animation: pal-turn 1.9s ease both; }
+.scroll-pal.is-act-peek .pal-act { animation: pal-peek 1.35s ease both; }
+.scroll-pal.is-act-blink .pal-act { animation: pal-blink 1.05s ease both; }
+.scroll-pal.is-act-nod .pal-act { animation: pal-nod 1.15s ease both; }
+.scroll-pal.is-act-settle .pal-act { animation: pal-settle 0.9s ease both; }
+@keyframes pal-launch {
+  0% { transform: translate3d(0, 5px, 0); }
+  42% { transform: translate3d(16px, -14px, 0); }
+  100% { transform: none; }
+}
+@keyframes pal-launch-in {
+  0% { transform: translate3d(0, 5px, 0); }
+  42% { transform: translate3d(-16px, -14px, 0); }
+  100% { transform: none; }
+}
+@keyframes pal-ready {
+  0% { transform: none; }
+  22% { transform: translate3d(0, 6px, 0) scale(1.04, 0.86); }
+  40% { transform: none; }
+  56% { transform: rotate(-8deg); }
+  70% { transform: rotate(7deg); }
+  84% { transform: rotate(-3deg); }
+  100% { transform: none; }
+}
+@keyframes pal-twitch {
+  0%, 100% { transform: none; }
+  30% { transform: rotate(8deg); }
+  55% { transform: rotate(-5deg); }
+  78% { transform: rotate(3deg); }
+}
+@keyframes pal-twitch-in {
+  0%, 100% { transform: none; }
+  30% { transform: rotate(-8deg); }
+  55% { transform: rotate(5deg); }
+  78% { transform: rotate(-3deg); }
+}
+@keyframes pal-watch {
+  0%, 100% { transform: none; }
+  28% { transform: translate3d(0, 3px, 0) rotate(5deg); }
+  52% { transform: translate3d(0, -1px, 0) rotate(-2deg); }
+  74% { transform: translate3d(0, 2px, 0) rotate(3deg); }
+}
+@keyframes pal-watch-in {
+  0%, 100% { transform: none; }
+  28% { transform: translate3d(0, 3px, 0) rotate(-5deg); }
+  52% { transform: translate3d(0, -1px, 0) rotate(2deg); }
+  74% { transform: translate3d(0, 2px, 0) rotate(-3deg); }
+}
+@keyframes pal-glance {
+  0%, 100% { transform: none; }
+  40% { transform: rotate(12deg); }
+  68% { transform: rotate(-4deg); }
+}
+@keyframes pal-glance-in {
+  0%, 100% { transform: none; }
+  40% { transform: rotate(-12deg); }
+  68% { transform: rotate(4deg); }
+}
+@keyframes pal-turn {
+  0% { transform: none; }
+  35% { transform: rotate(-8deg) scale(0.96); }
+  70% { transform: none; }
+  100% { transform: none; }
+}
+@keyframes pal-peek {
+  0%, 100% { transform: none; }
+  42% { transform: translate3d(0, 10px, 0); }
+  70% { transform: translate3d(0, 3px, 0); }
+}
+@keyframes pal-blink {
+  0%, 100% { transform: none; }
+  16% { transform: scaleY(0.86); }
+  30% { transform: none; }
+  46% { transform: scaleY(0.88); }
+  62% { transform: none; }
+}
+@keyframes pal-nod {
+  0%, 100% { transform: none; }
+  35% { transform: rotate(8deg); }
+  65% { transform: rotate(-3deg); }
+}
+@keyframes pal-settle {
+  0%, 100% { transform: none; }
+  50% { transform: translate3d(0, 5px, 0); }
+}
 .scroll-pal .pal-crest {
   width: 64px;
   height: 64px;
@@ -2918,7 +3100,13 @@ select:focus-visible {
     width: 40px;
     height: 40px;
   }
+  .pal-prop,
+  .hex-prop,
+  .mascot-peek,
+  .mascot-foot { display: none; }
+  .mascot-mini { width: 40px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .scroll-pal { display: none; }
+  .pal-act { animation: none !important; }
 }
