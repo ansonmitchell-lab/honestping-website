@@ -2380,7 +2380,7 @@ select:focus-visible {
 .pdemo-meta li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--hp-line); }
 .pdemo-meta span { color: var(--hp-muted); }
 
-/* 7-day report value: estimate + uses (index #isp, v=20261012c) */
+/* 7-day report value: estimate + uses (index #isp, v=20261012d) */
 .isp-head .plan-tag { margin-left: 6px; vertical-align: middle; }
 .isp-value { display: grid; gap: 20px; min-width: 0; }
 @media (min-width: 900px) { .isp-value { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; } }
@@ -2422,7 +2422,7 @@ select:focus-visible {
 .isp-head .isp-label-row .plan-tag { margin-left: 0; }
 .nowrap { white-space: nowrap; }
 
-/* Free to start, gamer tiers, 7-day strip, user types (v=20261012c) */
+/* Free to start, gamer tiers, 7-day strip, user types (v=20261012d) */
 .free-band { padding-bottom: 8px; }
 .free-panel {
   max-width: 46rem;
@@ -2445,14 +2445,36 @@ select:focus-visible {
 .gamers-soon { margin-top: 10px; font-size: 13px; color: var(--hp-muted); }
 .gamers-showcase > .tier-row,
 .gamers-showcase > .tier-note,
-.gamers-showcase > .tier-ready,
 .gamers-showcase > .hop-explain { grid-column: 1 / -1; }
-.tier-ready { display: none; }
 .tier-row {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
+  padding-top: 58px;
 }
+.tier-runner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 48px;
+  height: 52px;
+  z-index: 2;
+  pointer-events: none;
+  visibility: hidden;
+}
+.tier-row.is-tier-placed .tier-runner { visibility: visible; }
+.tier-runner img {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 48px;
+  height: 52px;
+  object-fit: contain;
+  object-position: center bottom;
+  display: block;
+}
+.tier-runner img[hidden] { display: none; }
 .tier-card {
   margin: 0;
   padding: 14px 10px 12px;
@@ -2469,23 +2491,6 @@ select:focus-visible {
 .tier-bronze { color: #e2b07a; }
 .tier-steel { color: #b7c6d1; }
 .tier-mark { width: 72px; height: 72px; display: block; }
-@media (min-width: 720px) {
-  .tier-ready {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    gap: 4px;
-    margin: 0 0 6px;
-  }
-  .mascot-ready-wrap {
-    display: block;
-    position: relative;
-    width: 72px;
-    transform: scaleX(-1);
-  }
-  .mascot-ready { width: 72px; height: auto; display: block; transform: none; }
-  .tier-ready .hex-prop { width: 28px; height: 22px; margin-bottom: 12px; }
-}
 .mascot-play {
   appearance: none;
   background: none;
@@ -2692,7 +2697,7 @@ select:focus-visible {
   .overpay-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* Try a sample week, app panel (index #isp, v=20261012c) */
+/* Try a sample week, app panel (index #isp, v=20261012d) */
 .try-week {
   position: relative;
   margin: 0;
@@ -2938,7 +2943,7 @@ select:focus-visible {
   .day-strip small { font-size: 9px; }
 }
 
-/* Scroll companion (home only, v=20261012c). Full-viewport layer, no rail. */
+/* Scroll companion (home only, v=20261012d). Full-viewport layer, no rail. */
 .scroll-pal {
   position: fixed;
   inset: 0;
@@ -3259,7 +3264,7 @@ select:focus-visible {
   .pal-act { animation: none !important; }
 }
 
-/* Hero balance, free bar, hop path, sleep, dark week (v=20261012c) */
+/* Hero balance, free bar, hop path, sleep, dark week (v=20261012d) */
 @media (min-width: 960px) {
   .hero-stage .hero-gauge {
     width: 100%;
@@ -3590,7 +3595,7 @@ select:focus-visible {
   .week-result b { white-space: normal; }
 }
 
-/* Section accent motions (v=20261012c). Transforms only. */
+/* Section accent motions (v=20261012d). Transforms only. */
 [data-act]:focus { outline: 3px solid var(--hp-blue); outline-offset: 3px; }
 .hero-mascot .act-face, .hero-mascot .act-motion { display: block; }
 .hero-mascot .act-motion { position: relative; }
@@ -3629,27 +3634,6 @@ select:focus-visible {
   62% { transform: translate3d(-28px, -34px, 0); }
   82% { transform: translate3d(-52px, 0, 0); }
   100% { transform: translate3d(0, 0, 0); }
-}
-.mascot-ready-wrap .pose-crouch {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: auto;
-  transform: scale(0);
-  transform-origin: 50% 100%;
-}
-.mascot-ready-wrap.is-act .pose-crouch { animation: ready-crouch 1.8s ease; }
-.mascot-ready-wrap.is-act .pose-sit { animation: ready-sit 1.8s ease; }
-@keyframes ready-crouch {
-  0% { transform: translate3d(0, 8px, 0) scale(.92, .84); }
-  22%, 68% { transform: translate3d(0, 0, 0) scale(1); }
-  100% { transform: scale(0); }
-}
-@keyframes ready-sit {
-  0%, 100% { transform: scale(1); }
-  22%, 68% { transform: scale(0); }
 }
 .mascot-listen { display: none; width: 64px; flex: 0 0 auto; }
 .mascot-listen img { width: 64px; height: auto; display: block; transform-origin: 50% 16%; }

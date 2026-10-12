@@ -1,8 +1,9 @@
 /* Scroll companion. No rail. Scroll progress walks a path of perches
    down the page, and the rabbit hops between the left and right gutters.
    It stays on screen at full opacity, including beside the hero, the
-   sample week, money tiles, legal notes, the tier row, and the hops card.
-   It does not perch on those. While another rabbit moves, it holds still.
+   sample week, money tiles, legal notes, and the hops card.
+   It does not perch on those, and it stays off the gamer tier row.
+   While another rabbit moves, it holds still.
    After it settles, it plays a short idle, then another every few seconds.
    The coin-roll tumble stays in this file and stays off.
    Reduced motion never builds it. */
@@ -135,9 +136,8 @@
         add(list, sec, "theme", -1, "leap", "launch", "", sid, pageTop(sec) + 20);
         add(list, sec, "gap", 1, "leap", "", "", sid, pageTop(sec) - 28);
       } else if (sid === "gamers") {
-        var tiers = sec.querySelector(".tier-row") || head;
-        add(list, tiers, "theme", 1, "sit", "ready", "pad", sid, pageTop(tiers) - 8);
-        add(list, sec, "gap", -1, "sit", "", "", sid, pageTop(sec) - 28);
+        add(list, head, "theme", -1, "sit", "", "", sid, pageTop(head) + 24);
+        add(list, sec, "gap", 1, "sit", "", "", sid, pageTop(sec) - 28);
       } else if (sid === "isp") {
         var mark = sec.querySelector(".isp-mark") || head;
         add(list, sec, "gap", -1, "rest", "", "", sid, pageTop(sec) - 28);
@@ -235,7 +235,7 @@
         var win = el.closest("#preview .window");
         if (win && samples[i][1] <= win.getBoundingClientRect().top + 46) continue;
       }
-      if (el.closest(".mascot-accent, .crest-mark, .hero-mascot, .mascot-sleep, .hop-explain, .free-bar, .mascot-play, .pal-hide, .waitlist-form, button, a, input, textarea, h1, h2, h3, h4, p, li, figcaption, label, .section-label, .card, .tier-card")) return true;
+      if (el.closest(".mascot-accent, .crest-mark, .hero-mascot, .mascot-sleep, .hop-explain, .free-bar, .mascot-play, .pal-hide, .waitlist-form, button, a, input, textarea, h1, h2, h3, h4, p, li, figcaption, label, .section-label, .card, .tier-card, .tier-row")) return true;
     }
     return false;
   }

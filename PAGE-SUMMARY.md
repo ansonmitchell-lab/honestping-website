@@ -112,3 +112,11 @@ Only the current product name HonestPing appears in user-facing copy.
 - The scroll companion stays in a side gutter at full opacity, including beside the hero, the hops card, the tier row, the sample week, money tiles, and legal notes. It does not perch on them. While another rabbit moves, it holds still. Reduced motion still hides it. After it settles it plays one idle from a set of ten, then another every few seconds, never the same idle twice in a row.
 - Gamer tier labels: Esports Ready, Ranked Ready, Casual Ready, Laggy, Not Game Ready. Badge colors and the A/B/C/D marks stay.
 - Asset query `v=20261012c`.
+
+## Shipped 2026-10-12 (preview: tier hop onto the crest)
+
+- The gamer accent hops the top edge of the five tier cards, right to left: Not Game Ready, Laggy, Casual Ready, Ranked Ready, then Esports Ready. One hop per card, about half a second. It faces the direction of travel, then sits on the Esports Ready card facing into the page. Its feet stay on the top edge, clear of the crest and the label.
+- After it lands, crest B snickers once while that rabbit holds still. The hop plays when the tier row scrolls into view, once. Hover or focus replays the hop, then the snicker.
+- The floating crouch above the row is gone. The scroll companion stays in the gutter by the heading, off the tier row.
+- Reduced motion, and a stacked or scrolling tier layout, shows the rabbit sitting on the Esports Ready card.
+- Tier labels are unchanged. Asset query `v=20261012d`.

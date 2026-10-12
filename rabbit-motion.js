@@ -2,7 +2,9 @@
    companion and the hop card count: while either is moving, every
    section accent holds its still. A one-shot plays once (a loop plays
    two or three passes), then rests. Hover or focus replays it once.
-   A hidden tab, an off-screen mascot, or reduced motion stays still. */
+   The gamer tier hop runs right to left, then the crest snicker plays
+   while that rabbit stays still. A hidden tab, an off-screen mascot,
+   or reduced motion stays still. */
 (function () {
   var mq = window.matchMedia("(prefers-reduced-motion: reduce)");
   var reduce = mq.matches;
@@ -20,8 +22,11 @@
     face: 2.2,
     peek: 2.0,
     blink: 2.0,
-    zoomies: 2.2
+    zoomies: 2.2,
+    tierhop: 2.5
   };
+  var TIER_HOP = 0.5;
+  var TIER_HOPS = 5;
   var slots = [];
   var active = null;
   var raf = 0;
@@ -115,10 +120,99 @@
     };
   }
 
+  function tierStill(el) {
+    if (reduce) return true;
+    if (window.matchMedia("(max-width: 800px)").matches) return true;
+    var cards = el.querySelectorAll(".tier-card");
+    if (cards.length < 5) return true;
+    var a = cards[0].getBoundingClientRect();
+    var b = cards[cards.length - 1].getBoundingClientRect();
+    if (a.width < 8 || Math.abs(a.top - b.top) > 12) return true;
+    if (el.scrollWidth > el.clientWidth + 8) return true;
+    return false;
+  }
+
+  function tierDraw(el) {
+    var dur = TIER_HOP * TIER_HOPS;
+    return function (t) {
+      var runner = el.querySelector(".tier-runner");
+      var leap = el.querySelector(".tier-leap");
+      var sit = el.querySelector(".tier-sit");
+      var cards = el.querySelectorAll(".tier-card");
+      if (!runner || !cards.length) return;
+      function showSit(on) {
+        if (leap) leap.hidden = on;
+        if (sit) sit.hidden = !on;
+      }
+      function perch(card) {
+        var rr = el.getBoundingClientRect();
+        var cr = card.getBoundingClientRect();
+        var rw = runner.offsetWidth || 48;
+        var rh = runner.offsetHeight || 52;
+        return {
+          x: cr.left + cr.width / 2 - rr.left - rw / 2,
+          y: cr.top - rr.top - rh + 4
+        };
+      }
+      function put(p, face) {
+        runner.style.transform = "translate3d(" + p.x.toFixed(1) + "px," + p.y.toFixed(1) + "px,0) scaleX(" + face + ")";
+        el.classList.add("is-tier-placed");
+      }
+      function points() {
+        var pads = [];
+        var n;
+        for (n = cards.length - 1; n >= 0; n--) pads.push(perch(cards[n]));
+        var gap = Math.max(36, cards[cards.length - 1].offsetWidth * 0.72);
+        var start = { x: pads[0].x + gap, y: pads[0].y };
+        var maxX = Math.max(pads[0].x + 16, el.clientWidth - (runner.offsetWidth || 48) + 8);
+        if (start.x > maxX) start.x = maxX;
+        return [start].concat(pads);
+      }
+      function park() {
+        showSit(true);
+        put(perch(cards[0]), 1);
+        el.classList.add("is-tier-placed");
+      }
+      if (tierStill(el) || t >= dur) {
+        park();
+        return;
+      }
+      if (t < 0) {
+        showSit(false);
+        put(points()[0], -1);
+        el.classList.add("is-tier-placed");
+        return;
+      }
+      var pts = points();
+      var idx = Math.min(TIER_HOPS - 1, Math.floor(t / TIER_HOP));
+      var u = (t - idx * TIER_HOP) / TIER_HOP;
+      if (u < 0) u = 0;
+      if (u > 1) u = 1;
+      var e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+      var from = pts[idx];
+      var to = pts[idx + 1];
+      var arc = 11;
+      var landing = idx === TIER_HOPS - 1 && u > 0.84;
+      showSit(landing);
+      put({
+        x: from.x + (to.x - from.x) * e,
+        y: from.y + (to.y - from.y) * e - Math.sin(Math.PI * u) * arc
+      }, landing ? 1 : -1);
+    };
+  }
+
   function actApi(el) {
     var name = el.getAttribute("data-act");
     var dur = ACT[name];
     if (!dur) return null;
+    if (name === "tierhop") {
+      return {
+        draw: tierDraw(el),
+        restTime: -1,
+        get loop() { return tierStill(el) ? 0.04 : dur; },
+        once: true
+      };
+    }
     var draw = name === "zoomies" ? zoomDraw(el, dur) : cssDraw(el, dur);
     return { draw: draw, restTime: dur, loop: dur, once: true };
   }
@@ -158,6 +252,10 @@
       return;
     }
     if (slot.api && typeof slot.api.draw === "function") {
+      if (slot.el.getAttribute("data-act") === "tierhop") {
+        slot.api.draw(slot.done && !reduce ? slot.api.loop : -1);
+        return;
+      }
       var at = slot.api.restTime;
       if (slot.el.getAttribute("data-act") === "zoomies" && (!slot.done || reduce)) at = -1;
       slot.api.draw(at);
@@ -198,14 +296,25 @@
     return { ratio: ratio, dist: Math.sqrt(dx * dx + dy * dy) };
   }
 
+  function tierHopPending() {
+    for (var i = 0; i < slots.length; i++) {
+      var slot = slots[i];
+      if (slot.el.getAttribute("data-act") !== "tierhop" || slot.done) continue;
+      if (tierStill(slot.el)) return false;
+      if (measure(slot.el).ratio >= MIN) return true;
+    }
+    return false;
+  }
+
   function winner() {
     if (reduce || document.hidden || blocked()) return null;
+    var holdCrest = blockCrest || tierHopPending();
     var best = null;
     var bestRank = -1;
     for (var i = 0; i < slots.length; i++) {
       var slot = slots[i];
       if (slot.once && slot.done) continue;
-      if (blockCrest && slot.el.getAttribute("data-mascot") === "crest") continue;
+      if (holdCrest && slot.el.getAttribute("data-mascot") === "crest") continue;
       var box = measure(slot.el);
       slot.ratio = box.ratio;
       if (box.ratio < MIN) continue;
@@ -251,6 +360,11 @@
       done.boost = 0;
       halt();
       rest(done);
+      if (done.el.getAttribute("data-act") === "tierhop") {
+        for (var c = 0; c < slots.length; c++) {
+          if (slots[c].el.getAttribute("data-mascot") === "crest" && !slots[c].done) slots[c].boost = 40;
+        }
+      }
       reconcile();
       return;
     }
@@ -309,6 +423,14 @@
   function replay(slot) {
     if (reduce || document.hidden || blocked()) return;
     if (active === slot && !slot.once) return;
+    if (slot.el.getAttribute("data-act") === "tierhop") {
+      for (var i = 0; i < slots.length; i++) {
+        if (slots[i].el.getAttribute("data-mascot") === "crest") {
+          slots[i].done = false;
+          slots[i].boost = 0;
+        }
+      }
+    }
     slot.done = false;
     slot.boost = 30;
     schedule();
