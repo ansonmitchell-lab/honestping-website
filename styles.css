@@ -2380,7 +2380,7 @@ select:focus-visible {
 .pdemo-meta li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--hp-line); }
 .pdemo-meta span { color: var(--hp-muted); }
 
-/* 7-day report value: estimate + uses (index #isp, v=20261011p) */
+/* 7-day report value: estimate + uses (index #isp, v=20261012a) */
 .isp-head .plan-tag { margin-left: 6px; vertical-align: middle; }
 .isp-value { display: grid; gap: 20px; min-width: 0; }
 @media (min-width: 900px) { .isp-value { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; } }
@@ -2422,7 +2422,7 @@ select:focus-visible {
 .isp-head .isp-label-row .plan-tag { margin-left: 0; }
 .nowrap { white-space: nowrap; }
 
-/* Free to start, gamer tiers, 7-day strip, user types (v=20261011p) */
+/* Free to start, gamer tiers, 7-day strip, user types (v=20261012a) */
 .free-band { padding-bottom: 8px; }
 .free-panel {
   max-width: 46rem;
@@ -2683,7 +2683,7 @@ select:focus-visible {
   .overpay-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* Try a sample week, app panel (index #isp, v=20261011p) */
+/* Try a sample week, app panel (index #isp, v=20261012a) */
 .try-week {
   position: relative;
   margin: 0;
@@ -2929,7 +2929,7 @@ select:focus-visible {
   .day-strip small { font-size: 9px; }
 }
 
-/* Scroll companion (home only, v=20261011p). Full-viewport layer, no rail. */
+/* Scroll companion (home only, v=20261012a). Full-viewport layer, no rail. */
 .scroll-pal {
   position: fixed;
   inset: 0;
@@ -3153,7 +3153,7 @@ select:focus-visible {
   .pal-act { animation: none !important; }
 }
 
-/* Hero balance, free bar, hop path, sleep, dark week (v=20261011p) */
+/* Hero balance, free bar, hop path, sleep, dark week (v=20261012a) */
 @media (min-width: 960px) {
   .hero-stage .hero-gauge {
     width: 100%;
@@ -3484,7 +3484,7 @@ select:focus-visible {
   .week-result b { white-space: normal; }
 }
 
-/* Section accent motions (v=20261011p). Transforms only. */
+/* Section accent motions (v=20261012a). Transforms only. */
 [data-act]:focus { outline: 3px solid var(--hp-blue); outline-offset: 3px; }
 .hero-mascot .act-face, .hero-mascot .act-motion { display: block; }
 .hero-mascot .act-motion { position: relative; }
@@ -3637,6 +3637,7 @@ select:focus-visible {
   z-index: 1;
   pointer-events: none;
 }
+.zoom-runner { transform-origin: 50% 80%; }
 .zoom-runner img {
   width: 48px;
   height: 48px;
@@ -3644,6 +3645,18 @@ select:focus-visible {
   object-position: center bottom;
   display: block;
 }
+.zoom-runner img[hidden] { display: none; }
+.zoom-grin {
+  position: absolute;
+  left: 50%;
+  top: 22%;
+  width: 16px;
+  height: 8px;
+  margin-left: -8px;
+  transform-origin: 50% 0;
+  pointer-events: none;
+}
+.zoom-grin[hidden] { display: none; }
 @media (max-width: 719px) {
   .mascot-foot-host { display: none; }
 }

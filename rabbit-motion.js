@@ -56,28 +56,43 @@
       var runner = el.querySelector(".zoom-runner");
       var leap = el.querySelector(".zoom-leap");
       var sit = el.querySelector(".zoom-sit");
+      var front = el.querySelector(".zoom-front");
+      var grin = el.querySelector(".zoom-grin");
       if (!runner) return;
       var rw = runner.offsetWidth || 48;
       var rh = runner.offsetHeight || 48;
       var w = Math.max(24, el.clientWidth - rw - 8);
       var h = Math.max(16, el.clientHeight - rh - 8);
       var restX = w;
-      var restY = Math.max(0, (el.clientHeight - rh) * 0.5);
-      function pose(sitOn) {
-        if (leap) leap.hidden = sitOn;
-        if (sit) sit.hidden = !sitOn;
+      var restY = Math.max(0, (el.clientHeight - rh) * 0.35);
+      function pose(which) {
+        if (leap) leap.hidden = which !== "leap";
+        if (sit) sit.hidden = which !== "sit";
+        if (front) front.hidden = which !== "front";
+        if (grin) {
+          if (which === "front") grin.removeAttribute("hidden");
+          else grin.setAttribute("hidden", "");
+        }
       }
-      if (t >= dur) {
-        pose(true);
-        runner.style.transform = "translate3d(" + restX.toFixed(1) + "px," + restY.toFixed(1) + "px,0) scaleX(-1) rotate(-7deg)";
+      function park(snicker, sy) {
+        pose(snicker ? "front" : "sit");
+        var squash = sy == null ? 1 : sy;
+        runner.style.transform = "translate3d(" + restX.toFixed(1) + "px," + restY.toFixed(1) + "px,0) scale(1," + squash.toFixed(3) + ")";
+        if (grin && snicker) grin.style.transform = "scaleX(" + (1 + (1 - squash) * 3).toFixed(3) + ")";
+      }
+      if (reduce || t < 0) {
+        park(false, 1);
         return;
       }
-      var land = dur - 0.34;
+      if (t >= dur) {
+        park(true, 1);
+        return;
+      }
+      var land = dur - 0.4;
       if (t >= land) {
-        var k = (t - land) / 0.34;
-        var bounce = Math.sin(Math.min(1, k) * Math.PI) * -6;
-        pose(true);
-        runner.style.transform = "translate3d(" + restX.toFixed(1) + "px," + (restY + bounce).toFixed(1) + "px,0) scaleX(-1) rotate(" + (-7 * Math.min(1, k)).toFixed(2) + "deg)";
+        var k = (t - land) / 0.4;
+        var wave = Math.sin(Math.min(1, k) * Math.PI);
+        park(true, 1 - wave * 0.1);
         return;
       }
       var u = t / land;
@@ -91,7 +106,7 @@
       else if (d < 2 * w + h) { x = w - (d - w - h); y = h; face = -1; }
       else { x = 0; y = h - (d - 2 * w - h); face = 1; }
       var hop = Math.abs(Math.sin(u * Math.PI * 5)) * (rh / 3);
-      pose(false);
+      pose("leap");
       runner.style.transform = "translate3d(" + x.toFixed(1) + "px," + (y - hop).toFixed(1) + "px,0) scaleX(" + face + ")";
     };
   }
@@ -138,7 +153,11 @@
       slot.el.classList.toggle("is-hold", inView && !reduce && blocked());
       return;
     }
-    if (slot.api && typeof slot.api.draw === "function") slot.api.draw(slot.api.restTime);
+    if (slot.api && typeof slot.api.draw === "function") {
+      var at = slot.api.restTime;
+      if (slot.el.getAttribute("data-act") === "zoomies" && (!slot.done || reduce)) at = -1;
+      slot.api.draw(at);
+    }
   }
 
   window.HonestPingMotion = {
@@ -319,7 +338,8 @@
   });
 
   document.querySelectorAll("[data-act]").forEach(function (el) {
-    addSlot(el, actApi(el), { priority: 16, replay: true });
+    var onceView = el.getAttribute("data-act") === "zoomies";
+    addSlot(el, actApi(el), { priority: 16, replay: !onceView });
   });
 
   document.querySelectorAll("[data-sleep]").forEach(function (el) {

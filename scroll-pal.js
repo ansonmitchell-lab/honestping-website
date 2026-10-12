@@ -1,10 +1,12 @@
 /* Scroll companion. No rail. Scroll progress walks a path of perches
    down the page, and the rabbit hops between the left and right sides.
    Each section has a perch, a pose, a tiny hex prop, and one short
-   landing action. At the 7-day heading it rolls once in hex coins,
-   then holds still. Hidden near money tiles, the sample week, and
-   legal lines. Reduced motion never builds it. */
+   landing action. The 7-day good-news card owns the zoomies lap.
+   The coin-roll tumble stays in this file and stays off.
+   Hidden near money tiles, the sample week, and legal lines.
+   Reduced motion never builds it. */
 (function () {
+  var COIN_ROLL_ENABLED = false;
   var root = document.getElementById("scroll-pal");
   if (!root) return;
   var mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -13,7 +15,7 @@
   var mover = root.querySelector(".scroll-pal-mover");
   var hopEl = root.querySelector(".scroll-pal-hop");
   var actEl = root.querySelector(".pal-act") || hopEl;
-  var pile = root.querySelector(".pal-cash");
+  var pile = null;
   var imgs = root.querySelectorAll(".pal-img");
   var hero = document.querySelector(".hero");
   var hides = document.querySelectorAll(".pal-hide");
@@ -122,7 +124,9 @@
       } else if (sid === "isp") {
         var mark = sec.querySelector(".isp-mark") || head;
         add(list, sec, "gap", -1, "rest", "", "", sid, pageTop(sec) - 28);
-        add(list, mark, "cash", 1, "rest", "cash", "", sid, pageTop(mark) + 16);
+        if (COIN_ROLL_ENABLED) {
+          add(list, mark, "cash", 1, "rest", "cash", "", sid, pageTop(mark) + 16);
+        }
         var extras = [".isp-flow", ".isp-proof", ".uses-card"];
         for (var e = 0; e < extras.length; e++) {
           var node = sec.querySelector(extras[e]);
@@ -376,7 +380,28 @@
     }
   }
 
+  function mountCoins() {
+    if (!COIN_ROLL_ENABLED || pile) return pile;
+    var node = document.createElement("div");
+    node.className = "pal-cash";
+    node.setAttribute("aria-hidden", "true");
+    node.innerHTML = '<svg viewBox="0 0 120 64" width="120" height="64" focusable="false">' +
+      '<polygon points="22,40 34,47 34,58 22,64 10,58 10,47" fill="#00e6a6"/>' +
+      '<polygon points="46,42 60,50 60,62 46,64 32,62 32,50" fill="#1a7d8d"/>' +
+      '<polygon points="74,40 88,48 88,60 74,64 60,60 60,48" fill="#6fe5ee"/>' +
+      '<polygon points="96,42 108,49 108,60 96,64 84,60 84,49" fill="#45e5ad"/>' +
+      '<polygon points="58,30 72,38 72,52 58,60 44,52 44,38" fill="#f6d983"/>' +
+      '<polygon class="flutter f1" points="30,28 40,34 40,46 30,52 20,46 20,34" fill="#f6d983"/>' +
+      '<polygon class="flutter f2" points="78,24 88,30 88,42 78,48 68,42 68,30" fill="#6fe5ee"/>' +
+      '<polygon class="flutter f3" points="100,30 110,36 110,46 100,52 90,46 90,36" fill="#00e6a6"/>' +
+      "</svg>";
+    mover.insertBefore(node, hopEl);
+    pile = node;
+    return pile;
+  }
+
   function showPile(on) {
+    if (!COIN_ROLL_ENABLED) return;
     if (!pile) return;
     if (on) {
       pile.classList.remove("is-out");
@@ -527,6 +552,8 @@
   }
 
   function startCash(now) {
+    if (!COIN_ROLL_ENABLED) return;
+    mountCoins();
     if (cashPlayed && cashLeftAt && (now - cashLeftAt) > REPLAY_MS) cashPlayed = false;
     cash = { t0: now, u: 0, x: pos.x, y: pos.y };
     showPile(true);
@@ -756,7 +783,7 @@
 
     var here = pts[landI];
     if (!excursion) noteVisit(here && here.sid);
-    if (!hop && !scrolling && here && here.kind === "cash" && cashOk(now)) {
+    if (COIN_ROLL_ENABLED && !hop && !scrolling && here && here.kind === "cash" && cashOk(now)) {
       showProp("");
       startCash(now);
       raf = requestAnimationFrame(frame);

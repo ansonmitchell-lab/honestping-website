@@ -99,3 +99,9 @@ Only the current product name HonestPing appears in user-facing copy.
 - Quick Check hero: crouch, then a side leap toward the dial (2.2s). 7-day heading: ears-up listen (2.4s). Good-news card: a lap around the card that lands in a sit. Gamers accent: ready crouch, then crest B snickers once. Work from home: two breaths with Z marks, then a still. Streaming: a head bob toward the hex screen. History: a glance. Who it's for: a three-quarter turn toward the copy. Inside the app: a peek and a blink. Footer and For ISPs: a front blink and ear twitch. About keeps the existing turn.
 - The below-plan line stays text inside the sample week. No rabbit sits on the money tiles, the sample week, pricing, or legal text.
 - Added file: `assets/mascot/crouch-ready-dark.svg` (copied from the mascot pack). Motions are CSS and JS transforms. Asset query `v=20261011p`.
+
+## Shipped 2026-10-12 (preview: zoomies lands in a snicker)
+
+- The companion coin-roll tumble is off. `COIN_ROLL_ENABLED` is false, and the hex coins are not in the page. The tumble code stays in `scroll-pal.js`.
+- The good-news card is the one zoomies moment: a lap of 2.2s around "Your plan held up this week.", then a front pose with a small grin squash. It plays once per view. Reduced motion shows the sit still beside the card. It stays off the money tiles and the sample week.
+- Asset query `v=20261012a`.
