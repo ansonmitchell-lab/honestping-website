@@ -1,7 +1,7 @@
-/* How hops work: a small rabbit hops the four dots, then sits.
-   Two passes when the card scrolls in, one more on hover or focus.
-   Pauses off screen and while the tab is hidden. Reduced motion
-   rests on the last dot with every dot lit. */
+/* How hops work: one rabbit hops the four dots, then sits on Server,
+   facing back into the card. Two passes when the card scrolls in, one
+   more on hover or focus. Pauses off screen and while the tab is hidden.
+   Reduced motion rests on Server with every dot lit. */
 (function () {
   var card = document.querySelector("[data-hop-card]");
   if (!card) return;
@@ -37,8 +37,30 @@
     var r = mark.getBoundingClientRect();
     return {
       x: r.left + r.width / 2 - pr.left - runner.offsetWidth / 2,
-      y: r.top + r.height / 2 - pr.top - runner.offsetHeight * 0.72
+      y: r.bottom - pr.top - runner.offsetHeight
     };
+  }
+
+  function fit(p) {
+    var cr = card.getBoundingClientRect();
+    var pr = path.getBoundingClientRect();
+    var rw = runner.offsetWidth;
+    var rh = runner.offsetHeight;
+    var minX = cr.left + 6 - pr.left;
+    var maxX = cr.right - 6 - rw - pr.left;
+    var minY = cr.top + 4 - pr.top;
+    var maxY = cr.bottom - 4 - rh - pr.top;
+    if (maxX < minX) maxX = minX;
+    if (maxY < minY) maxY = minY;
+    return {
+      x: Math.max(minX, Math.min(maxX, p.x)),
+      y: Math.max(minY, Math.min(maxY, p.y))
+    };
+  }
+
+  function put(p, face) {
+    var q = fit(p);
+    runner.style.transform = "translate3d(" + q.x.toFixed(1) + "px," + q.y.toFixed(1) + "px,0) scaleX(" + face + ")";
   }
 
   function showSit(on) {
@@ -55,7 +77,8 @@
   function park() {
     var last = stops.length - 1;
     var p = dotCenter(last);
-    runner.style.transform = "translate3d(" + p.x.toFixed(1) + "px," + p.y.toFixed(1) + "px,0)";
+    p.x += 8;
+    put(p, -1);
     showSit(true);
     light(last);
   }
@@ -65,9 +88,9 @@
     var b = dotCenter(hopI + 1);
     var e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
     var x = a.x + (b.x - a.x) * e;
-    var arc = runner.offsetHeight / 3;
+    var arc = Math.min(14, runner.offsetHeight / 5);
     var y = a.y + (b.y - a.y) * e - Math.sin(Math.PI * u) * arc;
-    runner.style.transform = "translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px,0)";
+    put({ x: x, y: y }, 1);
     showSit(false);
     light(u > 0.92 ? hopI + 1 : hopI);
   }
@@ -141,8 +164,7 @@
     held = false;
     light(0);
     showSit(false);
-    var p = dotCenter(0);
-    runner.style.transform = "translate3d(" + p.x.toFixed(1) + "px," + p.y.toFixed(1) + "px,0)";
+    put(dotCenter(0), 1);
     motion(true);
     t0 = performance.now();
     if (raf) cancelAnimationFrame(raf);

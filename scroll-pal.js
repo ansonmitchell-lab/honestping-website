@@ -1,9 +1,10 @@
 /* Scroll companion. No rail. Scroll progress walks a path of perches
-   down the page, and the rabbit hops between the left and right sides.
-   Each section has a perch, a pose, a tiny hex prop, and one short
-   landing action. The 7-day good-news card owns the zoomies lap.
+   down the page, and the rabbit hops between the left and right gutters.
+   It stays on screen at full opacity, including beside the hero, the
+   sample week, money tiles, legal notes, the tier row, and the hops card.
+   It does not perch on those. While another rabbit moves, it holds still.
+   After it settles, it plays a short idle, then another every few seconds.
    The coin-roll tumble stays in this file and stays off.
-   Hidden near money tiles, the sample week, and legal lines.
    Reduced motion never builds it. */
 (function () {
   var COIN_ROLL_ENABLED = false;
@@ -74,6 +75,21 @@
   var restTimer = 0;
   var pose = "leap";
   var leapImg = hopEl.querySelector("[data-pose='leap']");
+  var IDLES = [
+    { name: "blink", dur: 1200 },
+    { name: "ear", dur: 1400 },
+    { name: "perk", dur: 1600 },
+    { name: "look", dur: 1800 },
+    { name: "stretch", dur: 2200 },
+    { name: "groom", dur: 2000 },
+    { name: "hop", dur: 1300 },
+    { name: "scratch", dur: 1800 },
+    { name: "yawn", dur: 2400 },
+    { name: "sniff", dur: 1400 }
+  ];
+  var idle = null;
+  var idleWait = 0;
+  var lastIdle = "";
 
   function report(on) {
     if (reported === on) return;
@@ -108,6 +124,7 @@
 
   function build() {
     var list = [];
+    if (hero) add(list, hero, "gap", -1, "sit", "", "", "hero", pageTop(hero) + 168);
     var sections = document.querySelectorAll("main > section[id]");
     for (var i = 0; i < sections.length; i++) {
       var sec = sections[i];
@@ -270,39 +287,62 @@
     return { x: x, y: y };
   }
 
+  function clearGutter(box, side, preferY) {
+    var g = gutters(box.size);
+    var primary = side < 0 ? g.left : g.right;
+    var secondary = side < 0 ? g.right : g.left;
+    var xs = [primary, secondary];
+    var lo = box.mobile ? 96 : 132;
+    var hi = Math.min(window.innerHeight - box.size - 12, window.innerHeight * 0.72);
+    if (hi < lo) hi = lo;
+    var ys = [];
+    if (preferY != null) ys.push(clamp(preferY, lo, hi));
+    var steps = 7;
+    var i;
+    for (i = 0; i <= steps; i++) ys.push(lo + (hi - lo) * (i / steps));
+    var s;
+    var k;
+    var x;
+    var y;
+    for (s = 0; s < xs.length; s++) {
+      x = clamp(xs[s], 6, window.innerWidth - box.size - 6);
+      for (k = 0; k < ys.length; k++) {
+        y = ys[k];
+        if (hits(x, y, box.size, false)) continue;
+        if (box.mobile && cornerBlocked(x, y, box.size)) continue;
+        return { x: x, y: y };
+      }
+    }
+    return { x: clamp(primary, 6, window.innerWidth - box.size - 6), y: lo };
+  }
+
   function spot(wp, box) {
-    if (!wp) return null;
-    if (!box.mobile && wp.sid === "footer") {
+    if (!wp) return clearGutter(box, -1, null);
+    if (box.mobile) return clearGutter(box, wp.side, window.innerHeight - box.size - 18);
+    if (wp.sid === "footer") {
       var fs = footerSpot(wp, box);
       if (fs) return fs;
     }
-    if (!box.mobile && wp.kind === "peek") {
+    if (wp.kind === "peek") {
       var pk = peekSpot(box);
       if (pk && !hits(pk.x, pk.y, box.size, false, true)) return pk;
     }
-    if (box.mobile) {
-      var x = wp.side < 0 ? 8 : window.innerWidth - box.size - 8;
-      var y = window.innerHeight - box.size - 14;
-      if (cornerBlocked(x, y, box.size)) {
-        var x2 = wp.side < 0 ? window.innerWidth - box.size - 8 : 8;
-        if (!cornerBlocked(x2, y, box.size)) return { x: x2, y: y };
-        return null;
-      }
-      return { x: x, y: y };
-    }
     var s = rawSpot(wp, box.size);
-    if (!s) return null;
-    if (!hits(s.x, s.y, box.size, wp.kind === "cash")) return s;
+    if (s && !hits(s.x, s.y, box.size, wp.kind === "cash")) return s;
+    if (s) {
+      var g = gutters(box.size);
+      var x2 = clamp(wp.side < 0 ? g.right : g.left, 6, window.innerWidth - box.size - 6);
+      if (!hits(x2, s.y, box.size, false)) return { x: x2, y: s.y };
+    }
     var sec = wp.el.closest ? (wp.el.closest("section") || wp.el) : wp.el;
-    var g = gutters(box.size);
     var hi = Math.min(window.innerHeight - box.size - 16, window.innerHeight * 0.7);
     var rawGap = sec.getBoundingClientRect().top - box.size * 0.7;
-    if (rawGap < 132 || rawGap > hi) return null;
-    var y2 = rawGap;
-    var x2 = wp.side < 0 ? g.left : g.right;
-    x2 = clamp(x2, 6, window.innerWidth - box.size - 6);
-    if (!hits(x2, y2, box.size, false)) return { x: x2, y: y2 };
-    return null;
+    if (rawGap >= 132 && rawGap <= hi) {
+      var g2 = gutters(box.size);
+      var x3 = clamp(wp.side < 0 ? g2.left : g2.right, 6, window.innerWidth - box.size - 6);
+      if (!hits(x3, rawGap, box.size, false)) return { x: x3, y: rawGap };
+    }
+    return clearGutter(box, wp.side, s ? s.y : null);
   }
 
   function goalIndex() {
@@ -614,7 +654,35 @@
     return true;
   }
 
+  function clearIdle() {
+    root.classList.remove("is-idle");
+    if (!idle) return;
+    root.classList.remove("is-idle-" + idle.name);
+    idle = null;
+  }
+
+  function startIdle(now) {
+    var pool = [];
+    var i;
+    for (i = 0; i < IDLES.length; i++) {
+      if (IDLES[i].name !== lastIdle) pool.push(IDLES[i]);
+    }
+    var spec = pool[Math.floor(Math.random() * pool.length)];
+    lastIdle = spec.name;
+    idle = { name: spec.name, t0: now, dur: spec.dur };
+    root.classList.remove("is-idle");
+    for (i = 0; i < IDLES.length; i++) root.classList.remove("is-idle-" + IDLES[i].name);
+    void root.offsetWidth;
+    root.classList.add("is-idle", "is-idle-" + spec.name);
+  }
+
+  function motionBusy() {
+    return !!(hop || act || excursion || cash || cardHopping());
+  }
+
   function startAct(now, here) {
+    clearIdle();
+    idleWait = 0;
     act = { name: here.act, pose: here.pose, t0: now, dur: ACT_MS[here.act], sid: here.sid };
     acted[here.sid] = true;
     clearActClass();
@@ -666,6 +734,7 @@
 
   function frame(now) {
     if (document.hidden || mq.matches) {
+      if (document.hidden) clearIdle();
       report(false);
       raf = 0;
       running = false;
@@ -673,35 +742,24 @@
     }
     if (!pts.length) build();
     var box = metrics();
-    var hidden = away();
-    root.classList.toggle("is-away", hidden);
-    if (hidden) {
-      cancelCash(true);
-      cancelAct();
-      excursion = null;
-      hop = null;
-      var goal = goalIndex();
-      var snap = spot(pts[goal], box);
-      if (snap) {
-        showPose(pts[goal] ? pts[goal].pose : "rest");
-        showProp("");
-        paint(snap.x, snap.y, 0, 0, 0);
-      }
-      placed = true;
-      report(false);
-      raf = 0;
-      running = false;
-      return;
-    }
+    root.classList.remove("is-away");
 
     if (cardHopping()) {
       cancelCash(true);
       cancelAct();
+      clearIdle();
+      idleWait = 0;
       excursion = null;
       hop = null;
-      showPose(pts[landI] ? pts[landI].pose : "rest");
+      var hold = pts[landI];
+      showPose(hold ? hold.pose : "sit");
       showProp("");
-      paint(pos.x, pos.y, 0, 0, 0);
+      if (hits(pos.x, pos.y, box.size, false)) {
+        var safe = clearGutter(box, hold ? hold.side : -1, pos.y);
+        paint(safe.x, safe.y, 0, 0, 0);
+      } else {
+        paint(pos.x, pos.y, 0, 0, 0);
+      }
       report(false);
       raf = requestAnimationFrame(frame);
       return;
@@ -741,6 +799,20 @@
 
     var scrolling = (now - lastAt) < 170;
     var goal = goalIndex();
+    if (idle) {
+      if (scrolling || motionBusy() || goal !== landI) {
+        clearIdle();
+        idleWait = 0;
+        report(false);
+      } else if (now >= idle.t0 + idle.dur) {
+        clearIdle();
+        idleWait = now + 5000 + Math.random() * 4000;
+        report(false);
+      } else {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
+    }
     noteCashLeave(now);
 
     if (excursion && excursion.phase === "sit") {
@@ -800,23 +872,20 @@
     paint(pos.x, pos.y, 0, 0, 0);
     report(false);
 
-    if (!scrolling && !excursion && window.innerWidth >= 720) {
-      var due = Math.max(lastAt + REST_MS, nextEx);
-      if (now >= due) {
-        var n = nearbyPerch();
-        if (n >= 0) {
-          excursion = { dest: n, home: landI, phase: "go", sitUntil: 0 };
-          nextEx = now + GAP_MS;
-          beginHop(n, now, box);
-          if (hop) {
-            raf = requestAnimationFrame(frame);
-            return;
-          }
-          excursion = null;
-        }
-      } else {
-        armRest(due - now);
+    if (!scrolling && landI === goal && !motionBusy()) {
+      if (!idleWait) idleWait = now + 2000 + Math.random() * 2000;
+      if (now >= idleWait) {
+        startIdle(now);
+        idleWait = 0;
+        raf = requestAnimationFrame(frame);
+        return;
       }
+      armRest(idleWait - now);
+    } else if (scrolling) {
+      idleWait = 0;
+    } else {
+      idleWait = 0;
+      armRest(480);
     }
     raf = 0;
     running = false;
@@ -847,6 +916,8 @@
       armed = true;
       if (cash) cancelCash(false);
       cancelAct();
+      clearIdle();
+      idleWait = 0;
       if (excursion && excursion.phase === "sit") excursion = null;
     }
     lastY = y;
@@ -857,6 +928,8 @@
     build();
     cancelCash(false);
     cancelAct();
+    clearIdle();
+    idleWait = 0;
     excursion = null;
     hop = null;
     placed = false;
@@ -866,6 +939,8 @@
   document.addEventListener("visibilitychange", function () {
     var t = performance.now();
     if (document.hidden) {
+      clearIdle();
+      idleWait = 0;
       report(false);
       if (raf) cancelAnimationFrame(raf);
       raf = 0;
@@ -902,5 +977,13 @@
   });
 
   build();
+  root.classList.remove("is-away");
+  var openBox = metrics();
+  var openGoal = goalIndex();
+  var openSpot = spot(pts[openGoal], openBox);
+  landI = openGoal;
+  showPose(pts[openGoal] ? pts[openGoal].pose : "sit");
+  if (openSpot) paint(openSpot.x, openSpot.y, 0, 0, 0);
+  placed = true;
   kick();
 })();

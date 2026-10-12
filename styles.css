@@ -2380,7 +2380,7 @@ select:focus-visible {
 .pdemo-meta li { display: grid; grid-template-columns: 6.5rem 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--hp-line); }
 .pdemo-meta span { color: var(--hp-muted); }
 
-/* 7-day report value: estimate + uses (index #isp, v=20261012b) */
+/* 7-day report value: estimate + uses (index #isp, v=20261012c) */
 .isp-head .plan-tag { margin-left: 6px; vertical-align: middle; }
 .isp-value { display: grid; gap: 20px; min-width: 0; }
 @media (min-width: 900px) { .isp-value { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 28px; } }
@@ -2422,7 +2422,7 @@ select:focus-visible {
 .isp-head .isp-label-row .plan-tag { margin-left: 0; }
 .nowrap { white-space: nowrap; }
 
-/* Free to start, gamer tiers, 7-day strip, user types (v=20261012b) */
+/* Free to start, gamer tiers, 7-day strip, user types (v=20261012c) */
 .free-band { padding-bottom: 8px; }
 .free-panel {
   max-width: 46rem;
@@ -2513,12 +2513,12 @@ select:focus-visible {
 .hop-explain:focus { outline: 3px solid var(--hp-blue); outline-offset: 3px; }
 .hop-copy h3 { font-size: 17px; font-weight: 600; margin: 0 0 8px; }
 .hop-copy p { color: var(--hp-muted); font-size: 14px; max-width: 60ch; margin: 0; }
-.hop-path { position: relative; min-height: 108px; min-width: 0; }
+.hop-path { position: relative; min-height: 128px; min-width: 0; }
 .hop-line {
   position: absolute;
-  left: 8%;
-  right: 8%;
-  top: 62px;
+  left: 42px;
+  right: 66px;
+  top: 72px;
   height: 2px;
   background: #23404e;
 }
@@ -2527,7 +2527,7 @@ select:focus-visible {
   z-index: 1;
   display: flex;
   justify-content: space-between;
-  padding-top: 54px;
+  padding: 64px 40px 8px 16px;
 }
 .hop-stop { display: grid; justify-items: center; gap: 6px; width: 52px; }
 .hop-stop i {
@@ -2544,15 +2544,24 @@ select:focus-visible {
   position: absolute;
   left: 0;
   top: 0;
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   z-index: 2;
   pointer-events: none;
 }
-.hop-runner img { width: 72px; height: 72px; object-fit: contain; object-position: center bottom; display: block; }
+.hop-runner img {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  object-position: center bottom;
+  display: block;
+}
+.hop-runner img[hidden] { display: none; }
 @media (min-width: 720px) {
   .hop-explain { grid-template-columns: minmax(220px, 280px) minmax(0, 1fr); gap: 24px; padding: 16px 18px; }
-  .hop-runner, .hop-runner img { width: 84px; height: 84px; }
 }
 .tier-card figcaption { display: grid; gap: 2px; }
 .tier-card strong { color: var(--hp-text); font-size: 14px; font-weight: 600; }
@@ -2683,7 +2692,7 @@ select:focus-visible {
   .overpay-grid { grid-template-columns: 1fr 1fr; }
 }
 
-/* Try a sample week, app panel (index #isp, v=20261012b) */
+/* Try a sample week, app panel (index #isp, v=20261012c) */
 .try-week {
   position: relative;
   margin: 0;
@@ -2929,7 +2938,7 @@ select:focus-visible {
   .day-strip small { font-size: 9px; }
 }
 
-/* Scroll companion (home only, v=20261012b). Full-viewport layer, no rail. */
+/* Scroll companion (home only, v=20261012c). Full-viewport layer, no rail. */
 .scroll-pal {
   position: fixed;
   inset: 0;
@@ -3095,6 +3104,103 @@ select:focus-visible {
   0%, 100% { transform: none; }
   50% { transform: translate3d(0, 5px, 0); }
 }
+.scroll-pal.is-idle .pal-act { transform-origin: 50% 78%; }
+.scroll-pal.is-idle-blink .pal-act { animation: pal-idle-blink 1.2s ease; }
+.scroll-pal.is-idle-ear .pal-act { animation: pal-idle-ear 1.4s ease; }
+.scroll-pal.is-look-left.is-idle-ear .pal-act { animation-name: pal-idle-ear-in; }
+.scroll-pal.is-idle-perk .pal-act { animation: pal-idle-perk 1.6s ease; }
+.scroll-pal.is-idle-look .pal-act { animation: pal-idle-look 1.8s ease; }
+.scroll-pal.is-look-left.is-idle-look .pal-act { animation-name: pal-idle-look-in; }
+.scroll-pal.is-idle-stretch .pal-act { animation: pal-idle-stretch 2.2s ease; }
+.scroll-pal.is-idle-groom .pal-act { animation: pal-idle-groom 2s ease; }
+.scroll-pal.is-look-left.is-idle-groom .pal-act { animation-name: pal-idle-groom-in; }
+.scroll-pal.is-idle-hop .pal-act { animation: pal-idle-hop 1.3s ease; }
+.scroll-pal.is-idle-scratch .pal-act { animation: pal-idle-scratch 1.8s ease; }
+.scroll-pal.is-look-left.is-idle-scratch .pal-act { animation-name: pal-idle-scratch-in; }
+.scroll-pal.is-idle-yawn .pal-act { animation: pal-idle-yawn 2.4s ease; }
+.scroll-pal.is-idle-sniff .pal-act { animation: pal-idle-sniff 1.4s ease; }
+@keyframes pal-idle-blink {
+  0%, 100% { transform: none; }
+  18% { transform: scaleY(0.9); }
+  32% { transform: none; }
+  48% { transform: scaleY(0.92); }
+  64% { transform: none; }
+}
+@keyframes pal-idle-ear {
+  0%, 100% { transform: none; }
+  35% { transform: rotate(7deg); }
+  62% { transform: rotate(-2deg); }
+}
+@keyframes pal-idle-ear-in {
+  0%, 100% { transform: none; }
+  35% { transform: rotate(-7deg); }
+  62% { transform: rotate(2deg); }
+}
+@keyframes pal-idle-perk {
+  0%, 100% { transform: none; }
+  40% { transform: scaleY(1.06) translate3d(0, -2px, 0); }
+  70% { transform: scaleY(1.02); }
+}
+@keyframes pal-idle-look {
+  0%, 100% { transform: none; }
+  42% { transform: rotate(9deg); }
+  72% { transform: rotate(-2deg); }
+}
+@keyframes pal-idle-look-in {
+  0%, 100% { transform: none; }
+  42% { transform: rotate(-9deg); }
+  72% { transform: rotate(2deg); }
+}
+@keyframes pal-idle-stretch {
+  0%, 100% { transform: none; }
+  46% { transform: scaleX(1.08) scaleY(0.92) translate3d(0, 3px, 0); }
+  74% { transform: scaleX(0.98) scaleY(1.03); }
+}
+@keyframes pal-idle-groom {
+  0%, 100% { transform: none; }
+  32% { transform: rotate(-8deg) translate3d(0, -2px, 0); }
+  58% { transform: rotate(-3deg) translate3d(2px, -1px, 0); }
+  78% { transform: rotate(-6deg); }
+}
+@keyframes pal-idle-groom-in {
+  0%, 100% { transform: none; }
+  32% { transform: rotate(8deg) translate3d(0, -2px, 0); }
+  58% { transform: rotate(3deg) translate3d(-2px, -1px, 0); }
+  78% { transform: rotate(6deg); }
+}
+@keyframes pal-idle-hop {
+  0%, 100% { transform: none; }
+  36% { transform: translate3d(0, -10px, 0); }
+  58% { transform: translate3d(0, 2px, 0) scaleY(0.94); }
+}
+@keyframes pal-idle-scratch {
+  0%, 100% { transform: none; }
+  18% { transform: rotate(6deg); }
+  34% { transform: rotate(2deg); }
+  50% { transform: rotate(7deg); }
+  66% { transform: rotate(2deg); }
+  82% { transform: rotate(5deg); }
+}
+@keyframes pal-idle-scratch-in {
+  0%, 100% { transform: none; }
+  18% { transform: rotate(-6deg); }
+  34% { transform: rotate(-2deg); }
+  50% { transform: rotate(-7deg); }
+  66% { transform: rotate(-2deg); }
+  82% { transform: rotate(-5deg); }
+}
+@keyframes pal-idle-yawn {
+  0%, 100% { transform: none; }
+  38% { transform: scaleY(1.08) rotate(-3deg); }
+  72% { transform: scaleY(0.96) rotate(1deg); }
+}
+@keyframes pal-idle-sniff {
+  0%, 100% { transform: none; }
+  16% { transform: translate3d(1.5px, 0, 0); }
+  32% { transform: translate3d(-1px, 0, 0); }
+  48% { transform: translate3d(2px, 0, 0); }
+  64% { transform: translate3d(-0.5px, 0, 0); }
+}
 .scroll-pal .pal-crest {
   width: 64px;
   height: 64px;
@@ -3153,7 +3259,7 @@ select:focus-visible {
   .pal-act { animation: none !important; }
 }
 
-/* Hero balance, free bar, hop path, sleep, dark week (v=20261012b) */
+/* Hero balance, free bar, hop path, sleep, dark week (v=20261012c) */
 @media (min-width: 960px) {
   .hero-stage .hero-gauge {
     width: 100%;
@@ -3484,7 +3590,7 @@ select:focus-visible {
   .week-result b { white-space: normal; }
 }
 
-/* Section accent motions (v=20261012b). Transforms only. */
+/* Section accent motions (v=20261012c). Transforms only. */
 [data-act]:focus { outline: 3px solid var(--hp-blue); outline-offset: 3px; }
 .hero-mascot .act-face, .hero-mascot .act-motion { display: block; }
 .hero-mascot .act-motion { position: relative; }
