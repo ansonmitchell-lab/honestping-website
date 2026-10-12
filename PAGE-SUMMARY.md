@@ -120,3 +120,10 @@ Only the current product name HonestPing appears in user-facing copy.
 - The floating crouch above the row is gone. The scroll companion stays in the gutter by the heading, off the tier row.
 - Reduced motion, and a stacked or scrolling tier layout, shows the rabbit sitting on the Esports Ready card.
 - Tier labels are unchanged. Asset query `v=20261012d`.
+
+## Shipped 2026-10-12 (preview: hop loop, question titles, section accents)
+
+- How hops work loops You, Router, ISP, Server, and back while that card is in view. It faces the way it is going, pauses at each end, and lights the dot it lands on. Off screen or a hidden tab pauses it. Reduced motion sits at Server. Captions: your PC, your Wi-Fi or modem, your provider, the site or game.
+- Overpay card titles: "Getting less than you pay for?" and "Paying for more than you use?" The sublines stay. Those titles are not used in the sample week or the example player.
+- Section accents that were still now move once: the market-gap rabbit looks across the gap, and the day-to-day rabbit talks on a headset. Streaming bobs like popcorn in front of the screen. The hero dash is a flat leap toward the dial. The gamer companion holds a controller and snickers when it is the one moving. The ISP hero talks on a headset.
+- Asset query `v=20261012e`.

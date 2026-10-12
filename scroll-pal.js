@@ -50,6 +50,7 @@
     peek: 1350,
     blink: 1050,
     nod: 1150,
+    talk: 1600,
     settle: 900
   };
 
@@ -136,7 +137,7 @@
         add(list, sec, "theme", -1, "leap", "launch", "", sid, pageTop(sec) + 20);
         add(list, sec, "gap", 1, "leap", "", "", sid, pageTop(sec) - 28);
       } else if (sid === "gamers") {
-        add(list, head, "theme", -1, "sit", "", "", sid, pageTop(head) + 24);
+        add(list, head, "theme", -1, "sit", "ready", "pad", sid, pageTop(head) + 24);
         add(list, sec, "gap", 1, "sit", "", "", sid, pageTop(sec) - 28);
       } else if (sid === "isp") {
         var mark = sec.querySelector(".isp-mark") || head;
@@ -164,7 +165,7 @@
         add(list, head, "theme", 1, "rest", "settle", "", sid, pageTop(head) + 8);
         add(list, sec, "gap", -1, "rest", "", "", sid, pageTop(sec) - 28);
       } else if (sid === "benefits") {
-        add(list, head, "theme", -1, "ears", "nod", "", sid, pageTop(head) + 8);
+        add(list, head, "theme", -1, "ears", "talk", "headset", sid, pageTop(head) + 8);
         add(list, sec, "gap", 1, "ears", "", "", sid, pageTop(sec) - 28);
       } else if (sid === "preview") {
         var frame = sec.querySelector(".window") || head;

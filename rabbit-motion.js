@@ -22,6 +22,8 @@
     face: 2.2,
     peek: 2.0,
     blink: 2.0,
+    talk: 2.2,
+    between: 2.0,
     zoomies: 2.2,
     tierhop: 2.5
   };
