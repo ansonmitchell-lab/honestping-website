@@ -59,12 +59,12 @@
       var front = el.querySelector(".zoom-front");
       var grin = el.querySelector(".zoom-grin");
       if (!runner) return;
-      var rw = runner.offsetWidth || 48;
-      var rh = runner.offsetHeight || 48;
-      var w = Math.max(24, el.clientWidth - rw - 8);
-      var h = Math.max(16, el.clientHeight - rh - 8);
+      var rw = runner.offsetWidth || 32;
+      var rh = runner.offsetHeight || 32;
+      var w = Math.max(24, el.clientWidth - rw - 16);
+      var h = Math.max(16, el.clientHeight - rh - 12);
       var restX = w;
-      var restY = Math.max(0, (el.clientHeight - rh) * 0.35);
+      var restY = Math.max(0, (el.clientHeight - rh) * 0.42);
       function pose(which) {
         if (leap) leap.hidden = which !== "leap";
         if (sit) sit.hidden = which !== "sit";
@@ -96,16 +96,20 @@
         return;
       }
       var u = t / land;
-      var per = 2 * (w + h);
+      var up = Math.max(0, restY);
+      var down = Math.max(0, h - restY);
+      var segs = [up, w, h, w, down];
+      var per = up + w + h + w + down;
       var d = u * per;
-      var x;
-      var y;
-      var face;
-      if (d < w) { x = d; y = 0; face = 1; }
-      else if (d < w + h) { x = w; y = d - w; face = -1; }
-      else if (d < 2 * w + h) { x = w - (d - w - h); y = h; face = -1; }
-      else { x = 0; y = h - (d - 2 * w - h); face = 1; }
-      var hop = Math.abs(Math.sin(u * Math.PI * 5)) * (rh / 3);
+      var x = restX;
+      var y = restY;
+      var face = -1;
+      if (d < segs[0]) { x = w; y = restY - d; face = -1; }
+      else if (d < segs[0] + segs[1]) { x = w - (d - segs[0]); y = 0; face = -1; }
+      else if (d < segs[0] + segs[1] + segs[2]) { x = 0; y = d - segs[0] - segs[1]; face = 1; }
+      else if (d < per - segs[4]) { x = d - segs[0] - segs[1] - segs[2]; y = h; face = 1; }
+      else { x = w; y = h - (d - (per - segs[4])); face = -1; }
+      var hop = Math.abs(Math.sin(u * Math.PI * 6)) * (rh / 4);
       pose("leap");
       runner.style.transform = "translate3d(" + x.toFixed(1) + "px," + (y - hop).toFixed(1) + "px,0) scaleX(" + face + ")";
     };

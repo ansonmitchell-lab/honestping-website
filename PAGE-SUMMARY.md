@@ -104,4 +104,4 @@ Only the current product name HonestPing appears in user-facing copy.
 
 - The companion coin-roll tumble is off. `COIN_ROLL_ENABLED` is false, and the hex coins are not in the page. The tumble code stays in `scroll-pal.js`.
 - The good-news card is the one zoomies moment: a lap of 2.2s around "Your plan held up this week.", then a front pose with a small grin squash. It plays once per view. Reduced motion shows the sit still beside the card. It stays off the money tiles and the sample week.
-- Asset query `v=20261012a`.
+- Asset query `v=20261012b`. The lap stays in the card padding and ends on the right, in the snicker.
