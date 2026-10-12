@@ -91,4 +91,11 @@ Only the current product name HonestPing appears in user-facing copy.
 - How hops work: a small rabbit hops You, Router, ISP, Server, then sits. Two passes on scroll, one replay on hover or focus. The companion does not perch on those dots.
 - Good 7-day line: "Your plan held up this week." and "Connections can change, so check in now and then."
 - `#wfh` heading accent: sleeping rabbit, breathing, with rising Z marks. Hidden under 720px. The companion perches in the left gutter.
-- Asset query `v=20261011o`.
+- Asset query `v=20261011p`.
+
+## Shipped 2026-10-12 (preview: section accent motions)
+
+- Each home section accent plays once when it is the mascot most in view, then holds its still. Hover or focus replays it. Reduced motion, a hidden tab, and an off-screen accent stay still. The scroll companion and the hop card count in the same controller and yield while an accent is moving.
+- Quick Check hero: crouch, then a side leap toward the dial (2.2s). 7-day heading: ears-up listen (2.4s). Good-news card: a lap around the card that lands in a sit. Gamers accent: ready crouch, then crest B snickers once. Work from home: two breaths with Z marks, then a still. Streaming: a head bob toward the hex screen. History: a glance. Who it's for: a three-quarter turn toward the copy. Inside the app: a peek and a blink. Footer and For ISPs: a front blink and ear twitch. About keeps the existing turn.
+- The below-plan line stays text inside the sample week. No rabbit sits on the money tiles, the sample week, pricing, or legal text.
+- Added file: `assets/mascot/crouch-ready-dark.svg` (copied from the mascot pack). Motions are CSS and JS transforms. Asset query `v=20261011p`.

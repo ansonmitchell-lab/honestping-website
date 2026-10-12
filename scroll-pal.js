@@ -408,7 +408,11 @@
   }
 
   function cardHopping() {
-    return !!(window.HonestPingMotion && window.HonestPingMotion.hopIsMoving && window.HonestPingMotion.hopIsMoving());
+    var motion = window.HonestPingMotion;
+    if (!motion) return false;
+    if (motion.hopIsMoving && motion.hopIsMoving()) return true;
+    if (motion.accentMoving && motion.accentMoving()) return true;
+    return false;
   }
 
   function heroGone() {

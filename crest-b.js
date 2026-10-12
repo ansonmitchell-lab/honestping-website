@@ -70,5 +70,5 @@ window.crest=function(t){
  const q=cl((t-1.08)/.24); CGL.setAttribute("transform",`translate(${lerp(84,116,q).toFixed(1)} 0)`); CGL.setAttribute("opacity",(q>0&&q<1)?(Math.sin(Math.PI*q)).toFixed(3):"0");
  SPK.forEach(S=>spark(S,t));
 };
-window.HonestPingCrest = { draw: draw, restTime: 2, loop: LOOP };
+window.HonestPingCrest = { draw: draw, restTime: 0, loop: LOOP, once: true };
 })();

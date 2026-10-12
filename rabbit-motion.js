@@ -1,6 +1,8 @@
-/* One mascot moves at a time. A one-shot plays once, then holds its still.
-   A loop plays only while it is the mascot on screen. A hidden tab, an
-   off-screen mascot, or reduced motion stays on the still frame. */
+/* One mascot moves at a time. The most visible one wins. The scroll
+   companion and the hop card count: while either is moving, every
+   section accent holds its still. A one-shot plays once (a loop plays
+   two or three passes), then rests. Hover or focus replays it once.
+   A hidden tab, an off-screen mascot, or reduced motion stays still. */
 (function () {
   var mq = window.matchMedia("(prefers-reduced-motion: reduce)");
   var reduce = mq.matches;
@@ -8,6 +10,17 @@
     crest: window.HonestPingCrest,
     hero: window.HonestPingHero,
     turn: window.HonestPingTurn
+  };
+  var ACT = {
+    quick: 2.2,
+    listen: 2.4,
+    crouch: 1.8,
+    watch: 2.4,
+    glance: 1.6,
+    face: 2.2,
+    peek: 2.0,
+    blink: 2.0,
+    zoomies: 2.2
   };
   var slots = [];
   var active = null;
@@ -18,40 +31,134 @@
   var hopOn = false;
   var MIN = 0.25;
 
-  function syncSleep() {
-    var nodes = document.querySelectorAll("[data-sleep]");
-    var i;
-    for (i = 0; i < nodes.length; i++) {
-      var el = nodes[i];
-      var r = el.getBoundingClientRect();
+  function blocked() {
+    return companionOn || hopOn;
+  }
+
+  function cssDraw(el, dur) {
+    var primed = false;
+    return function (t) {
+      if (t >= dur - 0.02) {
+        el.classList.remove("is-act");
+        return;
+      }
+      if (!primed) {
+        el.classList.remove("is-act");
+        void el.offsetWidth;
+        primed = true;
+      }
+      if (!el.classList.contains("is-act")) el.classList.add("is-act");
+    };
+  }
+
+  function zoomDraw(el, dur) {
+    return function (t) {
+      var runner = el.querySelector(".zoom-runner");
+      var leap = el.querySelector(".zoom-leap");
+      var sit = el.querySelector(".zoom-sit");
+      if (!runner) return;
+      var rw = runner.offsetWidth || 48;
+      var rh = runner.offsetHeight || 48;
+      var w = Math.max(24, el.clientWidth - rw - 8);
+      var h = Math.max(16, el.clientHeight - rh - 8);
+      var restX = w;
+      var restY = Math.max(0, (el.clientHeight - rh) * 0.5);
+      function pose(sitOn) {
+        if (leap) leap.hidden = sitOn;
+        if (sit) sit.hidden = !sitOn;
+      }
+      if (t >= dur) {
+        pose(true);
+        runner.style.transform = "translate3d(" + restX.toFixed(1) + "px," + restY.toFixed(1) + "px,0) scaleX(-1) rotate(-7deg)";
+        return;
+      }
+      var land = dur - 0.34;
+      if (t >= land) {
+        var k = (t - land) / 0.34;
+        var bounce = Math.sin(Math.min(1, k) * Math.PI) * -6;
+        pose(true);
+        runner.style.transform = "translate3d(" + restX.toFixed(1) + "px," + (restY + bounce).toFixed(1) + "px,0) scaleX(-1) rotate(" + (-7 * Math.min(1, k)).toFixed(2) + "deg)";
+        return;
+      }
+      var u = t / land;
+      var per = 2 * (w + h);
+      var d = u * per;
+      var x;
+      var y;
+      var face;
+      if (d < w) { x = d; y = 0; face = 1; }
+      else if (d < w + h) { x = w; y = d - w; face = -1; }
+      else if (d < 2 * w + h) { x = w - (d - w - h); y = h; face = -1; }
+      else { x = 0; y = h - (d - 2 * w - h); face = 1; }
+      var hop = Math.abs(Math.sin(u * Math.PI * 5)) * (rh / 3);
+      pose(false);
+      runner.style.transform = "translate3d(" + x.toFixed(1) + "px," + (y - hop).toFixed(1) + "px,0) scaleX(" + face + ")";
+    };
+  }
+
+  function actApi(el) {
+    var name = el.getAttribute("data-act");
+    var dur = ACT[name];
+    if (!dur) return null;
+    var draw = name === "zoomies" ? zoomDraw(el, dur) : cssDraw(el, dur);
+    return { draw: draw, restTime: dur, loop: dur, once: true };
+  }
+
+  function sleepApi(el) {
+    var dur = 7.2;
+    return {
+      once: true,
+      loop: dur,
+      restTime: dur,
+      draw: function (t) {
+        if (t >= dur - 0.02) {
+          el.classList.remove("is-live");
+          el.classList.add("is-rest");
+          el.classList.remove("is-hold");
+          return;
+        }
+        el.classList.add("is-live");
+        el.classList.remove("is-hold");
+        el.classList.remove("is-rest");
+      }
+    };
+  }
+
+  function rest(slot) {
+    if (slot.sleep) {
+      slot.el.classList.remove("is-live");
+      if (slot.done) {
+        slot.el.classList.add("is-rest");
+        slot.el.classList.remove("is-hold");
+        return;
+      }
+      slot.el.classList.remove("is-rest");
+      var r = slot.el.getBoundingClientRect();
       var inView = r.width > 0 && r.bottom > 24 && r.top < (window.innerHeight || 1) - 24;
-      var block = companionOn || hopOn || document.hidden;
-      el.classList.toggle("is-live", inView && !reduce && !block);
-      el.classList.toggle("is-hold", inView && !reduce && block);
+      slot.el.classList.toggle("is-hold", inView && !reduce && blocked());
+      return;
     }
+    if (slot.api && typeof slot.api.draw === "function") slot.api.draw(slot.api.restTime);
   }
 
   window.HonestPingMotion = {
     companionMoving: function (on) {
       companionOn = !!on;
-      blockCrest = companionOn || hopOn;
+      blockCrest = blocked();
       schedule();
-      syncSleep();
     },
     hopCardMoving: function (on) {
       hopOn = !!on;
-      blockCrest = companionOn || hopOn;
+      blockCrest = blocked();
       schedule();
-      syncSleep();
     },
     hopIsMoving: function () {
       return hopOn;
+    },
+    accentMoving: function () {
+      return !!active;
     }
   };
-
-  function rest(slot) {
-    if (slot.api && typeof slot.api.draw === "function") slot.api.draw(slot.api.restTime);
-  }
 
   function measure(el) {
     var r = el.getBoundingClientRect();
@@ -69,6 +176,7 @@
   }
 
   function winner() {
+    if (reduce || document.hidden || blocked()) return null;
     var best = null;
     var bestRank = -1;
     for (var i = 0; i < slots.length; i++) {
@@ -78,7 +186,7 @@
       var box = measure(slot.el);
       slot.ratio = box.ratio;
       if (box.ratio < MIN) continue;
-      var rank = box.ratio * 10 - box.dist + slot.priority;
+      var rank = box.ratio * 10 - box.dist + slot.priority + (slot.boost || 0);
       if (slot.once) rank += 8;
       if (rank > bestRank) {
         bestRank = rank;
@@ -99,9 +207,15 @@
       raf = 0;
       return;
     }
-    if (reduce || document.hidden || measure(active.el).ratio < MIN) {
+    if (reduce || document.hidden || blocked()) {
+      var paused = active;
+      halt();
+      rest(paused);
+      return;
+    }
+    if (measure(active.el).ratio < MIN) {
       var gone = active;
-      if (gone.once) gone.done = true;
+      gone.boost = 0;
       halt();
       rest(gone);
       reconcile();
@@ -111,6 +225,7 @@
     if (active.once && elapsed >= active.api.loop) {
       var done = active;
       done.done = true;
+      done.boost = 0;
       halt();
       rest(done);
       reconcile();
@@ -131,8 +246,7 @@
   }
 
   function reconcile() {
-    if (reduce || document.hidden) {
-      if (active && active.once) active.done = true;
+    if (reduce || document.hidden || blocked()) {
       halt();
       for (var i = 0; i < slots.length; i++) rest(slots[i]);
       return;
@@ -144,7 +258,7 @@
     if (!next) {
       if (active) {
         var idle = active;
-        if (idle.once) idle.done = true;
+        idle.boost = 0;
         halt();
         rest(idle);
       }
@@ -153,7 +267,7 @@
     if (active === next) return;
     if (active) {
       var prev = active;
-      if (prev.once) prev.done = true;
+      prev.boost = 0;
       halt();
       rest(prev);
     }
@@ -166,24 +280,50 @@
     requestAnimationFrame(function () {
       pending = false;
       reconcile();
-      syncSleep();
     });
   }
 
-  document.querySelectorAll("[data-mascot]").forEach(function (el) {
-    var api = apis[el.getAttribute("data-mascot")];
+  function replay(slot) {
+    if (reduce || document.hidden || blocked()) return;
+    if (active === slot && !slot.once) return;
+    slot.done = false;
+    slot.boost = 30;
+    schedule();
+  }
+
+  function addSlot(el, api, opts) {
     if (!api || typeof api.draw !== "function") return;
     var slot = {
       el: el,
       api: api,
       once: !!api.once,
       done: false,
-      priority: api.once ? 40 : 10,
+      priority: opts.priority,
+      boost: 0,
+      sleep: !!opts.sleep,
       t0: 0,
       ratio: 0
     };
     slots.push(slot);
     rest(slot);
+    if (opts.replay) {
+      el.addEventListener("pointerenter", function () { replay(slot); });
+      el.addEventListener("focusin", function () { replay(slot); });
+    }
+  }
+
+  document.querySelectorAll("[data-mascot]").forEach(function (el) {
+    var name = el.getAttribute("data-mascot");
+    var api = apis[name];
+    addSlot(el, api, { priority: name === "turn" ? 36 : 12, replay: !!(api && api.once) });
+  });
+
+  document.querySelectorAll("[data-act]").forEach(function (el) {
+    addSlot(el, actApi(el), { priority: 16, replay: true });
+  });
+
+  document.querySelectorAll("[data-sleep]").forEach(function (el) {
+    addSlot(el, sleepApi(el), { priority: 14, sleep: true, replay: false });
   });
 
   if (!slots.length) return;
