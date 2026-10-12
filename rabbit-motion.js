@@ -14,12 +14,38 @@
   var raf = 0;
   var pending = false;
   var blockCrest = false;
+  var companionOn = false;
+  var hopOn = false;
   var MIN = 0.25;
+
+  function syncSleep() {
+    var nodes = document.querySelectorAll("[data-sleep]");
+    var i;
+    for (i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      var r = el.getBoundingClientRect();
+      var inView = r.width > 0 && r.bottom > 24 && r.top < (window.innerHeight || 1) - 24;
+      var block = companionOn || hopOn || document.hidden;
+      el.classList.toggle("is-live", inView && !reduce && !block);
+      el.classList.toggle("is-hold", inView && !reduce && block);
+    }
+  }
 
   window.HonestPingMotion = {
     companionMoving: function (on) {
-      blockCrest = !!on;
+      companionOn = !!on;
+      blockCrest = companionOn || hopOn;
       schedule();
+      syncSleep();
+    },
+    hopCardMoving: function (on) {
+      hopOn = !!on;
+      blockCrest = companionOn || hopOn;
+      schedule();
+      syncSleep();
+    },
+    hopIsMoving: function () {
+      return hopOn;
     }
   };
 
@@ -140,6 +166,7 @@
     requestAnimationFrame(function () {
       pending = false;
       reconcile();
+      syncSleep();
     });
   }
 

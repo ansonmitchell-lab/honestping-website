@@ -113,14 +113,12 @@
       var sid = sec.id;
       var head = sec.querySelector("h2") || sec;
       if (sid === "free") {
-        add(list, sec, "theme", -1, "leap", "launch", "", sid, pageTop(sec) + 130);
+        add(list, sec, "theme", -1, "leap", "launch", "", sid, pageTop(sec) + 20);
         add(list, sec, "gap", 1, "leap", "", "", sid, pageTop(sec) - 28);
       } else if (sid === "gamers") {
         var tiers = sec.querySelector(".tier-row") || head;
         add(list, tiers, "theme", 1, "sit", "ready", "pad", sid, pageTop(tiers) - 8);
         add(list, sec, "gap", -1, "sit", "", "", sid, pageTop(sec) - 28);
-        var dots = sec.querySelector("[data-roam='dots']");
-        if (dots) add(list, dots, "dots", -1, "sit", "hop", "", sid, pageTop(dots));
       } else if (sid === "isp") {
         var mark = sec.querySelector(".isp-mark") || head;
         add(list, sec, "gap", -1, "rest", "", "", sid, pageTop(sec) - 28);
@@ -132,9 +130,7 @@
           add(list, node, "head", e % 2 ? 1 : -1, "rest", "", "", sid, pageTop(node) + 12);
         }
       } else if (sid === "wfh") {
-        var calls = sec.querySelector(".wfh-call-row") || head;
-        add(list, calls, "theme", 1, "ears", "listen", "headset", sid, pageTop(calls) - 6);
-        add(list, sec, "gap", -1, "ears", "", "", sid, pageTop(sec) - 28);
+        add(list, sec, "theme", -1, "ears", "listen", "headset", sid, pageTop(sec) + 160);
       } else if (sid === "streaming") {
         var screen = sec.querySelector(".streaming-screen") || head;
         add(list, screen, "theme", -1, "sit", "watch", "screen", sid, pageTop(screen) - 6);
@@ -218,7 +214,7 @@
         var win = el.closest("#preview .window");
         if (win && samples[i][1] <= win.getBoundingClientRect().top + 46) continue;
       }
-      if (el.closest(".mascot-accent, .crest-mark, .hero-mascot, .mascot-play, .pal-hide, .waitlist-form, button, a, input, textarea, h1, h2, h3, h4, p, li, figcaption, label, .section-label, .card, .tier-card")) return true;
+      if (el.closest(".mascot-accent, .crest-mark, .hero-mascot, .mascot-sleep, .hop-explain, .free-bar, .mascot-play, .pal-hide, .waitlist-form, button, a, input, textarea, h1, h2, h3, h4, p, li, figcaption, label, .section-label, .card, .tier-card")) return true;
     }
     return false;
   }
@@ -409,6 +405,10 @@
     var overlap = Math.min(r.bottom, bandBot) - Math.max(r.top, bandTop);
     if (overlap < 36) return false;
     return overlap >= Math.min(56, r.height * 0.55);
+  }
+
+  function cardHopping() {
+    return !!(window.HonestPingMotion && window.HonestPingMotion.hopIsMoving && window.HonestPingMotion.hopIsMoving());
   }
 
   function heroGone() {
@@ -660,6 +660,19 @@
       report(false);
       raf = 0;
       running = false;
+      return;
+    }
+
+    if (cardHopping()) {
+      cancelCash(true);
+      cancelAct();
+      excursion = null;
+      hop = null;
+      showPose(pts[landI] ? pts[landI].pose : "rest");
+      showProp("");
+      paint(pos.x, pos.y, 0, 0, 0);
+      report(false);
+      raf = requestAnimationFrame(frame);
       return;
     }
 

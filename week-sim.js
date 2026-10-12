@@ -66,7 +66,7 @@
   }
 
   function speedCopy(summary) {
-    if (summary.good) return "You got the speed you pay for.";
+    if (summary.good) return "Your plan held up this week.";
     return "You may be paying about " + money(summary.monthly) + "/month for speed you don't get.";
   }
 
@@ -192,8 +192,8 @@
     var both = summary.good && fit && fit.kind === "fit";
     if (both) {
       return {
-        title: "You got what you pay for!",
-        detail: "Simulated week. Your own week may differ."
+        title: "Your plan held up this week.",
+        detail: "Connections can change, so check in now and then."
       };
     }
     if (!summary.good) {
