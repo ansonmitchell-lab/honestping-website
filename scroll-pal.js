@@ -3,16 +3,24 @@
    It stays on screen at full opacity, including beside the hero, the
    sample week, money tiles, legal notes, and the hops card.
    It does not perch on those, and it stays off the gamer tier row.
-   While another rabbit moves, it holds still.
+   While another rabbit moves, it holds still. While it idles, the others hold.
    After it settles, it plays a short idle, then another every few seconds.
    The coin-roll tumble stays in this file and stays off.
-   Reduced motion never builds it. */
+   Reduced motion leaves one still pose in the gutter. */
 (function () {
   var COIN_ROLL_ENABLED = false;
   var root = document.getElementById("scroll-pal");
   if (!root) return;
   var mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-  if (mq.matches) return;
+  if (mq.matches || document.documentElement.classList.contains("hp-reduce")) {
+    var stillMover = root.querySelector(".scroll-pal-mover");
+    var leapPose = root.querySelector("[data-pose='leap']");
+    var sitPose = root.querySelector("[data-pose='sit']");
+    if (leapPose) leapPose.classList.remove("is-on");
+    if (sitPose) sitPose.classList.add("is-on");
+    if (stillMover) stillMover.style.transform = "translate3d(16px,140px,0)";
+    return;
+  }
 
   var mover = root.querySelector(".scroll-pal-mover");
   var hopEl = root.querySelector(".scroll-pal-hop");
@@ -748,6 +756,7 @@
     for (i = 0; i < IDLES.length; i++) root.classList.remove("is-idle-" + IDLES[i].name);
     void root.offsetWidth;
     root.classList.add("is-idle", "is-idle-" + spec.name);
+    report(true);
   }
 
   function motionBusy() {
@@ -893,6 +902,7 @@
           var ang = Math.atan2(pointer.y - (pos.y + 32), pointer.x - (pos.x + 32));
           actEl.style.transform = "rotate(" + clamp(ang * 10, -14, 14).toFixed(1) + "deg)";
         }
+        report(true);
         raf = requestAnimationFrame(frame);
         return;
       }

@@ -112,8 +112,8 @@
     soFar.textContent = n ? pct + "% of your plan" : "Waiting for the first test";
     soFar.className = "week-val" + (n && pct < 80 ? " is-mid" : "");
     if (!n) {
-      slow.textContent = "·";
-      money.textContent = "·";
+      slow.textContent = "Waiting for the first test";
+      money.textContent = "Waiting for the first test";
     } else {
       var names = { morning: "Mornings", afternoon: "Afternoons", evening: "Evenings" };
       var best = null;
@@ -125,8 +125,8 @@
         var med = median(nums);
         if (!best || med < best.med) best = { slot: slot, med: med };
       });
-      slow.textContent = best ? names[best.slot] + ", " + best.med + "%" : "·";
-      money.textContent = pct < 90 && n >= 9 ? "You may be overpaying by about $20/month" : "·";
+      slow.textContent = best ? names[best.slot] + ", " + best.med + "%" : "Waiting for the first test";
+      money.textContent = pct < 90 && n >= 9 ? "You may be overpaying by about $20/month" : "Too early to say";
     }
     showModal(u >= 0.9);
     if (timeEl) timeEl.textContent = clock(t);

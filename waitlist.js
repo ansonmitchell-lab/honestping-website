@@ -7,6 +7,8 @@
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
+    /* No HTTPS intake is live. Stay on this page and open the mail app.
+       The address is not posted to a server. */
     var emailInput = document.getElementById("waitlist-email");
     var email = ((emailInput && emailInput.value) || "").trim();
     if (!email) {

@@ -9,7 +9,7 @@ from urllib.error import HTTPError
 from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
-CREDIT = "© <span id=\"year\">2026</span> <span class=\"footer-creator\">Anson Mitchell</span> and <span class=\"footer-creator\">Matt Lewis</span>"
+CREDIT = "© <span id=\"year\">2026</span> Honest Ping LLC"
 PRIVACY_HREF = 'href="/privacy"'
 ALLOWED_EMAILS = {"hello@honestping.com", "you@example.com"}
 
