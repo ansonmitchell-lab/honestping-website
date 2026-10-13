@@ -3475,6 +3475,33 @@ select:focus-visible {
   .free-bar p { font-size: 14px; }
 }
 .free-bar .btn { flex: none; white-space: nowrap; }
+.free-bar-dismiss,
+.motion-pref {
+  background: transparent;
+  border: 0;
+  color: var(--hp-muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+}
+.motion-pref:hover,
+.free-bar-dismiss:hover { color: var(--hp-text); }
+.free-bar-dismiss:focus-visible,
+.motion-pref:focus-visible {
+  outline: 2px solid var(--hp-cyan);
+  outline-offset: 3px;
+}
+.footer-prefs { width: 100%; margin: 0; }
+html.hp-bar-off .free-band { display: none; }
+html.hp-reduce { scroll-behavior: auto; }
+html.hp-reduce .scroll-pal { display: none; }
+html.hp-reduce *,
+html.hp-reduce *::before,
+html.hp-reduce *::after {
+  animation: none !important;
+  transition: none !important;
+}
 @media (max-width: 719px) {
   .free-bar { flex-wrap: wrap; align-items: flex-start; }
   .free-bar p { flex: 1 1 160px; }

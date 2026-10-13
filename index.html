@@ -27,7 +27,38 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20261012f">
+  <script>
+  /* Display choices stay on this device. Nothing here is sent anywhere. */
+  (function () {
+    var reduce = false, barOff = false;
+    try {
+      reduce = localStorage.getItem("hp-reduce-motion") === "1";
+      barOff = localStorage.getItem("hp-free-bar") === "off";
+    } catch (e) {}
+    if (barOff) document.documentElement.classList.add("hp-bar-off");
+    if (reduce) {
+      document.documentElement.classList.add("hp-reduce");
+      var native = window.matchMedia.bind(window);
+      window.matchMedia = function (q) {
+        var m = native(q);
+        if (String(q).indexOf("prefers-reduced-motion") !== -1) {
+          return {
+            matches: true,
+            media: m.media,
+            onchange: null,
+            addEventListener: function () {},
+            removeEventListener: function () {},
+            addListener: function () {},
+            removeListener: function () {},
+            dispatchEvent: function () { return false; }
+          };
+        }
+        return m;
+      };
+    }
+  })();
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20261013a">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -128,6 +159,7 @@
           <span class="free-pill">Free download</span>
           <p id="free-heading">HonestPing for Windows. Unlimited Quick Check, saved on your PC. 5 Pro speed tests, 3 gamer tests.</p>
           <a class="btn btn-primary" id="free-download" href="#waitlist">Download (coming soon)</a>
+          <button type="button" class="free-bar-dismiss" id="free-bar-dismiss" aria-label="Dismiss the download bar">Hide</button>
         </div>
       </div>
     </section>
@@ -1113,6 +1145,7 @@
         <svg class="bye-paw" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><polygon points="3,10 8,2 13,10 8,13" fill="#edf5fa"/></svg>
       </span>
       <p class="footer-privacy pal-hide">Waitlist mail is only used to notify you when HonestPing is available. No extra newsletters unless you ask.</p>
+      <p class="footer-prefs"><button type="button" class="motion-pref" id="motion-pref" aria-pressed="false">Fewer animations</button></p>
     </div>
   </footer>
 
@@ -1163,6 +1196,7 @@
     </div>
   </div>
 
+  <script src="prefs.js?v=20261013a" defer></script>
   <script src="waitlist.js?v=20261012f" defer></script>
   <script src="gauge.js?v=20261012f" defer></script>
   <script src="trace-demo.js?v=20261012f" defer></script>
@@ -1186,5 +1220,6 @@
   <script src="crest-b.js?v=20261012f" defer></script>
   <script src="rabbit-motion.js?v=20261012f" defer></script>
   <script src="scroll-pal.js?v=20261012f" defer></script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"6f00d55b80b34345b83061ebb7dc1a0d"}'></script>
 </body>
 </html>

@@ -9,6 +9,37 @@
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<script>
+/* Display choices stay on this device. Nothing here is sent anywhere. */
+(function () {
+  var reduce = false, barOff = false;
+  try {
+    reduce = localStorage.getItem("hp-reduce-motion") === "1";
+    barOff = localStorage.getItem("hp-free-bar") === "off";
+  } catch (e) {}
+  if (barOff) document.documentElement.classList.add("hp-bar-off");
+  if (reduce) {
+    document.documentElement.classList.add("hp-reduce");
+    var native = window.matchMedia.bind(window);
+    window.matchMedia = function (q) {
+      var m = native(q);
+      if (String(q).indexOf("prefers-reduced-motion") !== -1) {
+        return {
+          matches: true,
+          media: m.media,
+          onchange: null,
+          addEventListener: function () {},
+          removeEventListener: function () {},
+          addListener: function () {},
+          removeListener: function () {},
+          dispatchEvent: function () { return false; }
+        };
+      }
+      return m;
+    };
+  }
+})();
+</script>
 <link rel="stylesheet" href="assets/report.css?v=20261012e">
 </head>
 <body>
@@ -160,5 +191,6 @@
 <script>
 (function(){var w=window.matchMedia("(min-width: 761px)");function s(){document.querySelectorAll("details.auto").forEach(function(d){d.open=w.matches;});}s();})();
 </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"6f00d55b80b34345b83061ebb7dc1a0d"}'></script>
 </body>
 </html>
