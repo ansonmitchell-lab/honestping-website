@@ -139,4 +139,5 @@ Only the current product name HonestPing appears in user-facing copy.
 - Cloudflare Web Analytics beacon on the home page, About, For ISPs, and the example report. The script uses defer. Preview /privacy points at the public privacy page and does not load the beacon. The public site is unchanged.
 - Fewer animations and Hide on the download bar are saved in localStorage on this device only. They are not sent anywhere.
 - A proposed privacy paragraph is in `legal/PROPOSED-privacy-analytics.md` for Legal review. It is not published and not linked.
-- Stylesheet query `v=20261013a`.
+- Stylesheet query `v=20261013b`.
+- Preview `/privacy`, `/privacy/subprocessors`, and `/privacy/history` use the approved analytics wording. The policy date stays the go-live date placeholder. Production `/privacy` is unchanged.
