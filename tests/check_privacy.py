@@ -230,16 +230,17 @@ def main():
         check(html_pages, "no HTML pages found")
         for page in html_pages:
             text = page.read_text(encoding="utf-8")
-            if page.parent.name == "privacy":
-                check(PRIVACY_HREF in text, f"{page.name} footer is missing a link to /privacy")
-                check(CREDIT in text, f"{page.name} footer credit line does not match")
+            check(PRIVACY_HREF in text, f"{page.name} footer is missing a link to /privacy")
+            check(CREDIT in text, f"{page.name} footer credit line does not match")
             extra = emails_in(text) - ALLOWED_EMAILS
             check(not extra, f"{page.name} has unexpected email addresses: {sorted(extra)}")
-            if page.parent.name == "privacy" and page.name == "index.html":
+            if page.name == "privacy.html" or (page.parent.name == "privacy" and page.name == "index.html"):
                 check("Created by" not in text, "privacy page meta description includes a Created by phrase")
 
         index = (ROOT / "index.html").read_text(encoding="utf-8")
         check("you@example.com" in index, "waitlist placeholder you@example.com was removed")
+        about = (ROOT / "about.html").read_text(encoding="utf-8")
+        check('id="creators"' in about, "about.html is missing the creators section from main")
 
         planned = (ROOT / "docs" / "privacy-planned.md").read_text(encoding="utf-8")
         check("Site analytics (not enabled)" not in planned, "planned doc still parks the analytics paragraph")

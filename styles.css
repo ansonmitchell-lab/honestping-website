@@ -818,6 +818,7 @@ html.is-live .gauge-sweep circle { animation: gauge-sweep 2.4s linear infinite; 
   margin-top: 4px;
   opacity: 0.85;
 }
+.site-footer .wrap > p { min-width: 0; max-width: 100%; }
 .mascot-foot { width: 40px; height: 40px; display: block; flex: 0 0 auto; }
 .pal-kicker {
   display: flex;
@@ -864,6 +865,44 @@ html.is-live .gauge-sweep circle { animation: gauge-sweep 2.4s linear infinite; 
   gap: 12px;
 }
 .about-hero .wrap { position: relative; z-index: 1; }
+.creators-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .creators-grid { grid-template-columns: 1fr 1fr; }
+}
+.creator-card {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.creator-card .creator-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--hp-primary-text);
+  background: linear-gradient(135deg, var(--hp-brand), var(--hp-cyan));
+}
+.creator-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--hp-text);
+}
+.creator-card .creator-role {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--hp-green);
+}
+.creator-card p { color: var(--hp-muted); font-size: 14px; }
 .about-grid {
   display: grid;
   gap: 20px;
