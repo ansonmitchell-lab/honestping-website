@@ -20,16 +20,6 @@
     return Math.round((mbps / plan) * 100);
   }
 
-  function gap(bill, plan, typical) {
-    if (!(plan > 0) || typical >= plan) return 0;
-    return bill * (1 - typical / plan);
-  }
-
-  function money(v) {
-    if (v > 0 && v < 10) return "$" + v.toFixed(2);
-    return "$" + Math.round(v).toLocaleString("en-US");
-  }
-
   /* Ranges match the #user-types guide. Tiers are the usual advertised steps, used only to see whether the next step down still covers that range. */
   var USES = {
     light: { min: 100, max: 100, about: 100 },
@@ -171,20 +161,17 @@
     return best;
   }
 
-  function summarize(tests, plan, bill) {
+  function summarize(tests, plan) {
     var values = tests.map(function (t) { return t.mbps; });
     var typical = median(values);
     var pct = pctOf(typical, plan);
     var slow = slowest(tests);
-    var monthly = gap(bill, plan, typical);
     return {
       typical: typical,
       pct: pct,
       good: pct >= 90,
       slowLabel: slow.label,
-      slowMbps: slow.mbps,
-      monthly: monthly,
-      yearly: monthly * 12
+      slowMbps: slow.mbps
     };
   }
 
@@ -199,7 +186,7 @@
     if (!summary.good) {
       return {
         title: "You may not be getting what you pay for",
-        detail: "About " + money(summary.monthly) + "/month, about " + money(summary.yearly) + " a year. Estimates only. Your provider decides."
+        detail: "About " + summary.pct + "% of your plan's download on this sample week. Speeds vary with Wi-Fi, devices and time of day."
       };
     }
     return {
@@ -220,8 +207,6 @@
       buildWeek: buildWeek,
       summarize: summarize,
       outcomeCopy: outcomeCopy,
-      gap: gap,
-      money: money,
       median: median,
       planFit: planFit,
       speedCopy: speedCopy,
@@ -232,7 +217,6 @@
 
   var form = document.getElementById("try-week-form");
   var planEl = document.getElementById("try-plan");
-  var billEl = document.getElementById("try-bill");
   var useEl = document.getElementById("try-use");
   var errorEl = document.getElementById("try-error");
   var runBtn = document.getElementById("try-run");
@@ -253,13 +237,12 @@
   var strip = document.getElementById("try-strip");
   var againBtn = document.getElementById("try-again");
   var againBtn = document.getElementById("try-again");
-  if (!form || !planEl || !billEl || !useEl || !errorEl || !runBtn || !skipBtn || !live || !stage || !ringNum || !countEl || !dayEl || !ring || !barEl || !nowEl || !soFarEl || !slowEl || !speedEl || !fitEl || !detailEl || !strip || !againBtn) return;
+  if (!form || !planEl || !useEl || !errorEl || !runBtn || !skipBtn || !live || !stage || !ringNum || !countEl || !dayEl || !ring || !barEl || !nowEl || !soFarEl || !slowEl || !speedEl || !fitEl || !detailEl || !strip || !againBtn) return;
 
   ring.style.strokeDasharray = "0 " + RING_C;
 
   var tests = [];
   var plan = 300;
-  var bill = 70;
   var use = USES.stream;
   var revealed = 0;
   var running = false;
@@ -281,7 +264,7 @@
   function clearInvalid() {
     errorEl.textContent = "";
     errorEl.hidden = true;
-    [planEl, billEl, useEl].forEach(function (el) {
+    [planEl, useEl].forEach(function (el) {
       el.removeAttribute("aria-invalid");
       el.removeAttribute("aria-describedby");
     });
@@ -290,7 +273,7 @@
   function setInvalid(el, message) {
     errorEl.textContent = message;
     errorEl.hidden = false;
-    [planEl, billEl, useEl].forEach(function (field) {
+    [planEl, useEl].forEach(function (field) {
       field.removeAttribute("aria-invalid");
       field.removeAttribute("aria-describedby");
     });
@@ -301,13 +284,8 @@
 
   function readInputs() {
     var nextPlan = readNumber(planEl);
-    var nextBill = readNumber(billEl);
     if (nextPlan === null || nextPlan < 1 || nextPlan > 10000) {
       setInvalid(planEl, "Enter 1 to 10000 Mbps.");
-      return false;
-    }
-    if (nextBill === null || nextBill < 0 || nextBill > 1000) {
-      setInvalid(billEl, "Enter a bill from 0 to 1000.");
       return false;
     }
     if (!USES[useEl.value]) {
@@ -316,7 +294,6 @@
     }
     clearInvalid();
     plan = nextPlan;
-    bill = nextBill;
     use = USES[useEl.value];
     return true;
   }
@@ -325,7 +302,6 @@
     running = busy;
     runBtn.disabled = busy;
     planEl.disabled = busy;
-    billEl.disabled = busy;
     useEl.disabled = busy;
     stage.setAttribute("aria-busy", busy ? "true" : "false");
   }
@@ -388,7 +364,7 @@
       detailEl.textContent = "";
       return null;
     }
-    summary = summarize(tests.slice(0, count), plan, bill);
+    summary = summarize(tests.slice(0, count), plan);
     slowPct = pctOf(summary.slowMbps, plan);
     soFarEl.textContent = summary.pct + "% of your plan";
     soFarEl.className = "app7-val " + tone(summary.pct);
