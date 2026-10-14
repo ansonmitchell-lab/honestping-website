@@ -31,7 +31,7 @@ Mirrors the HonestPing Windows app **navy Neon** theme from `theme-tokens.json`:
 
 ## About Us (`about.html`)
 
-Same header/nav/footer chrome. Product blurb (*Network health, explained*). Creators section (`id="creators"`): two identical co-creator cards (initials badge, name, "Co-creator" role): **Anson Mitchell** and **Matt Lewis**. No personal links for either creator. The About rabbit stacks blocks into a small house. Waitlist CTA links back to `index.html#waitlist`.
+Same header/nav/footer chrome. Product blurb (*Network health, explained*). Creators section (`id="creators"`): one creator card (initials badge, name, "Creator" role): **Anson Mitchell**. No personal link. The About rabbit stacks blocks into a small house. Waitlist CTA links back to `index.html#waitlist`.
 
 ## Privacy (`/privacy`)
 
@@ -39,7 +39,7 @@ Privacy policy for the website and the Windows app. This preview keeps the appro
 
 ## Credits
 
-About lists Anson Mitchell and Matt Lewis as co-creators, with equal cards. The footer credit is Honest Ping LLC. The site contains no links or references to any personal domain.
+About lists Anson Mitchell as the only creator. The footer credit is Honest Ping LLC. The site contains no links or references to any personal domain.
 
 ## For ISPs FAQ
 
@@ -149,4 +149,4 @@ Only the current product name HonestPing appears in user-facing copy.
 - A proposed privacy paragraph is in `legal/PROPOSED-privacy-analytics.md` for Legal review. It is not published and not linked.
 - Stylesheet query `v=20261013b`.
 - Preview `/privacy`, `/privacy/subprocessors`, and `/privacy/history` use the approved analytics wording. The policy date stays the go-live date placeholder. Production `/privacy` is unchanged.
-- Merged main: every page footer keeps Honest Ping LLC, About Us, Privacy (`/privacy`), and www.honestping.com. About keeps `id="creators"` with the two co-creator cards. Stylesheet query `v=20261014k`.
+- Merged main: every page footer keeps Honest Ping LLC, About Us, Privacy (`/privacy`), and www.honestping.com. About keeps `id="creators"` with Anson Mitchell as the only creator. Stylesheet query `v=20261014k`.
