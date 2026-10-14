@@ -146,7 +146,7 @@
         if (!best || med < best.med) best = { slot: slot, med: med };
       });
       slow.textContent = best ? names[best.slot] + ", " + best.med + "%" : "Waiting for the first test";
-      money.textContent = pct < 90 && n >= 9 ? "You may be paying about $20/month for speed you don't get" : "Too early to say";
+      money.textContent = "About " + pct + "% of your plan's download on these tests.";
     }
     showModal(u >= 0.9);
     if (timeEl) timeEl.textContent = clock(t);
