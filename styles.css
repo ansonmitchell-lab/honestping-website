@@ -1743,7 +1743,7 @@ html.is-live .gauge-sweep circle { animation: gauge-sweep 2.4s linear infinite; 
 .mascot-call {
   position: relative;
   display: block;
-  width: 124px;
+  width: 148px;
   margin: 0 0 8px auto;
   justify-self: end;
   overflow: visible;
@@ -1760,7 +1760,7 @@ html.is-live .gauge-sweep circle { animation: gauge-sweep 2.4s linear infinite; 
   .wfh-head {
     max-width: none;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 168px;
+    grid-template-columns: minmax(0, 1fr) 180px;
     column-gap: 28px;
     align-items: center;
   }
@@ -1768,7 +1768,7 @@ html.is-live .gauge-sweep circle { animation: gauge-sweep 2.4s linear infinite; 
   .mascot-call {
     grid-column: 2;
     grid-row: 1 / span 3;
-    width: 128px;
+    width: 156px;
     height: auto;
     margin: 0 0 0 auto;
     align-self: center;
@@ -3859,31 +3859,46 @@ html.hp-reduce *::after {
   position: relative;
   display: block;
   width: 96px;
-  transform-origin: 48% 92%;
+  margin-left: auto;
+  transform-origin: 50% 42%;
 }
 .mascot-call .call-rabbit {
   width: 96px;
   height: auto;
   display: block;
 }
+.mascot-call .call-hand {
+  position: absolute;
+  left: 7px;
+  top: 42px;
+  width: 18px;
+  height: 44px;
+  transform: rotate(18deg);
+  transform-origin: 70% 12%;
+  pointer-events: none;
+}
 .mascot-call .call-phone {
   position: absolute;
-  left: 46px;
-  top: 12px;
-  width: 14px;
-  height: 26px;
-  transform: rotate(18deg);
-  transform-origin: 28% 8%;
-  pointer-events: none;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.mascot-call .call-paw {
+  position: absolute;
+  left: -8px;
+  top: 16px;
+  width: 46px;
+  height: 54px;
+  overflow: visible;
 }
 .mascot-call .call-arcs {
   position: absolute;
-  left: 68px;
+  left: -30px;
   top: 2px;
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 32px;
   overflow: visible;
-  pointer-events: none;
 }
 .mascot-call .call-arcs path {
   fill: none;
@@ -3893,7 +3908,7 @@ html.hp-reduce *::after {
   opacity: 0;
 }
 .mascot-call.is-act .call-pose { animation: call-talk 2.8s ease 1; }
-.mascot-call.is-act .call-phone { animation: call-press 2.8s ease 1; }
+.mascot-call.is-act .call-hand { animation: call-press 2.8s ease 1; }
 .mascot-call.is-act .call-arcs path { animation: call-arc 2.8s ease 1; }
 .mascot-call.is-act .call-arcs path:nth-child(2) { animation-delay: 0.14s; }
 .mascot-call.is-act .call-arcs path:nth-child(3) { animation-delay: 0.28s; }
@@ -3915,12 +3930,12 @@ html.hp-reduce *::after {
 }
 @keyframes call-arc {
   0%, 10%, 40%, 100% { opacity: 0; transform: translate(0, 2px); }
-  18%, 32% { opacity: 0.95; transform: translate(2px, -1px); }
-  68%, 82% { opacity: 0.8; transform: translate(3px, -2px); }
+  18%, 32% { opacity: 0.95; transform: translate(-2px, -1px); }
+  68%, 82% { opacity: 0.8; transform: translate(-3px, -2px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .mascot-call.is-act .call-pose,
-  .mascot-call.is-act .call-phone,
+  .mascot-call.is-act .call-hand,
   .mascot-call.is-act .call-arcs path,
   .wfh-wave.is-smooth .wave-smooth,
   .wfh-wave.is-glitch .wave-glitch { animation: none; }
