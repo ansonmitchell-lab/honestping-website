@@ -31,7 +31,7 @@ Mirrors the HonestPing Windows app **navy Neon** theme from `theme-tokens.json`:
 
 ## About Us (`about.html`)
 
-Same header/nav/footer chrome. Product blurb (*Network health, explained*), then two identical co-creator cards (initials badge, name, "Co-creator" role): **Anson Mitchell** and **Matt Lewis**. No personal links for either creator. Waitlist CTA links back to `index.html#waitlist`.
+Same header/nav/footer chrome. Product blurb (*Network health, explained*), then one creator card (initials badge, name, "Creator" role): **Anson Mitchell**. No personal link. Waitlist CTA links back to `index.html#waitlist`. The creators section keeps `id="creators"`.
 
 ## Privacy (`privacy.html`, served at `/privacy`)
 
@@ -39,7 +39,7 @@ Privacy policy for the website and the Windows app. Planned sections are not on 
 
 ## Credits
 
-The footer credit reads Honest Ping LLC. About Us lists Anson Mitchell and Matt Lewis as co-creators, with equal prominence and no personal links. The site contains no links to any personal domain.
+The footer credit reads Honest Ping LLC. About Us lists Anson Mitchell as the only creator, with no personal link. The site contains no links to any personal domain.
 
 ## Primary CTA
 
