@@ -644,9 +644,9 @@ html:not(.js) .scroll-pal { display: none !important; }
   .scroll-pal-mover, .scroll-pal .pal-img { width: 40px; height: 40px; }
 }
   </style>
-  <link rel="preload" href="styles.css?v=20261014g" as="style">
-  <link rel="stylesheet" href="styles.css?v=20261014g" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="styles.css?v=20261014g"></noscript>
+  <link rel="preload" href="styles.css?v=20261014i" as="style">
+  <link rel="stylesheet" href="styles.css?v=20261014i" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="styles.css?v=20261014i"></noscript>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -1251,72 +1251,85 @@ html:not(.js) .scroll-pal { display: none !important; }
       <div class="wrap">
         <div class="wfh-panel">
           <div class="wfh-head">
-            <span class="mascot-sleep" data-sleep>
-              <img src="assets/mascot/front-calm-dark.svg?v=20261013c" width="96" height="160" alt="" loading="lazy" decoding="async">
-              <svg class="sleep-eyes" viewBox="0 0 48 14" aria-hidden="true" focusable="false">
-                <polygon points="6,8 10,10 14,8 14,6 10,4 6,6" fill="none" stroke="#06202a" stroke-width="1.6" stroke-linejoin="round"/>
-                <polygon points="34,8 38,10 42,8 42,6 38,4 34,6" fill="none" stroke="#06202a" stroke-width="1.6" stroke-linejoin="round"/>
+            <span class="mascot-call" data-act="call" tabindex="0" role="img" aria-label="HonestPing rabbit on a video call, wearing a headset, waving to a second tile and sending a short code">
+              <img class="call-self" src="assets/mascot/side-sit-dark.svg?v=20261013c" width="88" height="108" alt="" loading="lazy" decoding="async">
+              <svg class="call-headset" viewBox="0 0 64 36" aria-hidden="true" focusable="false">
+                <path d="M12 24c0-11 9-18 20-18s20 7 20 18" fill="none" stroke="#71def0" stroke-width="3" stroke-linecap="round"/>
+                <rect x="4" y="18" width="12" height="14" rx="3" fill="#1a7d8d"/>
+                <rect x="48" y="18" width="12" height="14" rx="3" fill="#1a7d8d"/>
               </svg>
-              <span class="sleep-z" aria-hidden="true">z</span>
-              <span class="sleep-z" aria-hidden="true">Z</span>
-              <span class="sleep-z" aria-hidden="true">Z</span>
+              <span class="call-peer" aria-hidden="true">
+                <img src="assets/mascot/front-calm-dark.svg?v=20261013c" width="36" height="40" alt="">
+                <i></i><i></i><i></i>
+              </span>
+              <span class="call-code" aria-hidden="true">Code</span>
             </span>
             <div class="wfh-label-row">
               <span class="section-label">For work from home</span>
             </div>
-            <h2 class="wfh-title" id="wfh-heading">Is the frozen call your internet, or theirs?</h2>
+            <h2 class="wfh-title" id="wfh-heading">Whose side is the frozen call on?</h2>
             <p class="wfh-intro">
-              When a call freezes mid-sentence, you need a straight answer.
-              HonestPing watches the connection while you work.
+              Share HonestPing with the friends, clients, and coworkers on the call.
+              You each run a check and swap a short code, so everyone sees whose side the problem is on.
             </p>
           </div>
 
           <div class="wfh-showcase">
             <div class="wfh-features">
               <article class="wfh-card">
-                <h3>Live status in your taskbar</h3>
-                <p>A color-coded tray icon shows whether your connection looks healthy, while the call is still going.</p>
+                <h3>Share a check</h3>
+                <p>Send a short code to someone on the call. You both run a check, and everyone sees whose side it is.</p>
               </article>
               <article class="wfh-card">
-                <h3>Jitter and packet-loss tracking</h3>
-                <p>See the jitter and dropped packets that make voices break up, not just a speed number from earlier this morning.</p>
+                <h3>Tray status</h3>
+                <p>A tray icon shows whether your side looks healthy while the call is still going.</p>
               </article>
               <article class="wfh-card">
-                <h3>“Is it just me?” check</h3>
-                <p>Swap a quick code with a coworker or friend to see whose side the problem is on, before you apologize to the room.</p>
+                <h3>Jitter and loss</h3>
+                <p>See the jitter and dropped packets that break a voice up, not a speed number from this morning.</p>
               </article>
               <article class="wfh-card">
                 <span class="plan-tag plan-tag-pro">Pro</span>
                 <h3>Trace</h3>
-                <p>Shows where along the path it slows down, so you can tell a local Wi-Fi hiccup from something further out.</p>
+                <p>See where the path slows, so a Wi-Fi problem is separate from something further out.</p>
               </article>
               <article class="wfh-card">
                 <span class="plan-tag plan-tag-pro">Pro</span>
                 <h3>Wi-Fi details</h3>
-                <p>Signal facts for your PC’s Wi-Fi, for when the problem might be the wireless link, not the wider internet.</p>
+                <p>Signal facts for your PC, when the weak spot may be the wireless link.</p>
               </article>
               <article class="wfh-card">
                 <h3>History</h3>
-                <p>Keep timed results to show IT or your provider. 24 hours free, 7 days and export in Pro.</p>
+                <p>Timed results for IT or your provider. 24 hours free. 7 days and export in Pro.</p>
               </article>
             </div>
 
-            <figure class="wfh-visual" aria-label="Abstract work-from-home network visual: unlabeled call tiles, a waveform, and an animated Trace-style hop demo from your PC through router and ISP toward a destination. Example only. No video-call brand marks.">
-              <div class="wfh-call-row" aria-hidden="true">
-                <div class="wfh-tile" data-trace-tile><span></span><i></i></div>
-                <div class="wfh-tile" data-trace-tile><span></span><i></i></div>
-                <div class="wfh-tile" data-trace-tile><span></span><i></i></div>
-                <div class="wfh-tile" data-trace-tile><span></span><i></i></div>
+            <figure class="wfh-visual">
+              <div class="call-demo" data-call-demo data-state="steady">
+                <div class="call-pair">
+                  <div class="call-person" data-call-you>
+                    <span class="call-face" aria-hidden="true"></span>
+                    <strong>You</strong>
+                    <span class="call-meter" data-you-meter>Steady</span>
+                  </div>
+                  <div class="call-person" data-call-them>
+                    <span class="call-face" aria-hidden="true"></span>
+                    <strong>Coworker</strong>
+                    <span class="call-meter" data-them-meter>Steady</span>
+                  </div>
+                </div>
+                <svg class="wfh-wave" data-call-wave viewBox="0 0 280 36" preserveAspectRatio="none" focusable="false" aria-hidden="true">
+                  <path class="wave-smooth" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"
+                    d="M4 18 L18 8 L32 28 L46 12 L60 24 L74 14 L88 26 L102 10 L116 22 L130 16 L144 20 L158 9 L172 27 L186 13 L200 23 L214 15 L228 25 L242 11 L256 21 L270 18"/>
+                  <path class="wave-glitch" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"
+                    d="M4 18 H96 L104 4 L112 32 L120 18 H168 L176 8 L184 28 L192 18 H276"/>
+                </svg>
+                <p class="call-result" data-call-result>
+                  <span class="status warn" data-call-pill>Shared check</span>
+                  <b data-call-side>Both sides look steady.</b>
+                </p>
               </div>
-              <svg class="wfh-wave" viewBox="0 0 280 36" preserveAspectRatio="none" focusable="false" aria-hidden="true">
-                <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"
-                  d="M4.0 18 L14.1 8 L24.1 28 L34.2 12 L44.3 24 L54.4 14 L64.4 26 L74.5 10 L84.6 22 L94.7 16 L104.7 20 L114.8 9 L124.9 27 L135.0 13 L145.0 23 L155.1 15 L165.2 25 L175.3 11 L185.3 21 L195.4 17 L205.5 19 L215.6 10 L225.6 26 L235.7 14 L245.8 22 L255.9 16 L265.9 20 L276.0 18"/>
-              </svg>
-              <div class="wfh-trace" data-trace-demo>
-                <div class="trace-track" data-trace-track aria-hidden="true"></div>
-                <p class="wfh-visual-status" data-trace-status><span class="status">Tracing path…</span></p>
-              </div>
-              <figcaption class="wfh-caption">Example Trace · Abstract path only</figcaption>
+              <figcaption class="wfh-caption">Example only. Not your call.</figcaption>
             </figure>
           </div>
         </div>
@@ -1738,7 +1751,7 @@ html:not(.js) .scroll-pal { display: none !important; }
   <script src="prefs.js?v=20261014g" defer></script>
   <script src="waitlist.js?v=20261014d" defer></script>
   <script src="gauge.js?v=20261014g" defer></script>
-  <script src="trace-demo.js?v=20261013c" defer></script>
+  <script src="trace-demo.js?v=20261014i" defer></script>
   <script src="verdict-demo.js?v=20261013c" defer></script>
   <script src="week-sim.js?v=20261014f" defer></script>
   <script src="demo-player.js?v=20261014f" defer></script>
@@ -1757,8 +1770,8 @@ html:not(.js) .scroll-pal { display: none !important; }
   })();
   </script>
   <script src="crest-b.js?v=20261013c" defer></script>
-  <script src="rabbit-motion.js?v=20261014h" defer></script>
-  <script src="scroll-pal.js?v=20261014g" defer></script>
+  <script src="rabbit-motion.js?v=20261014i" defer></script>
+  <script src="scroll-pal.js?v=20261014i" defer></script>
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"6f00d55b80b34345b83061ebb7dc1a0d"}'></script>
 </body>
 </html>

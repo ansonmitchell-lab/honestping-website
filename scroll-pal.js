@@ -169,7 +169,7 @@
           add(list, node, "head", e % 2 ? 1 : -1, "rest", "", "days", sid, pageTop(node) + 12);
         }
       } else if (sid === "wfh") {
-        add(list, sec, "theme", -1, "rest", "", "zzz", sid, pageTop(sec) + 160);
+        add(list, sec, "theme", -1, "sit", "", "headset", sid, pageTop(sec) + 160);
       } else if (sid === "streaming") {
         var screen = sec.querySelector(".streaming-screen") || head;
         add(list, screen, "theme", -1, "sit", "", "pop", sid, pageTop(screen) - 6);
@@ -250,7 +250,7 @@
         var win = el.closest("#preview .window");
         if (win && samples[i][1] <= win.getBoundingClientRect().top + 46) continue;
       }
-      if (el.closest(".mascot-accent, .crest-mark, .hero-mascot, .mascot-sleep, .hop-explain, .free-bar, .mascot-play, .pal-hide, .week-tiles, .app7-money, .overpay-ways, .sourced-cite, .footer-privacy, .waitlist-privacy, .waitlist-form, button, a, input, textarea, h1, h2, h3, h4, p, li, figcaption, label, .section-label, .card, .tier-card, .tier-row")) return true;
+      if (el.closest(".mascot-accent, .crest-mark, .hero-mascot, .mascot-call, .mascot-sleep, .hop-explain, .free-bar, .mascot-play, .pal-hide, .week-tiles, .app7-money, .overpay-ways, .sourced-cite, .footer-privacy, .waitlist-privacy, .waitlist-form, button, a, input, textarea, h1, h2, h3, h4, p, li, figcaption, label, .section-label, .card, .tier-card, .tier-row")) return true;
     }
     return false;
   }

@@ -23,6 +23,7 @@
     claim: 2.4,
     climb: 2.2,
     hats: 2.8,
+    call: 2.8,
     bye: 2.2,
     house: 2.4,
     zoomies: 2.2,
