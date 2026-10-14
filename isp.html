@@ -15,6 +15,7 @@
   <meta property="og:image" content="https://www.honestping.com/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HonestPing rabbit on a dark navy card.">
   <meta property="og:site_name" content="HonestPing">
   <meta property="og:locale" content="en_US">
 
@@ -22,14 +23,18 @@
   <meta name="twitter:title" content="For ISPs · HonestPing">
   <meta name="twitter:description" content="Cut “my internet is slow” calls. Give real answers. HonestPing for internet providers.">
   <meta name="twitter:image" content="https://www.honestping.com/assets/og-image.png">
+  <meta name="twitter:image:alt" content="HonestPing rabbit on a dark navy card.">
 
   <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
   <script>
   /* Display choices stay on this device. Nothing here is sent anywhere. */
   (function () {
+    document.documentElement.classList.add("js");
     var reduce = false, barOff = false;
     try {
       reduce = localStorage.getItem("hp-reduce-motion") === "1";
@@ -58,7 +63,7 @@
     }
   })();
   </script>
-  <link rel="stylesheet" href="styles.css?v=20261014c">
+  <link rel="stylesheet" href="styles.css?v=20261014d">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -90,16 +95,12 @@
       <div class="wrap">
         <span class="section-label">For internet providers</span>
         <h1 id="ispx-heading">Cut the “my internet is slow” calls. Give real answers.</h1>
-        <p class="ispx-sub">
-          Built to cut support calls, and to shorten the ones that remain. HonestPing shows how an internet
-          connection is doing: live ping, jitter, loss, and speed compared with the plan. With the customer’s
-          permission, your team sees the same report, so the calls that remain start from evidence.
-        </p>
+        <p class="ispx-sub">HonestPing shows live ping, jitter, loss, and speed against the plan. With the customer’s permission, your team sees the same report.</p>
         <div class="hero-actions">
           <a class="btn btn-primary btn-lg" href="#partner">Talk to us about partnering</a>
           <a class="btn btn-ghost btn-lg" href="#how">See how it works</a>
         </div>
-        <p class="hero-note">Opt-in for customers. Being built so nobody can edit the numbers, including us and you. The partner program is in development, and the app is waitlist only for now.</p>
+        <p class="hero-note">Opt-in for customers. Nobody can edit the numbers, including us. The partner program is in development.</p>
         <span class="blink-host ispx-hero-mascot mascot-claim" data-act="claim" tabindex="0" role="img" aria-label="HonestPing rabbit tapping a clipboard and checking a claim">
           <img class="mascot-accent" src="assets/mascot/front-calm-dark.svg?v=20261013c" width="88" height="150" alt="">
           <svg class="clip-board" viewBox="0 0 36 48" aria-hidden="true" focusable="false">
@@ -487,7 +488,10 @@
         <div class="card waitlist-panel ispx-contact">
           <span class="section-label">Talk to us about partnering</span>
           <h2 id="ispx-partner">See how many support calls you could cut</h2>
-          <p>Tell us a little about your service. No sales pressure. If it isn’t a fit, we’ll say so.</p>
+          <p>Tell us about your service. If it isn’t a fit, we’ll say so.</p>
+          <noscript>
+            <p class="form-noscript">JavaScript is off. Email <a href="mailto:hello@honestping.com?subject=ISP%20partnership">hello@honestping.com</a> and tell us about your service.</p>
+          </noscript>
           <form class="ispx-form" id="isp-contact-form" action="#partner" method="get" novalidate>
             <label>Your name<input id="ic-name" name="name" type="text" autocomplete="name" required></label>
             <label>Company<input id="ic-company" name="company" type="text" autocomplete="organization" required></label>
@@ -495,6 +499,7 @@
             <label>Approximate subscribers <span class="ispx-opt">(optional)</span><input id="ic-subs" name="subscribers" type="text" inputmode="numeric"></label>
             <label class="ispx-full">Message<textarea id="ic-message" name="message" rows="4" required placeholder="What would you most like to improve?"></textarea></label>
             <button class="btn btn-primary btn-lg ispx-full" type="submit">Talk to us about partnering</button>
+            <p class="form-status ispx-full" id="isp-status" role="status" hidden></p>
           </form>
           <p class="waitlist-alt">Submitting opens your email app with a message to <a href="mailto:hello@honestping.com?subject=ISP%20partnership">hello@honestping.com</a>. We’ll use it only to reply to you. No mailing lists unless you ask.</p>
         </div>
@@ -512,10 +517,10 @@
   </footer>
 
   <script src="prefs.js?v=20261013c" defer></script>
-  <script src="rabbit-motion.js?v=20261014c" defer></script>
-  <script src="waitlist.js?v=20261014c" defer></script>
+  <script src="rabbit-motion.js?v=20261014d" defer></script>
+  <script src="waitlist.js?v=20261014d" defer></script>
   <script src="portal-demo.js?v=20261013c" defer></script>
-  <script src="isp-contact.js?v=20261013c" defer></script>
+  <script src="isp-contact.js?v=20261014d" defer></script>
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"6f00d55b80b34345b83061ebb7dc1a0d"}'></script>
 </body>
 </html>

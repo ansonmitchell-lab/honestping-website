@@ -24,6 +24,7 @@
   <meta property="og:image" content="https://www.honestping.com/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HonestPing rabbit on a dark navy card.">
   <meta property="og:site_name" content="HonestPing">
   <meta property="og:locale" content="en_US">
 
@@ -31,14 +32,18 @@
   <meta name="twitter:title" content="HonestPing · Network health, explained">
   <meta name="twitter:description" content="See if your internet is really working, and if you’re getting the speed you pay for. Plain language, for Windows.">
   <meta name="twitter:image" content="https://www.honestping.com/assets/og-image.png">
+  <meta name="twitter:image:alt" content="HonestPing rabbit on a dark navy card.">
 
   <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
   <script>
   /* Display choices stay on this device. Nothing here is sent anywhere. */
   (function () {
+    document.documentElement.classList.add("js");
     var reduce = false, barOff = false;
     try {
       reduce = localStorage.getItem("hp-reduce-motion") === "1";
@@ -67,7 +72,7 @@
     }
   })();
   </script>
-  <link rel="stylesheet" href="styles.css?v=20261014c">
+  <link rel="stylesheet" href="styles.css?v=20261014d">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -107,15 +112,12 @@
           </div>
           <h1>You’re not crazy. It might be your connection.</h1>
           <p class="tagline">Network health, explained</p>
-          <p class="lede">
-            Lag in a match. A call that drops. The doubt that it might be you.
-            HonestPing is a Windows app that says, in plain language, whether your internet is working right now.
-          </p>
+          <p class="lede">HonestPing is a Windows app that says whether your internet is working right now.</p>
           <div class="hero-actions">
             <a class="btn btn-primary btn-lg" href="#waitlist">Join the waitlist</a>
             <a class="btn btn-ghost btn-lg" href="#gamers">For gamers</a>
           </div>
-          <p class="hero-note">Free to start on Windows. No public download yet. <a href="#waitlist">Join the waitlist</a>.</p>
+          <p class="hero-note">Free to start on Windows. No public download yet.</p>
         </div>
 
         <div class="hero-stage">
@@ -1112,23 +1114,25 @@
       <div class="wrap">
         <div class="card waitlist-panel">
           <h2 id="waitlist-heading">Join the waitlist</h2>
-          <p>
-            There’s no public download yet. Leave your email and we’ll tell you when HonestPing
-            for Windows is ready. Honest network health, explained.
-          </p>
-          <form class="waitlist-form" id="waitlist-form" action="#waitlist" method="post">
+          <p>No public download yet. Leave your email and we’ll tell you when the Windows app is ready.</p>
+          <noscript>
+            <p class="form-noscript">JavaScript is off. To join, email <a href="mailto:hello@honestping.com?subject=HonestPing%20waitlist">hello@honestping.com</a>.</p>
+          </noscript>
+          <form class="waitlist-form" id="waitlist-form" action="#waitlist" method="get">
             <input type="hidden" name="subject" value="HonestPing waitlist">
             <label for="waitlist-email">Email address</label>
             <input
               id="waitlist-email"
-              name="body"
+              name="email"
               type="email"
               autocomplete="email"
               required
               placeholder="you@example.com"
-              inputmode="email">
+              inputmode="email"
+              aria-describedby="waitlist-status">
             <button class="btn btn-primary btn-lg" type="submit">Join the waitlist</button>
           </form>
+          <p class="form-status" id="waitlist-status" role="status" hidden></p>
           <p class="waitlist-tiers">Free for Windows. Pro adds the 7-day Pro report, longer history, and export.</p>
           <p class="waitlist-alt">
             Or email
@@ -1203,12 +1207,12 @@
   </div>
 
   <script src="prefs.js?v=20261013c" defer></script>
-  <script src="waitlist.js?v=20261014c" defer></script>
+  <script src="waitlist.js?v=20261014d" defer></script>
   <script src="gauge.js?v=20261013c" defer></script>
   <script src="trace-demo.js?v=20261013c" defer></script>
   <script src="verdict-demo.js?v=20261013c" defer></script>
-  <script src="week-sim.js?v=20261014c" defer></script>
-  <script src="demo-player.js?v=20261014c" defer></script>
+  <script src="week-sim.js?v=20261014d" defer></script>
+  <script src="demo-player.js?v=20261014d" defer></script>
   <script src="hop-card.js?v=20261013c" defer></script>
   <script>
   /* When data-download-url is a real address, the button reads Free download and links there.
@@ -1224,8 +1228,8 @@
   })();
   </script>
   <script src="crest-b.js?v=20261013c" defer></script>
-  <script src="rabbit-motion.js?v=20261014c" defer></script>
-  <script src="scroll-pal.js?v=20261014c" defer></script>
+  <script src="rabbit-motion.js?v=20261014d" defer></script>
+  <script src="scroll-pal.js?v=20261014d" defer></script>
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"6f00d55b80b34345b83061ebb7dc1a0d"}'></script>
 </body>
 </html>
