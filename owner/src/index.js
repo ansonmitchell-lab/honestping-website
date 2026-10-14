@@ -2,6 +2,16 @@ import { loadTraffic } from "./analytics.js";
 import { verifyAccessJwt } from "./auth.js";
 import { ispCsv, waitlistCsv } from "./csv.js";
 import { loadDownloads } from "./downloads.js";
+import {
+  feedbackById,
+  feedbackTotals,
+  loadRequestDetail,
+  loadRequestList,
+  parseFeedbackId,
+  parseFeedbackStatus,
+  parseFilters,
+  saveFeedbackStatus,
+} from "./feedback.js";
 import { renderDashboard, renderDenied } from "./html.js";
 import {
   CSV_LIMIT,
@@ -28,6 +38,7 @@ const TABS = {
   "/isp": "isp",
   "/traffic": "traffic",
   "/downloads": "downloads",
+  "/requests": "requests",
   "/access": "access",
 };
 
@@ -38,7 +49,7 @@ const HTML_HEADERS = {
   "referrer-policy": "no-referrer",
   "x-frame-options": "DENY",
   "x-robots-tag": "noindex",
-  "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; script-src 'none'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'",
+  "content-security-policy": "default-src 'none'; style-src 'unsafe-inline'; img-src 'self'; script-src 'none'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'",
 };
 
 function logEvent(fields) {
@@ -117,6 +128,7 @@ async function overviewModel(env, fetchImpl, now) {
   const statuses = await ispStatuses(env.DB);
   const traffic = await loadTraffic(env, fetchImpl, now);
   const downloads = await loadDownloads(env, fetchImpl);
+  const feedback = await feedbackTotals(env.DB);
   return {
     waitlistTotal: waitlistTotalCount,
     ispTotal: ispTotalCount,
@@ -127,10 +139,11 @@ async function overviewModel(env, fetchImpl, now) {
     statusesReady: statuses.ready,
     traffic,
     downloads,
+    feedback,
   };
 }
 
-async function renderTab(tab, env, email, fetchImpl, now, warning) {
+async function renderTab(tab, env, email, fetchImpl, now, warning, url) {
   const model = { tab, email, warning };
   if (tab === "overview") model.overview = await overviewModel(env, fetchImpl, now);
   else if (tab === "waitlist") {
@@ -149,8 +162,19 @@ async function renderTab(tab, env, email, fetchImpl, now, warning) {
     };
   } else if (tab === "traffic") model.traffic = await loadTraffic(env, fetchImpl, now);
   else if (tab === "downloads") model.downloads = await loadDownloads(env, fetchImpl);
+  else if (tab === "requests") model.requests = await requestListModel(env, url, now);
   else if (tab === "access") model.access = await accessRows(env.DB);
   return html(200, renderDashboard(model));
+}
+
+async function requestListModel(env, url, now) {
+  const filters = parseFilters(url);
+  try {
+    return await loadRequestList(env.DB, filters, now);
+  } catch (error) {
+    if (!missingTable(error, "feedback")) throw error;
+    return { ready: false, mode: "list", filters, groups: [], rows: [] };
+  }
 }
 
 async function exportCsv(kind, env, email, iso) {
@@ -254,6 +278,137 @@ async function updateStatus(request, env, email, iso) {
   });
 }
 
+function notice(email, title, message) {
+  return html(400, renderDashboard({
+    tab: "requests",
+    email,
+    notice: true,
+    title,
+    message,
+  }));
+}
+
+async function updateFeedback(request, env, email, iso) {
+  if (!sameOrigin(request)) {
+    return html(403, renderDashboard({
+      tab: "requests",
+      email,
+      notice: true,
+      title: "Save refused",
+      message: "That save was refused.",
+    }));
+  }
+  const type = request.headers.get("content-type") || "";
+  if (!type.includes("application/x-www-form-urlencoded")) {
+    return notice(email, "Save refused", "That save was refused.");
+  }
+  const raw = await request.text();
+  if (raw.length > 2000) return notice(email, "Save refused", "That save was refused.");
+  const params = new URLSearchParams(raw);
+  const feedbackId = parseFeedbackId(params.get("feedback_id") || "");
+  const status = parseFeedbackStatus(params.get("status") || "");
+  if (!feedbackId || !status) {
+    return notice(email, "Save refused", "Choose a status of new, reviewing, planned, declined, or done.");
+  }
+  if (!env.DB) return plain(500, "The database binding is missing.");
+  let saved;
+  try {
+    saved = await saveFeedbackStatus(env.DB, feedbackId, status);
+  } catch (error) {
+    if (missingTable(error, "feedback")) {
+      return html(500, renderDashboard({
+        tab: "requests",
+        email,
+        notice: true,
+        title: "Migration needed",
+        message: "Apply migration 0004 before status can be saved.",
+      }));
+    }
+    logEvent({ event: "feedback_status_failed" });
+    return html(500, renderDashboard({
+      tab: "requests",
+      email,
+      notice: true,
+      title: "Not saved",
+      message: "The status could not be saved.",
+    }));
+  }
+  if (!saved.ok && saved.reason === "missing") {
+    return html(404, renderDashboard({
+      tab: "requests",
+      email,
+      notice: true,
+      title: "Not found",
+      message: "That report is not on file.",
+    }));
+  }
+  if (saved.changed) {
+    await record(env.DB, email, "status", `feedback ${feedbackId} ${status}`, iso);
+    logEvent({ event: "feedback_status", id: feedbackId, status });
+  }
+  return new Response(null, {
+    status: 303,
+    headers: {
+      location: new URL(`/requests/${feedbackId}`, request.url).href,
+      "cache-control": "no-store",
+    },
+  });
+}
+
+async function feedbackScreenshot(env, id) {
+  if (!env.SCREENSHOTS || typeof env.SCREENSHOTS.get !== "function") {
+    return plain(404, "Screenshot storage is not connected.");
+  }
+  const row = await feedbackById(env.DB, id);
+  if (!row || !row.screenshot_key) return plain(404, "That screenshot is not on file.");
+  const object = await env.SCREENSHOTS.get(row.screenshot_key);
+  if (!object || !object.body) return plain(404, "That screenshot is not on file.");
+  const type = object.httpMetadata && object.httpMetadata.contentType;
+  if (type !== "image/png" && type !== "image/jpeg") return plain(404, "That screenshot is not on file.");
+  return new Response(object.body, {
+    status: 200,
+    headers: {
+      "content-type": type,
+      "cache-control": "no-store",
+      "x-content-type-options": "nosniff",
+      "x-robots-tag": "noindex",
+      "content-disposition": "inline",
+    },
+  });
+}
+
+async function renderFeedbackDetail(env, email, id, warning) {
+  let loaded;
+  try {
+    loaded = await loadRequestDetail(env.DB, id);
+  } catch (error) {
+    if (missingTable(error, "feedback")) {
+      return html(200, renderDashboard({
+        tab: "requests",
+        email,
+        warning,
+        requests: { ready: false, mode: "detail" },
+      }));
+    }
+    throw error;
+  }
+  if (loaded.missing) {
+    return html(404, renderDashboard({
+      tab: "requests",
+      email,
+      warning,
+      requests: loaded,
+    }));
+  }
+  loaded.showScreenshot = Boolean(loaded.detail.screenshot_key && env.SCREENSHOTS);
+  return html(200, renderDashboard({
+    tab: "requests",
+    email,
+    warning,
+    requests: loaded,
+  }));
+}
+
 export async function handleOwnerRequest(request, env, deps = {}) {
   const fetchImpl = deps.fetch || fetch;
   const now = deps.now ? deps.now() : new Date();
@@ -273,9 +428,41 @@ export async function handleOwnerRequest(request, env, deps = {}) {
   if (request.method === "POST" && path === "/isp/status") {
     return updateStatus(request, env, auth.email, iso);
   }
+  if (request.method === "POST" && path === "/requests/status") {
+    return updateFeedback(request, env, auth.email, iso);
+  }
   if (request.method !== "GET" && request.method !== "HEAD") return plain(405, "Method not allowed");
   if (path === "/export/waitlist.csv") return exportCsv("waitlist", env, auth.email, iso);
   if (path === "/export/isp.csv") return exportCsv("isp", env, auth.email, iso);
+
+  const feedbackPath = path.match(/^\/requests\/([1-9][0-9]{0,14})(\/screenshot)?$/);
+  if (feedbackPath) {
+    const feedbackId = parseFeedbackId(feedbackPath[1]);
+    if (!feedbackId) {
+      return html(404, renderDashboard({
+        tab: "requests",
+        email: auth.email,
+        notice: true,
+        title: "Not found",
+        message: "That report is not on file.",
+      }));
+    }
+    if (feedbackPath[2]) return feedbackScreenshot(env, feedbackId);
+    const warning = await record(env.DB, auth.email, "view", `feedback ${feedbackId}`, iso);
+    logEvent({ event: "view", tab: "requests", id: feedbackId });
+    try {
+      return await renderFeedbackDetail(env, auth.email, feedbackId, warning);
+    } catch (error) {
+      logEvent({ event: "section_failed", tab: "requests", error: error instanceof Error ? error.name : "Error" });
+      return html(500, renderDashboard({
+        tab: "requests",
+        email: auth.email,
+        notice: true,
+        title: "Could not be loaded",
+        message: "This page could not be loaded.",
+      }));
+    }
+  }
 
   const tab = TABS[path];
   if (!tab) {
@@ -290,7 +477,7 @@ export async function handleOwnerRequest(request, env, deps = {}) {
   const warning = await record(env.DB, auth.email, "view", tab, iso);
   logEvent({ event: "view", tab });
   try {
-    return await renderTab(tab, env, auth.email, fetchImpl, now, warning);
+    return await renderTab(tab, env, auth.email, fetchImpl, now, warning, url);
   } catch (error) {
     logEvent({ event: "section_failed", tab, error: error instanceof Error ? error.name : "Error" });
     return html(500, renderDashboard({
