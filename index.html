@@ -644,9 +644,9 @@ html:not(.js) .scroll-pal { display: none !important; }
   .scroll-pal-mover, .scroll-pal .pal-img { width: 40px; height: 40px; }
 }
   </style>
-  <link rel="preload" href="styles.css?v=20261014m" as="style">
-  <link rel="stylesheet" href="styles.css?v=20261014m" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="styles.css?v=20261014m"></noscript>
+  <link rel="preload" href="styles.css?v=20261014n" as="style">
+  <link rel="stylesheet" href="styles.css?v=20261014n" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="styles.css?v=20261014n"></noscript>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -821,14 +821,17 @@ html:not(.js) .scroll-pal { display: none !important; }
               </article>
             </div>
 
-            <figure class="gamers-visual" aria-label="Example gamer dials. One shows a sample grade. The other shows sample ping, jitter, and packet loss.">
+            <figure class="gamers-visual" data-sample-dials aria-label="Example gamer dials. One shows a sample grade. The other shows sample ping, jitter, and packet loss.">
               <div class="gamers-dials">
                 <div class="gamer-dial-card">
                   <span class="gamer-tier">Free</span>
                   <div class="gamer-dial">
-                    <div class="hp-dial-rim gamer-ring">
+                    <div class="hp-dial-rim gamer-ring" data-free-ring>
+                      <svg class="gamer-sweep" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+                        <circle cx="50" cy="50" r="47"></circle>
+                      </svg>
                       <div class="hp-dial-face">
-                        <div class="hp-dial-value gamer-status">Healthy</div>
+                        <div class="hp-dial-value gamer-status" data-free-status>Healthy</div>
                         <span class="gauge-label">Path quality</span>
                       </div>
                     </div>
@@ -839,15 +842,19 @@ html:not(.js) .scroll-pal { display: none !important; }
                   <span class="gamer-tier">Pro</span>
                   <div class="gamer-dial">
                     <div class="hp-dial-rim gamer-ring">
+                      <svg class="gamer-arc" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+                        <circle cx="50" cy="50" r="47" fill="none" stroke="#14303c" stroke-width="3.4"></circle>
+                        <circle data-pro-arc cx="50" cy="50" r="47" fill="none" stroke="#45e5ad" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="218.5 295.3" transform="rotate(-90 50 50)"></circle>
+                      </svg>
                       <div class="hp-dial-face">
-                        <div class="hp-dial-value"><span>28</span><small class="gauge-unit">ms</small></div>
+                        <div class="hp-dial-value"><span class="gamer-ms" data-pro-ms>28</span><small class="gauge-unit">ms</small></div>
                         <span class="gauge-label">Live ping</span>
                       </div>
                     </div>
                   </div>
                   <div class="gamer-mini-metrics">
-                    <span>Jitter <strong>3</strong><small>ms</small></span>
-                    <span>Loss <strong>0</strong><small>%</small></span>
+                    <span>Jitter <strong data-pro-jitter>3</strong><small>ms</small></span>
+                    <span>Loss <strong data-pro-loss>0</strong><small>%</small></span>
                   </div>
                 </div>
               </div>
@@ -1127,7 +1134,7 @@ html:not(.js) .scroll-pal { display: none !important; }
                 <svg class="isp-proof-icon" width="22" height="22" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 2 3.5 4.5v5c0 4 2.8 7.2 6.5 8.5 3.7-1.3 6.5-4.5 6.5-8.5v-5L10 2Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m7 10 2.2 2.2L13.3 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 A dated record for your provider
               </h3>
-              <p class="isp-partner-line">Same tests for every provider. <a href="isp.html">For ISPs</a></p>
+              <p class="isp-partner-line" id="for-isps"><strong>For ISPs.</strong> Subscribers who can see the connection is fine, or get a clear answer, tend to stay and call less. That can mean fewer cancellations, fewer angry calls, and more trust in the advertised speed. <a href="isp.html">For ISPs</a></p>
               <ul class="isp-checklist">
                 <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Every test dated and timed</span></li>
                 <li><svg class="isp-check" width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="8.2" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.4"/><path d="m6.6 10.2 2.3 2.3 4.5-4.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Typical (median) speed, so one bad test can't skew it</span></li>
@@ -1765,6 +1772,7 @@ html:not(.js) .scroll-pal { display: none !important; }
   <script src="prefs.js?v=20261014g" defer></script>
   <script src="waitlist.js?v=20261014d" defer></script>
   <script src="gauge.js?v=20261014g" defer></script>
+  <script src="sample-dials.js?v=20261014n" defer></script>
   <script src="trace-demo.js?v=20261014i" defer></script>
   <script src="verdict-demo.js?v=20261013c" defer></script>
   <script src="week-sim.js?v=20261014f" defer></script>
