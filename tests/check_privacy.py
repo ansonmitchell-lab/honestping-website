@@ -128,6 +128,7 @@ def main():
             "October 14, 2026",
             "a summary of times your connection dropped or slowed, kept for 30 days. HonestPing uses it on your PC to decide whether to suggest a 7-day report. It isn't sent to us.",
             "the internet plan details you enter (download and upload speeds, data cap and billing day, and provider name and monthly price if you add them). HonestPing uses them on your PC to compare your test results with your plan. They aren't sent to us. You can change or delete them in Settings.",
+            "evening gamer test results from a paid 7-day report (ping, jitter, packet loss, lag while busy and the network route, which includes the addresses of routers along the way), kept on your PC for 90 days. HonestPing uses them on your PC to build that report. They aren't sent to us unless you choose to share the report.",
             "Remove plan details with the",
             "Delete plan details",
             "button in Settings.",
@@ -158,7 +159,9 @@ def main():
         check("GitHub" not in body, "/privacy names GitHub")
         check("Site analytics" not in body, "/privacy still contains the analytics paragraph")
         check("An AI service" not in body, "/privacy still describes an AI service")
-        check("90 days" not in body, "/privacy still states a 90-day retention period")
+        check(body.count("90 days") == 1, f"/privacy mentions 90 days {body.count('90 days')} times, expected only the evening gamer line")
+        check("Raw reports are deleted within 90 days." not in body, "/privacy still states the planned crash-report 90-day retention")
+        check("Otherwise we delete them within 90 days." not in body, "/privacy still states the planned crash-signature 90-day retention")
         check("Two things are sent automatically" not in body, "/privacy still says two things are sent automatically")
         check(
             "bug reports you've written but haven't sent yet, which you can delete" not in body,
@@ -219,7 +222,22 @@ def main():
         check(
             "Section 3.1 now lists two more things kept only on your PC: a 30 day summary of times your connection dropped or slowed, and the internet plan details you enter. Section 9 explains how to delete plan details."
             in history_body,
-            "history page is missing the October 14 entry",
+            "history page is missing the October 14 Ears Up and plan details entry",
+        )
+        check(
+            "October 14, 2026: Section 3.1 now lists two more things kept only on your PC:"
+            in history_body,
+            "the Ears Up and plan details history entry is no longer dated October 14, 2026",
+        )
+        check(
+            "data-policy-updated>October 14, 2026</span>: Section 3.1 now lists two more things"
+            not in history_body,
+            "the Ears Up history date is still bound to the current policy date",
+        )
+        check(
+            "<span data-policy-updated>October 14, 2026</span>: Section 3.1 now lists evening gamer test results from a paid 7-day report, kept on your PC for 90 days. HonestPing uses them on your PC to build that report. They aren't sent to us unless you choose to share the report."
+            in history_body,
+            "history page is missing the evening gamer results entry",
         )
         check(
             'data-policy-updated>October 11, 2026' not in history_body,
