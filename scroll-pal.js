@@ -31,8 +31,9 @@
   var imgs = root.querySelectorAll(".pal-img");
   var hero = document.querySelector(".hero");
   var hides = document.querySelectorAll(".pal-hide");
-  var crest = document.querySelector(".crest-mark");
-  if (crest && hopEl) {
+  function attachCrest() {
+    var crest = document.querySelector(".crest-mark");
+    if (!crest || !hopEl || actEl.querySelector(".pal-crest")) return;
     var clone = crest.cloneNode(true);
     clone.setAttribute("class", "pal-img pal-crest");
     clone.setAttribute("data-pose", "crest");
@@ -180,9 +181,6 @@
       } else if (sid === "gap") {
         add(list, head, "theme", 1, "rest", "", "tape", sid, pageTop(head) + 8);
         add(list, sec, "gap", -1, "rest", "", "tape", sid, pageTop(sec) - 28);
-      } else if (sid === "benefits") {
-        add(list, head, "theme", -1, "ears", "", "bub", sid, pageTop(head) + 8);
-        add(list, sec, "gap", 1, "ears", "", "bub", sid, pageTop(sec) - 28);
       } else if (sid === "preview") {
         var frame = sec.querySelector(".window") || head;
         add(list, frame, "peek", 1, "look", "", "knob", sid, pageTop(frame) + 6);
@@ -1042,6 +1040,7 @@
   }
 
   function kick() {
+    if (!motionOn) return;
     if (restTimer) {
       clearTimeout(restTimer);
       restTimer = 0;
@@ -1141,5 +1140,18 @@
   showPose(pts[openGoal] ? pts[openGoal].pose : "sit");
   if (openSpot) paint(openSpot.x, openSpot.y, 0, 0, 0);
   placed = true;
-  kick();
+  var motionOn = false;
+  function enableMotion() {
+    if (motionOn) return;
+    motionOn = true;
+    attachCrest();
+    var held = root.querySelectorAll(".pal-img[data-src]");
+    for (var h = 0; h < held.length; h++) {
+      held[h].setAttribute("src", held[h].getAttribute("data-src"));
+      held[h].removeAttribute("data-src");
+    }
+    kick();
+  }
+  if (document.documentElement.classList.contains("is-live")) enableMotion();
+  else document.addEventListener("hp-live", enableMotion, { once: true });
 })();

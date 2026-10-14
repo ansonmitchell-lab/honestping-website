@@ -117,5 +117,6 @@
     else if (motion.addListener) motion.addListener(update);
   }
   document.addEventListener("visibilitychange", update);
-  update();
+  if (document.documentElement.classList.contains("is-live")) update();
+  else document.addEventListener("hp-live", update, { once: true });
 })();

@@ -63,7 +63,7 @@
     }
   })();
   </script>
-  <link rel="stylesheet" href="styles.css?v=20261014f">
+  <link rel="stylesheet" href="styles.css?v=20261014g">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -78,13 +78,16 @@
         </div>
       </a>
       <nav class="nav" aria-label="Primary">
-        <a class="nav-link" href="index.html#gamers">For gamers</a>
-        <a class="nav-link" href="index.html#wfh">For work</a>
-        <a class="nav-link" href="index.html#streaming">For streaming</a>
-        <a class="nav-link" href="index.html#isp">7-day report</a>
-        <a class="nav-link" href="index.html#preview">Inside the app</a>
-        <a class="nav-link" href="isp.html" aria-current="page">For ISPs</a>
-        <a class="nav-link" href="about.html">About Us</a>
+        <button type="button" class="nav-menu" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <div class="nav-links" id="nav-links">
+          <a class="nav-link" href="index.html#gamers">For gamers</a>
+          <a class="nav-link" href="index.html#wfh">For work</a>
+          <a class="nav-link" href="index.html#streaming">For streaming</a>
+          <a class="nav-link" href="index.html#isp">7-day report</a>
+          <a class="nav-link" href="index.html#preview">Inside the app</a>
+          <a class="nav-link" href="isp.html" aria-current="page">For ISPs</a>
+          <a class="nav-link" href="about.html">About Us</a>
+        </div>
         <a class="btn btn-primary" href="index.html#waitlist">Join the waitlist</a>
       </nav>
     </div>
@@ -232,7 +235,6 @@
               <button type="button" role="tab" id="pdemo-tab-net" aria-controls="pdemo-net" aria-selected="true" tabindex="0">Network team</button>
               <button type="button" role="tab" id="pdemo-tab-sup" aria-controls="pdemo-sup" aria-selected="false" tabindex="-1">Support team</button>
             </div>
-            <span class="draft-chip pdemo-ex">Example data</span>
           </div>
 
           <div class="pdemo-panel" role="tabpanel" id="pdemo-net" aria-labelledby="pdemo-tab-net" tabindex="0">
@@ -509,7 +511,7 @@
     </div>
   </footer>
 
-  <script src="prefs.js?v=20261013c" defer></script>
+  <script src="prefs.js?v=20261014g" defer></script>
   <script src="rabbit-motion.js?v=20261014d" defer></script>
   <script src="waitlist.js?v=20261014d" defer></script>
   <script src="portal-demo.js?v=20261013c" defer></script>

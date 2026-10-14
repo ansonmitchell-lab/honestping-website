@@ -33,6 +33,14 @@
         document.documentElement.classList.add("hp-bar-off");
       });
     }
+    var menu = document.querySelector(".nav-menu");
+    var nav = document.querySelector(".nav");
+    if (menu && nav) {
+      menu.addEventListener("click", function () {
+        var open = nav.classList.toggle("is-open");
+        menu.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+    }
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ready);

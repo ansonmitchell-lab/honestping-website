@@ -72,7 +72,581 @@
     }
   })();
   </script>
-  <link rel="stylesheet" href="styles.css?v=20261014f">
+  <style>
+/* HonestPing landing: mirrors app Neon navy theme-tokens */
+:root {
+  --hp-bg: #07131f;
+  --hp-surface: #0d1e2e;
+  --hp-subtle: #122a3a;
+  --hp-text: #edf5fa;
+  --hp-muted: #abc0ce;
+  --hp-line: #203c4e;
+  --hp-green: #45e5ad;
+  --hp-green-bg: #102e2b;
+  --hp-amber: #ffc478;
+  --hp-amber-bg: #32281c;
+  --hp-red: #ff8d9b;
+  --hp-red-bg: #351e2a;
+  --hp-blue: #71def0;
+  --hp-selected: #103641;
+  --hp-brand: #00e6a6;
+  --hp-cyan: #05d1e8;
+  --hp-dial: #071c25;
+  --hp-primary-text: #03271e;
+  --hp-radius: 12px;
+  --hp-radius-sm: 8px;
+  --hp-brand-hover: #1aefb2;
+  --hp-shadow-brand: 0 0 20px #00e6a628;
+  --hp-shadow-brand-hover: 0 0 28px #00e6a640;
+  --hp-shadow-card: 0 20px 60px rgba(0, 0, 0, 0.35);
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-md: 15px;
+  --font: "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --max: 1040px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: clip; }
+
+body {
+  margin: 0;
+  overflow-x: clip;
+  font-family: var(--font);
+  font-size: var(--text-md);
+  line-height: 1.5;
+  color: var(--hp-text);
+  background: var(--hp-bg);
+  color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+p, h1, h2, h3 { margin: 0; }
+a { color: var(--hp-blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+p a,
+li a,
+td a,
+figcaption a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--hp-blue);
+  outline-offset: 3px;
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 8px 12px;
+  background: var(--hp-brand);
+  color: var(--hp-primary-text);
+  font-weight: 600;
+}
+.skip:focus,
+.skip:focus-visible { left: 12px; top: 12px; outline: 3px solid var(--hp-blue); outline-offset: 3px; }
+
+.wrap {
+  width: min(100% - 2rem, var(--max));
+  margin-inline: auto;
+}
+
+/* Header (app-like) */
+.site-header {
+  border-bottom: 1px solid var(--hp-line);
+  background: rgba(7, 19, 31, 0.92);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+.site-header .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--hp-text);
+  text-decoration: none;
+}
+.brand:hover { text-decoration: none; }
+.brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.brand strong {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  line-height: 1.15;
+}
+.brand span {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--hp-muted);
+  font-weight: 400;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.nav a.nav-link {
+  color: var(--hp-muted);
+  font-size: var(--text-sm);
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: var(--hp-radius-sm);
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+.nav a.nav-link:hover {
+  color: var(--hp-text);
+  background: var(--hp-subtle);
+  text-decoration: none;
+}
+.nav-menu {
+  display: none;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: var(--hp-radius-sm);
+  border: 1px solid var(--hp-line);
+  background: transparent;
+  color: var(--hp-text);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+.nav-links { display: contents; }
+@media (max-width: 800px) {
+  .nav:has(.nav-menu) {
+    width: auto;
+    margin-left: auto;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  .nav-menu { display: inline-flex; }
+  .nav:has(.nav-menu) .nav-links { display: none; width: 100%; }
+  .nav.is-open:has(.nav-menu) { width: 100%; }
+  .nav.is-open .nav-links { display: flex; flex-wrap: wrap; gap: 2px; }
+}
+
+/* Buttons (match app .hp-button) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: var(--hp-radius-sm);
+  border: 1px solid var(--hp-line);
+  background: var(--hp-subtle);
+  color: var(--hp-text);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.btn:hover { text-decoration: none; border-color: var(--hp-blue); }
+.btn-primary {
+  background: var(--hp-brand);
+  color: var(--hp-primary-text);
+  border-color: transparent;
+  box-shadow: var(--hp-shadow-brand);
+}
+.btn-primary:hover {
+  background: var(--hp-brand-hover);
+  color: var(--hp-primary-text);
+  border-color: transparent;
+  box-shadow: var(--hp-shadow-brand-hover);
+}
+.btn-lg {
+  padding: 12px 18px;
+  font-size: 14px;
+  border-radius: var(--hp-radius-sm);
+}
+
+/* Status chips (app .hp-status) */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: var(--hp-radius-sm);
+  background: var(--hp-subtle);
+  color: var(--hp-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+.status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.status.good { color: var(--hp-green); background: var(--hp-green-bg); }
+.status.warn { color: var(--hp-amber); background: var(--hp-amber-bg); }
+.status.bad { color: var(--hp-red); background: var(--hp-red-bg); }
+
+/* Cards */
+.card {
+  border: 1px solid var(--hp-line);
+  border-radius: var(--hp-radius);
+  background: var(--hp-surface);
+}
+
+/* Hero */
+.hero {
+  padding: 32px 0 24px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  top: -140px;
+  right: -80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(5, 209, 232, 0.16), transparent 68%);
+  pointer-events: none;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  bottom: -120px;
+  left: -100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 230, 166, 0.12), transparent 68%);
+  pointer-events: none;
+}
+.hero-grid {
+  display: grid;
+  gap: 36px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+@media (min-width: 960px) {
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(440px, 520px);
+    gap: 24px;
+    align-items: center;
+  }
+}
+.hero-copy .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: var(--hp-muted);
+}
+.hero h1 {
+  font-size: clamp(28px, 4.2vw, 40px);
+  font-weight: 600;
+  letter-spacing: -0.9px;
+  line-height: 1.15;
+  max-width: 18ch;
+  margin: 0 0 8px;
+}
+.hero .tagline {
+  font-size: clamp(18px, 2.4vw, 22px);
+  font-weight: 500;
+  color: var(--hp-cyan);
+  letter-spacing: -0.3px;
+  margin: 0 0 16px;
+}
+.hero .lede {
+  color: var(--hp-muted);
+  font-size: 15px;
+  max-width: 60ch;
+  margin: 0 0 24px;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 0 0 8px;
+}
+.hero-note {
+  font-size: 12px;
+  color: var(--hp-muted);
+  margin: 0;
+}
+.hero-stage { position: relative; min-width: 0; }
+.hero-mascot {
+  width: min(200px, 70%);
+  margin-top: 8px;
+}
+.hero-mascot img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.hero-mascot .act-face, .hero-mascot .act-motion { display: block; }
+.hero-mascot .act-motion { position: relative; }
+.hero-mascot .pose-crouch {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: scale(0);
+  transform-origin: 50% 100%;
+}
+.gauge-demo-caption {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--hp-muted);
+}
+.sprint-needle {
+  position: absolute;
+  left: 36%;
+  top: 6%;
+  width: 28%;
+  height: 28%;
+  transform: rotate(-36deg);
+  transform-origin: 50% 160%;
+  pointer-events: none;
+  z-index: 3;
+}
+@media (min-width: 960px) {
+  .hero-stage {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    align-items: end;
+  }
+  .hero-gauge { grid-column: 2; grid-row: 1; width: 100%; justify-self: stretch; z-index: 1; }
+  .hero-mascot {
+    grid-column: 1 / 3;
+    grid-row: 1;
+    width: 340px;
+    margin: 0 0 16px;
+    justify-self: start;
+    align-self: end;
+    z-index: 0;
+  }
+  .hero-mascot .act-face { transform: scaleX(-1); }
+  .hero-mascot img {
+    opacity: 0.9;
+    filter: drop-shadow(0 0 22px rgba(5, 209, 232, 0.35));
+  }
+}
+
+/* Hero live gauge: mirrors app Overview .hp-dial-rim / .hp-dial-face / .hp-dial-value */
+.hero-gauge {
+  --dial: 220px;
+  justify-self: center;
+  width: min(100%, 440px);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 18px 24px;
+  padding: 22px 24px 20px;
+  background:
+    radial-gradient(ellipse 70% 80% at 30% 40%, rgba(5, 209, 232, 0.07), transparent 60%),
+    var(--hp-surface);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35), 0 0 40px #05d1e810;
+}
+.gauge-status { grid-column: 1 / -1; justify-self: start; }
+.gauge-dial { position: relative; z-index: 0; text-align: center; }
+.hp-dial-rim {
+  position: relative;
+  width: var(--dial);
+  height: var(--dial);
+  border-radius: 50%;
+  padding: 5px;
+  background: linear-gradient(125deg, #a6ffdf 0%, var(--hp-brand) 30%, var(--hp-cyan) 75%, #73e7f8 100%);
+  box-shadow: 0 0 20px #00e6a614;
+}
+.hp-dial-face {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(ellipse at 28% 12%, #1a424d, #0a2632 42%, var(--hp-dial) 72%);
+  box-shadow: inset 0 1px 2px #a3f2ff58, inset 0 -2px 4px #00000080;
+  color: #f2fcff;
+}
+.hp-dial-value {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-variant-numeric: tabular-nums;
+  font-size: 70px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -2px;
+}
+.hp-dial-value small { font-size: 24px; letter-spacing: 0; font-weight: 400; }
+.gauge-ms { display: inline-block; min-width: 2ch; text-align: right; }
+.gauge-label { font-size: 14px; color: #bed7e1; margin-top: 8px; }
+.gauge-src { display: block; margin-top: 11px; font-size: 12px; color: var(--hp-muted); }
+
+/* Soft neon glow that breathes behind the rim */
+.gauge-glow {
+  position: absolute;
+  inset: -10px;
+  z-index: -1;
+  border-radius: 50%;
+  background: linear-gradient(125deg, var(--hp-brand), var(--hp-cyan));
+  filter: blur(22px);
+  opacity: 0.32;
+  animation: none;
+}
+html.is-live .gauge-glow { animation: gauge-breathe 3.6s ease-in-out infinite; }
+/* Light sweep travelling around the rim (stroke-dashoffset) */
+.gauge-sweep {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  transform: rotate(-90deg);
+}
+.gauge-sweep circle {
+  fill: none;
+  stroke: #e9fffb;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 9 91;
+  stroke-dashoffset: 0;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 4px #9ff7ff) drop-shadow(0 0 10px #05d1e8);
+  animation: none;
+}
+html.is-live .gauge-sweep circle { animation: gauge-sweep 2.4s linear infinite; }
+/* Outward ping ring, restarted by gauge.js on every sample */
+.gauge-pulse {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 50%;
+  border: 2px solid var(--hp-cyan);
+  opacity: 0;
+  pointer-events: none;
+}
+.gauge-pulse.is-on { animation: gauge-pulse 1.1s ease-out; }
+
+@keyframes gauge-breathe {
+  0%, 100% { opacity: 0.24; transform: scale(0.98); }
+  50% { opacity: 0.5; transform: scale(1.03); }
+}
+@keyframes gauge-sweep { to { stroke-dashoffset: -100; } }
+@keyframes gauge-pulse {
+  0% { opacity: 0.55; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.16); }
+}
+
+.gauge-metrics {
+  padding-left: 22px;
+  border-left: 1px solid var(--hp-line);
+}
+.gauge-metrics > div + div { margin-top: 15px; }
+.gauge-metrics span { display: block; color: var(--hp-muted); font-size: 12px; }
+.gauge-metrics strong {
+  font-size: 26px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  margin-right: 4px;
+}
+.gauge-metrics small { font-size: 14px; color: var(--hp-muted); }
+.gauge-metrics p { margin-top: 15px; font-size: 11px; color: var(--hp-muted); line-height: 1.45; }
+
+@media (max-width: 480px) {
+  .hero-gauge { --dial: 196px; grid-template-columns: 1fr; padding: 18px; }
+  .gauge-dial { justify-self: center; }
+  .hp-dial-value { font-size: 62px; }
+  .gauge-metrics {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 12px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--hp-line);
+  }
+  .gauge-metrics > div + div { margin: 0; }
+  .gauge-metrics p { margin: 0 0 0 auto; text-align: right; }
+  .gauge-metrics strong { font-size: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gauge-glow, .gauge-sweep circle, .gauge-pulse.is-on,
+  html.is-live .gauge-glow, html.is-live .gauge-sweep circle { animation: none; }
+  .gauge-sweep { display: none; }
+  .gauge-glow { opacity: 0.32; }
+}
+
+@media (max-width: 560px) {
+  .site-header .wrap { flex-wrap: wrap; }
+  .nav { width: 100%; justify-content: flex-start; gap: 2px; }
+  .nav a.nav-link { padding: 8px 8px; }
+  .brand span { display: none; }
+  .hero { padding-top: 28px; }
+}
+
+.scroll-pal { position: fixed; inset: 0; z-index: 30; pointer-events: none; opacity: 1; }
+html:not(.js) .scroll-pal { display: none !important; }
+.scroll-pal-mover { position: absolute; left: 0; top: 0; width: 64px; height: 64px; }
+.scroll-pal .pal-img { position: absolute; left: 0; top: 0; width: 64px; height: 64px; max-width: none; opacity: 0; }
+.scroll-pal .pal-img.is-on { opacity: 1; }
+.pal-symbols { position: absolute; width: 0; height: 0; overflow: hidden; }
+@media (max-width: 719px) {
+  .scroll-pal-mover, .scroll-pal .pal-img { width: 40px; height: 40px; }
+}
+  </style>
+  <link rel="preload" href="styles.css?v=20261014g" as="style">
+  <link rel="stylesheet" href="styles.css?v=20261014g" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="styles.css?v=20261014g"></noscript>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -87,13 +661,16 @@
         </div>
       </a>
       <nav class="nav" aria-label="Primary">
-        <a class="nav-link" href="#gamers">For gamers</a>
-        <a class="nav-link" href="#wfh">For work</a>
-        <a class="nav-link" href="#streaming">For streaming</a>
-        <a class="nav-link" href="#isp">7-day report</a>
-        <a class="nav-link" href="#preview">Inside the app</a>
-        <a class="nav-link" href="isp.html">For ISPs</a>
-        <a class="nav-link" href="about.html">About Us</a>
+        <button type="button" class="nav-menu" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <div class="nav-links" id="nav-links">
+          <a class="nav-link" href="#gamers">For gamers</a>
+          <a class="nav-link" href="#wfh">For work</a>
+          <a class="nav-link" href="#streaming">For streaming</a>
+          <a class="nav-link" href="#isp">7-day report</a>
+          <a class="nav-link" href="#preview">Inside the app</a>
+          <a class="nav-link" href="isp.html">For ISPs</a>
+          <a class="nav-link" href="about.html">About Us</a>
+        </div>
         <a class="btn btn-primary" href="#waitlist">Join the waitlist</a>
       </nav>
     </div>
@@ -137,20 +714,20 @@
                 <span class="gauge-label">Current ping</span>
               </div>
             </div>
-            <span class="gauge-src">Live ping (example)</span>
+            <span class="gauge-src">Sample ping</span>
           </div>
           <div class="gauge-metrics">
             <div><span>Jitter</span><strong id="hero-jitter">3</strong><small>ms</small></div>
             <div><span>Packet loss</span><strong id="hero-loss">0</strong><small>%</small></div>
             <p>Example path<br>Last 15 minutes</p>
           </div>
-          <p class="gauge-demo-caption">Live demo · Example reading</p>
+          <p class="gauge-demo-caption">Sample reading · not your connection</p>
         </div>
           <div class="hero-mascot" data-act="quick" tabindex="0" role="img" aria-label="HonestPing rabbit dashes toward the dial">
             <span class="act-face">
               <span class="act-motion">
                 <img class="pose-leap" src="assets/mascot/side-leap-dark.svg?v=20261013c" width="340" height="200" alt="">
-                <img class="pose-crouch" src="assets/mascot/crouch-ready-dark.svg?v=20261013c" width="340" height="160" alt="" aria-hidden="true">
+                <img class="pose-crouch" data-src="assets/mascot/crouch-ready-dark.svg?v=20261013c" width="340" height="160" alt="" aria-hidden="true">
               </span>
             </span>
           </div>
@@ -164,10 +741,13 @@
         <!-- data-download-url stays empty until the Windows file is ready.
              When it is a real address, the button reads Free download and links there. -->
         <div class="free-bar" data-download-url="">
-          <span class="free-pill">Free download</span>
-          <p id="free-heading">Free download for Windows (coming soon). Unlimited Quick Check, saved on your PC, plus 5 Pro speed tests and 3 gamer tests. Your first 30 days of Pro don’t include the 7-day Pro report. It’s bought on its own.</p>
+          <span class="free-pill">Coming soon</span>
+          <div class="free-copy">
+            <p id="free-heading">Free download for Windows (coming soon). Unlimited Quick Check, saved on your PC, plus 5 Pro speed tests and 3 gamer tests.</p>
+            <p class="free-note">Your first 30 days of Pro don’t include the 7-day Pro report. It’s bought on its own.</p>
+          </div>
           <a class="btn btn-primary" id="free-download" href="#waitlist">Get notified</a>
-          <button type="button" class="free-bar-dismiss" id="free-bar-dismiss" aria-label="Hide download bar">Hide download bar</button>
+          <button type="button" class="free-bar-dismiss" id="free-bar-dismiss" aria-label="Hide this note">Hide</button>
         </div>
       </div>
     </section>
@@ -185,14 +765,14 @@
               Prime time is the evening. The 7-day gaming report runs a gamer test every evening of the week, then one reading of ping, jitter, and packet loss.
               It is a check of the path, not a scoreboard.
             </p>
-            <p class="gamers-soon">Pro Gaming (coming soon).</p>
+            <p class="gamers-soon">Pro Gaming is coming soon.</p>
           </div>
 
           <div class="gamers-showcase">
             <div class="tier-row" data-act="tierhop" data-pal="crest" tabindex="0" aria-label="Example gamer tiers">
               <span class="tier-runner" aria-hidden="true">
-                <img class="tier-leap" src="assets/mascot/side-leap-dark.svg?v=20261013c" width="48" height="28" alt="" hidden>
-                <img class="tier-sit" src="assets/mascot/side-sit-dark.svg?v=20261013c" width="48" height="52" alt="">
+                <img class="tier-leap" src="assets/mascot/side-leap-dark.svg?v=20261013c" width="48" height="28" alt="" hidden loading="lazy" decoding="async">
+                <img class="tier-sit" src="assets/mascot/side-sit-dark.svg?v=20261013c" width="48" height="52" alt="" loading="lazy" decoding="async">
               </span>
               <figure class="tier-card tier-s">
                 <div class="mascot-play" data-mascot="crest" role="img" aria-label="Esports Ready crest.">
@@ -210,19 +790,19 @@
                 <figcaption><strong>Esports Ready</strong><span>90 to 100</span></figcaption>
               </figure>
               <figure class="tier-card tier-ranked">
-                <img class="tier-mark" src="assets/tier-ranked-ready.svg?v=20261013c" width="72" height="72" alt="Ranked Ready.">
+                <img class="tier-mark" src="assets/tier-ranked-ready.svg?v=20261013c" width="72" height="72" alt="Ranked Ready." loading="lazy" decoding="async">
                 <figcaption><strong>Ranked Ready</strong><span>80 to 89</span></figcaption>
               </figure>
               <figure class="tier-card tier-casual">
-                <img class="tier-mark" src="assets/tier-casual-ready.svg?v=20261013c" width="72" height="72" alt="Casual Ready.">
+                <img class="tier-mark" src="assets/tier-casual-ready.svg?v=20261013c" width="72" height="72" alt="Casual Ready." loading="lazy" decoding="async">
                 <figcaption><strong>Casual Ready</strong><span>65 to 79</span></figcaption>
               </figure>
               <figure class="tier-card tier-laggy">
-                <img class="tier-mark" src="assets/tier-laggy.svg?v=20261013c" width="72" height="72" alt="Laggy.">
+                <img class="tier-mark" src="assets/tier-laggy.svg?v=20261013c" width="72" height="72" alt="Laggy." loading="lazy" decoding="async">
                 <figcaption><strong>Laggy</strong><span>50 to 64</span></figcaption>
               </figure>
               <figure class="tier-card tier-not-ready">
-                <img class="tier-mark" src="assets/tier-not-game-ready.svg?v=20261013c" width="72" height="72" alt="Not Game Ready.">
+                <img class="tier-mark" src="assets/tier-not-game-ready.svg?v=20261013c" width="72" height="72" alt="Not Game Ready." loading="lazy" decoding="async">
                 <figcaption><strong>Not Game Ready</strong><span>0 to 49</span></figcaption>
               </figure>
             </div>
@@ -237,7 +817,7 @@
               <article class="gamers-card">
                 <span class="plan-tag plan-tag-pro">Pro</span>
                 <h3>A gamer test every evening</h3>
-                <p>The 7-day gaming report runs one gamer test each evening of the week. The regular speed report is bought on its own.</p>
+                <p>One gamer test each evening, for a week. The regular speed report is bought on its own.</p>
               </article>
             </div>
 
@@ -283,8 +863,8 @@
                   <span class="hop-stop"><i></i><small>Server</small><span class="hop-cap">the site or game</span></span>
                 </div>
                 <div class="hop-runner">
-                  <img class="hop-leap" src="assets/mascot/side-leap-dark.svg?v=20261013c" width="84" height="50" alt="">
-                  <img class="hop-sit" src="assets/mascot/side-sit-dark.svg?v=20261013c" width="84" height="84" alt="" hidden>
+                  <img class="hop-leap" src="assets/mascot/side-leap-dark.svg?v=20261013c" width="84" height="50" alt="" loading="lazy" decoding="async">
+                  <img class="hop-sit" src="assets/mascot/side-sit-dark.svg?v=20261013c" width="84" height="84" alt="" hidden loading="lazy" decoding="async">
                 </div>
               </div>
               <div class="hop-copy">
@@ -302,10 +882,10 @@
       <div class="wrap">
         <div class="isp-panel">
           <div class="isp-head" data-pal="rest">
-            <img class="isp-mark" src="assets/breakaway.svg?v=20261013c" width="207" height="109" alt="A trail of hex cells running out to the last hop.">
+            <img class="isp-mark" src="assets/breakaway.svg?v=20261013c" width="207" height="109" alt="A trail of hex cells running out to the last hop." loading="lazy" decoding="async">
             <div class="isp-label-row">
               <span class="mascot-accent mascot-listen mascot-days" data-act="days" tabindex="0" role="img" aria-label="HonestPing rabbit flipping through a 7 day calendar">
-                <img src="assets/mascot/ears-up-dark.svg?v=20261013c" width="64" height="92" alt="">
+                <img src="assets/mascot/ears-up-dark.svg?v=20261013c" width="64" height="92" alt="" loading="lazy" decoding="async">
                 <span class="day-cal" aria-hidden="true"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i></span>
               </span>
               <span class="section-label">Are you getting what you pay for?</span> <span class="plan-tag plan-tag-pro">Pro</span>
@@ -349,7 +929,6 @@
             <figure class="week-demo" id="week-demo">
               <div class="week-demo-head">
                 <h3>Watch an example week</h3>
-                <span class="draft-chip">Example data</span>
               </div>
               <div class="week-play" id="week-play" data-mode="speed">
                 <div class="week-stage">
@@ -386,7 +965,6 @@
                       <span><i class="is-g"></i>80% or more</span>
                       <span><i class="is-a"></i>60 to 79%</span>
                       <span><i class="is-r"></i>under 60%</span>
-                      <span class="week-pill">Example data</span>
                     </div>
                     <div class="week-tiles">
                       <div><small>So far</small><b class="week-val" id="week-sofar">Waiting for the first test</b></div>
@@ -402,7 +980,6 @@
                       <div class="week-modal-actions">
                         <button type="button" class="btn btn-ghost" id="week-again">Replay example</button>
                         <button type="button" class="btn btn-ghost" id="week-close">Close</button>
-                        <span class="week-pill">Example data</span>
                       </div>
                     </div>
                   </div>
@@ -625,9 +1202,9 @@
 
             <div class="good-news card pal-hide" data-act="zoomies" tabindex="0">
               <span class="zoom-runner" aria-hidden="true">
-                <img class="zoom-leap" src="assets/mascot/side-leap-dark.svg?v=20261013c" width="52" height="32" alt="">
-                <img class="zoom-sit" src="assets/mascot/side-sit-dark.svg?v=20261013c" width="52" height="52" alt="" hidden>
-                <img class="zoom-front" src="assets/mascot/front-calm-dark.svg?v=20261013c" width="52" height="52" alt="" hidden>
+                <img class="zoom-leap" src="assets/mascot/side-leap-dark.svg?v=20261013c" width="52" height="32" alt="" loading="lazy" decoding="async">
+                <img class="zoom-sit" src="assets/mascot/side-sit-dark.svg?v=20261013c" width="52" height="52" alt="" hidden loading="lazy" decoding="async">
+                <img class="zoom-front" src="assets/mascot/front-calm-dark.svg?v=20261013c" width="52" height="52" alt="" hidden loading="lazy" decoding="async">
                 <svg class="zoom-grin" viewBox="0 0 24 10" hidden focusable="false" aria-hidden="true">
                   <path d="M3 2.2 Q12 9.2 21 2.2" fill="none" stroke="#06202a" stroke-width="1.8" stroke-linecap="round"/>
                 </svg>
@@ -675,7 +1252,7 @@
         <div class="wfh-panel">
           <div class="wfh-head">
             <span class="mascot-sleep" data-sleep>
-              <img src="assets/mascot/front-calm-dark.svg?v=20261013c" width="96" height="160" alt="">
+              <img src="assets/mascot/front-calm-dark.svg?v=20261013c" width="96" height="160" alt="" loading="lazy" decoding="async">
               <svg class="sleep-eyes" viewBox="0 0 48 14" aria-hidden="true" focusable="false">
                 <polygon points="6,8 10,10 14,8 14,6 10,4 6,6" fill="none" stroke="#06202a" stroke-width="1.6" stroke-linejoin="round"/>
                 <polygon points="34,8 38,10 42,8 42,6 38,4 34,6" fill="none" stroke="#06202a" stroke-width="1.6" stroke-linejoin="round"/>
@@ -750,7 +1327,7 @@
         <div class="streaming-panel">
           <div class="streaming-head">
             <div class="streaming-watch" data-act="watch" tabindex="0" role="img" aria-label="HonestPing rabbit watching a screen">
-              <img class="mascot-accent mascot-watch" src="assets/mascot/side-sit-dark.svg?v=20261013c" width="96" height="118" alt="">
+              <img class="mascot-accent mascot-watch" src="assets/mascot/side-sit-dark.svg?v=20261013c" width="96" height="118" alt="" loading="lazy" decoding="async">
               <span class="popcorn" aria-hidden="true"><i></i><i></i><i></i></span>
               <svg class="buffer-wheel" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8" fill="none" stroke="#71def0" stroke-width="3" stroke-linecap="round" stroke-dasharray="14 36"/></svg>
               <svg class="hex-prop" viewBox="0 0 40 36" width="36" height="32"><use href="#hex-screen"/></svg>
@@ -758,9 +1335,8 @@
             <div class="streaming-label-row">
               <span class="section-label">In-Home Streaming</span>
             </div>
-            <h2 class="streaming-title" id="streaming-heading">In-Home Streaming</h2>
+            <h2 class="streaming-title" id="streaming-heading">Whose fault is the glitch?</h2>
             <p class="streaming-intro">
-              A spinner doesn’t say whose fault the glitch is.
               HonestPing checks your home connection so you can wait it out or fix your setup.
             </p>
           </div>
@@ -895,7 +1471,7 @@
           <span class="section-label">The gap in the market</span>
           <span class="mascot-accent mascot-between mascot-tape" data-act="tape" tabindex="0" role="img" aria-label="HonestPing rabbit measuring the gap with a tape">
             <span class="tape-scene" aria-hidden="true"><b></b><b></b><i></i></span>
-            <img class="mascot-mini" src="assets/mascot/front-calm-dark.svg?v=20261013c" width="48" height="48" alt="">
+            <img class="mascot-mini" src="assets/mascot/front-calm-dark.svg?v=20261013c" width="48" height="48" alt="" loading="lazy" decoding="async">
           </span>
         </div>
         <h2 class="section-title" id="gap-heading">Built for the space in between</h2>
@@ -963,7 +1539,7 @@
             <span class="window-title">HonestPing Overview (Pro view, example)</span>
           </div>
           <span class="mascot-accent mascot-peek mascot-climb" data-act="climb" tabindex="0" role="img" aria-label="HonestPing rabbit climbing into the window to flip the view">
-            <img src="assets/mascot/look-back-dark.svg?v=20261013c" width="32" height="32" alt="">
+            <img src="assets/mascot/look-back-dark.svg?v=20261013c" width="32" height="32" alt="" loading="lazy" decoding="async">
             <span class="view-switch" aria-hidden="true"><i></i></span>
           </span>
           <picture>
@@ -1043,7 +1619,7 @@
     <section class="section" id="waitlist" aria-labelledby="waitlist-heading">
       <div class="wrap">
         <div class="card waitlist-panel">
-          <h2 id="waitlist-heading">Join the waitlist</h2>
+          <h2 id="waitlist-heading">Get a note when it’s ready</h2>
           <p>Leave your email and we’ll tell you when the app is ready.</p>
           <noscript>
             <p class="form-noscript">JavaScript is off. To join, email <a href="mailto:hello@honestping.com?subject=HonestPing%20waitlist">hello@honestping.com</a>.</p>
@@ -1081,7 +1657,7 @@
       <p>© <span id="year">2026</span> Honest Ping LLC</p>
       <p><a href="about.html">About Us</a> · <a href="isp.html">For ISPs</a> · <a href="https://www.honestping.com">www.honestping.com</a></p>
       <span class="blink-host mascot-foot-host mascot-bye" data-act="bye" tabindex="0" role="img" aria-label="HonestPing rabbit waves goodbye and hops off">
-        <img class="mascot-accent mascot-foot" src="assets/mascot/front-calm-dark.svg?v=20261013c" width="40" height="40" alt="">
+        <img class="mascot-accent mascot-foot" src="assets/mascot/front-calm-dark.svg?v=20261013c" width="40" height="40" alt="" loading="lazy" decoding="async">
         <svg class="bye-paw" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><polygon points="3,10 8,2 13,10 8,13" fill="#edf5fa"/></svg>
       </span>
       <p class="footer-privacy pal-hide">Waitlist mail is only used to notify you when HonestPing is available. No extra newsletters unless you ask.</p>
@@ -1127,18 +1703,41 @@
         <div class="pal-act">
           <img class="pal-img is-on" data-pose="leap" data-face="right" src="assets/mascot/side-leap-dark.svg?v=20261013c" width="64" height="64" alt="">
           <img class="pal-img" data-pose="sit" data-face="right" src="assets/mascot/side-sit-dark.svg?v=20261013c" width="64" height="64" alt="">
-          <img class="pal-img" data-pose="ears" data-face="right" src="assets/mascot/ears-up-dark.svg?v=20261013c" width="64" height="64" alt="">
-          <img class="pal-img" data-pose="look" data-face="right" src="assets/mascot/look-back-dark.svg?v=20261013c" width="64" height="64" alt="">
-          <img class="pal-img" data-pose="quarter" data-face="right" src="assets/mascot/three-quarter-dark.svg?v=20261013c" width="64" height="64" alt="">
-          <img class="pal-img" data-pose="rest" src="assets/mascot/front-calm-dark.svg?v=20261013c" width="64" height="64" alt="">
+          <img class="pal-img" data-pose="ears" data-face="right" data-src="assets/mascot/ears-up-dark.svg?v=20261013c" width="64" height="64" alt="">
+          <img class="pal-img" data-pose="look" data-face="right" data-src="assets/mascot/look-back-dark.svg?v=20261013c" width="64" height="64" alt="">
+          <img class="pal-img" data-pose="quarter" data-face="right" data-src="assets/mascot/three-quarter-dark.svg?v=20261013c" width="64" height="64" alt="">
+          <img class="pal-img" data-pose="rest" data-src="assets/mascot/front-calm-dark.svg?v=20261013c" width="64" height="64" alt="">
         </div>
       </div>
     </div>
   </div>
 
-  <script src="prefs.js?v=20261013c" defer></script>
+  <script>
+  /* Decorative motion waits until a person scrolls, taps, or types.
+     A cold performance run never does those, so the first screen stays still. */
+  (function () {
+    var html = document.documentElement;
+    if (html.classList.contains("hp-reduce")) return;
+    var done = false;
+    function go() {
+      if (done) return;
+      done = true;
+      html.classList.add("is-live");
+      var crouch = document.querySelector(".pose-crouch[data-src]");
+      if (crouch) {
+        crouch.src = crouch.getAttribute("data-src");
+        crouch.removeAttribute("data-src");
+      }
+      document.dispatchEvent(new Event("hp-live"));
+    }
+    addEventListener("pointerdown", go, { once: true, passive: true });
+    addEventListener("keydown", go, { once: true });
+    addEventListener("scroll", go, { once: true, passive: true });
+  })();
+  </script>
+  <script src="prefs.js?v=20261014g" defer></script>
   <script src="waitlist.js?v=20261014d" defer></script>
-  <script src="gauge.js?v=20261013c" defer></script>
+  <script src="gauge.js?v=20261014g" defer></script>
   <script src="trace-demo.js?v=20261013c" defer></script>
   <script src="verdict-demo.js?v=20261013c" defer></script>
   <script src="week-sim.js?v=20261014f" defer></script>
@@ -1159,7 +1758,7 @@
   </script>
   <script src="crest-b.js?v=20261013c" defer></script>
   <script src="rabbit-motion.js?v=20261014d" defer></script>
-  <script src="scroll-pal.js?v=20261014f" defer></script>
+  <script src="scroll-pal.js?v=20261014g" defer></script>
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"6f00d55b80b34345b83061ebb7dc1a0d"}'></script>
 </body>
 </html>

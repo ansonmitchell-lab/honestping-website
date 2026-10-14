@@ -155,6 +155,34 @@ summary:focus-visible {
   background: var(--hp-subtle);
   text-decoration: none;
 }
+.nav-menu {
+  display: none;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: var(--hp-radius-sm);
+  border: 1px solid var(--hp-line);
+  background: transparent;
+  color: var(--hp-text);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+.nav-links { display: contents; }
+@media (max-width: 800px) {
+  .nav:has(.nav-menu) {
+    width: auto;
+    margin-left: auto;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  .nav-menu { display: inline-flex; }
+  .nav:has(.nav-menu) .nav-links { display: none; width: 100%; }
+  .nav.is-open:has(.nav-menu) { width: 100%; }
+  .nav.is-open .nav-links { display: flex; flex-wrap: wrap; gap: 2px; }
+}
 
 /* Buttons (match app .hp-button) */
 .btn {
@@ -277,10 +305,11 @@ summary:focus-visible {
   color: var(--hp-muted);
 }
 .hero h1 {
-  font-size: clamp(32px, 5vw, 44px);
+  font-size: clamp(28px, 4.2vw, 40px);
   font-weight: 600;
-  letter-spacing: -1px;
-  line-height: 1.12;
+  letter-spacing: -0.9px;
+  line-height: 1.15;
+  max-width: 18ch;
   margin: 0 0 8px;
 }
 .hero .tagline {
@@ -317,6 +346,16 @@ summary:focus-visible {
   width: 100%;
   height: auto;
   display: block;
+}
+.hero-mascot .act-face, .hero-mascot .act-motion { display: block; }
+.hero-mascot .act-motion { position: relative; }
+.hero-mascot .pose-crouch {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: scale(0);
+  transform-origin: 50% 100%;
 }
 @media (min-width: 960px) {
   .hero-stage {
@@ -405,8 +444,9 @@ summary:focus-visible {
   background: linear-gradient(125deg, var(--hp-brand), var(--hp-cyan));
   filter: blur(22px);
   opacity: 0.32;
-  animation: gauge-breathe 3.6s ease-in-out infinite;
+  animation: none;
 }
+html.is-live .gauge-glow { animation: gauge-breathe 3.6s ease-in-out infinite; }
 /* Light sweep travelling around the rim (stroke-dashoffset) */
 .gauge-sweep {
   position: absolute;
@@ -427,8 +467,9 @@ summary:focus-visible {
   stroke-dashoffset: 0;
   opacity: 0.85;
   filter: drop-shadow(0 0 4px #9ff7ff) drop-shadow(0 0 10px #05d1e8);
-  animation: gauge-sweep 2.4s linear infinite;
+  animation: none;
 }
+html.is-live .gauge-sweep circle { animation: gauge-sweep 2.4s linear infinite; }
 /* Outward ping ring, restarted by gauge.js on every sample */
 .gauge-pulse {
   position: absolute;
@@ -484,7 +525,8 @@ summary:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gauge-glow, .gauge-sweep circle, .gauge-pulse.is-on { animation: none; }
+  .gauge-glow, .gauge-sweep circle, .gauge-pulse.is-on,
+  html.is-live .gauge-glow, html.is-live .gauge-sweep circle { animation: none; }
   .gauge-sweep { display: none; }
   .gauge-glow { opacity: 0.32; }
 }
@@ -1598,8 +1640,8 @@ summary:focus-visible {
 .gamers-caption {
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--hp-muted);
   opacity: 0.9;
   text-align: center;
@@ -2077,13 +2119,6 @@ summary:focus-visible {
   letter-spacing: 0.04em;
   color: var(--hp-brand);
   margin-right: 4px;
-}
-.hero h1 {
-  font-size: clamp(28px, 4.2vw, 40px);
-  letter-spacing: -0.9px;
-  line-height: 1.15;
-  max-width: 18ch;
-  margin: 0 0 8px;
 }
 .gauge-demo-caption {
   margin: 12px 0 0;
@@ -3531,13 +3566,17 @@ html:not(.js) #isp-contact-form { display: none; }
   border-radius: 999px;
   padding: 4px 10px;
 }
+.free-copy { flex: 1 1 auto; min-width: 0; }
 .free-bar p {
   margin: 0;
-  flex: 1 1 auto;
-  min-width: 0;
   font-size: 14px;
-  line-height: 1.3;
+  line-height: 1.35;
   color: var(--hp-text);
+}
+.free-bar .free-note {
+  margin-top: 4px;
+  color: var(--hp-muted);
+  font-size: 13px;
 }
 @media (min-width: 980px) {
   .free-bar p { font-size: 13px; }
@@ -3579,6 +3618,12 @@ html.hp-reduce .scroll-pal .pal-img.is-on { opacity: 0; }
 html.hp-reduce .scroll-pal .pal-img[data-pose="sit"],
 html.hp-reduce .scroll-pal .pal-img[data-pose="sit"].is-on { opacity: 1; }
 html.hp-reduce .scroll-pal-mover { transform: translate3d(16px, 140px, 0); }
+html.hp-reduce .gauge-glow,
+html.hp-reduce.is-live .gauge-glow,
+html.hp-reduce .gauge-sweep circle,
+html.hp-reduce.is-live .gauge-sweep circle,
+html.hp-reduce .gauge-pulse.is-on { animation: none; }
+html.hp-reduce .gauge-sweep { display: none; }
 
 /* Privacy policy */
 .privacy-main { padding-bottom: 64px; }
