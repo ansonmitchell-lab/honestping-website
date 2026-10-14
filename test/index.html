@@ -13,7 +13,10 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="stylesheet" href="/styles.css?v=20261008a">
-  <link rel="stylesheet" href="/test/speedtest.css?v=20261014b">
+  <link rel="stylesheet" href="/test/speedtest.css?v=20261014c">
+  <script>
+  document.documentElement.setAttribute("data-st-variant", /(?:^|[?&])variant=waitlist(?:&|$)/.test(location.search) ? "waitlist" : "app");
+  </script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -29,7 +32,6 @@
       <nav class="nav" aria-label="Primary">
         <a class="nav-link" href="/">Home</a>
         <a class="nav-link" href="/test" aria-current="page">Speed test</a>
-        <a class="btn btn-primary" href="/#waitlist">Join the waitlist</a>
       </nav>
     </div>
   </header>
@@ -158,8 +160,22 @@
           <p class="st-subline" data-variability hidden>Speeds vary with Wi-Fi, devices and time of day, and plans usually promise speeds 'up to' a number.</p>
           <h3 class="st-outcome-head" data-headline hidden></h3>
           <p data-outcome hidden></p>
-          <p data-cta-lead>See your evenings. The HonestPing app tests every evening HonestPing is open and builds a 7-day report.</p>
-          <p><a class="btn btn-primary btn-lg" data-cta href="/?src=webtest#waitlist">Get the app</a></p>
+          <div data-variant-app>
+            <p data-cta-lead>See your evenings. Get the HonestPing app for Windows, then add a 7-day Pro report when you want the full week.</p>
+            <p class="st-app-download"><a class="btn btn-primary btn-lg" data-cta href="/?src=webtest">Get the app</a></p>
+            <p class="st-app-paid">Free to download for Windows. Pro and the 7-day report are paid.</p>
+          </div>
+          <div data-variant-waitlist>
+            <p data-waitlist-lead>See your evenings. HonestPing for Windows is coming soon.</p>
+            <form class="st-waitlist" id="waitlist-form" action="mailto:hello@honestping.com" method="get">
+              <label for="waitlist-email">Email address</label>
+              <input id="waitlist-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" inputmode="email">
+              <p><a href="/privacy">Details in our privacy policy.</a></p>
+              <button class="btn btn-primary btn-lg" data-cta type="submit">Join the waitlist</button>
+            </form>
+            <p class="st-help">Waitlist mail is only used to notify you when HonestPing is available. No extra newsletters unless you ask.</p>
+          </div>
+          <p class="st-phone-note">HonestPing is coming to Android and iOS.</p>
         </div>
       </section>
     </div>
@@ -175,6 +191,6 @@
   <script>
   document.getElementById("year").textContent = String(new Date().getFullYear());
   </script>
-  <script type="module" src="/test/speedtest-page.js?v=20261014b"></script>
+  <script type="module" src="/test/speedtest-page.js?v=20261014c"></script>
 </body>
 </html>

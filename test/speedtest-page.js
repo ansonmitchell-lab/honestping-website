@@ -27,7 +27,9 @@ import { count } from "./speedtest-counters.js";
   var headlineEl = root.querySelector("[data-headline]");
   var percents = root.querySelector("[data-percents]");
   var varyEl = root.querySelector("[data-variability]");
-  var cta = root.querySelector("[data-cta]");
+  var ctaLead = root.querySelector("[data-cta-lead]");
+  var waitLead = root.querySelector("[data-waitlist-lead]");
+  var unclearRuns = 0;
 
   var LINES = {
     snapshot: "One test is a snapshot. Your evenings may differ.",
@@ -41,7 +43,12 @@ import { count } from "./speedtest-counters.js";
     good: "Good news is worth knowing. A week of tests shows whether evenings hold up too.",
     unclearHead: "We couldn't get a clear reading this time.",
     unclear: "The test may have been interrupted, or the numbers didn't line up.",
-    cta: "See your evenings. The HonestPing app tests every evening HonestPing is open and builds a 7-day report."
+    unclearAgain: "Some connections are hard to read in one go. The app can test over a week and show what's typical.",
+    appLead: "See your evenings. Get the HonestPing app for Windows, then add a 7-day Pro report when you want the full week.",
+    appPaid: "Free to download for Windows. Pro and the 7-day report are paid.",
+    phone: "HonestPing is coming to Android and iOS.",
+    waitLead: "See your evenings. HonestPing for Windows is coming soon.",
+    waitPrivacy: "Details in our privacy policy."
   };
 
   function planNumber(input) {
@@ -249,8 +256,13 @@ import { count } from "./speedtest-counters.js";
     var planDown = planNumber(downInput);
     var planUp = planNumber(upInput);
     if (sample.downloadMbps == null && sample.uploadMbps == null) {
-      return { head: LINES.unclearHead, line: LINES.unclear };
+      unclearRuns += 1;
+      return {
+        head: LINES.unclearHead,
+        line: unclearRuns >= 2 ? LINES.unclearAgain : LINES.unclear
+      };
     }
+    unclearRuns = 0;
     var under = (planDown && sample.downloadMbps != null && sample.downloadMbps < planDown)
       || (planUp && sample.uploadMbps != null && sample.uploadMbps < planUp);
     if (under) return { head: LINES.belowHead, line: LINES.below };
@@ -354,7 +366,34 @@ import { count } from "./speedtest-counters.js";
   upInput.addEventListener("input", savePlan);
   remember.addEventListener("change", savePlan);
   if (forget) forget.addEventListener("click", forgetPlan);
-  if (cta) cta.addEventListener("click", function () { count("cta_clicked"); });
+  if (ctaLead) ctaLead.textContent = LINES.appLead;
+  if (waitLead) waitLead.textContent = LINES.waitLead;
+  var paid = root.querySelector(".st-app-paid");
+  var phoneNote = root.querySelector(".st-phone-note");
+  var privacyLink = root.querySelector(".st-waitlist a");
+  if (paid) paid.textContent = LINES.appPaid;
+  if (phoneNote) phoneNote.textContent = LINES.phone;
+  if (privacyLink) privacyLink.textContent = LINES.waitPrivacy;
+  root.querySelectorAll("[data-cta]").forEach(function (el) {
+    el.addEventListener("click", function () { count("cta_clicked"); });
+  });
+  var waitForm = root.querySelector("#waitlist-form");
+  if (waitForm) {
+    waitForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var emailInput = waitForm.querySelector("input[type='email']");
+      var email = ((emailInput && emailInput.value) || "").trim();
+      if (!emailInput || !email || !emailInput.checkValidity()) {
+        if (emailInput) emailInput.reportValidity();
+        return;
+      }
+      var subject = encodeURIComponent("HonestPing waitlist");
+      var body = encodeURIComponent(
+        "Please add me to the HonestPing waitlist.\n\nEmail: " + email + "\n"
+      );
+      window.location.href = "mailto:hello@honestping.com?subject=" + subject + "&body=" + body;
+    });
+  }
   loadPlan();
   resetMeters();
   setPhase("idle");

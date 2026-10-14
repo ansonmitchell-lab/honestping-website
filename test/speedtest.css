@@ -170,10 +170,35 @@
 }
 .st-check { margin: 0; font-weight: 500; }
 .st-check input { margin-right: 8px; }
-.st-percent, .st-subline, .st-hook [data-outcome], .st-hook [data-snapshot], .st-hook [data-cta-lead] {
+.st-percent, .st-subline, .st-hook [data-outcome], .st-hook [data-snapshot], .st-hook [data-cta-lead], .st-hook [data-waitlist-lead], .st-app-paid, .st-phone-note {
   color: var(--hp-text);
   font-weight: 400;
 }
+[data-st-variant="app"] [data-variant-waitlist],
+[data-st-variant="waitlist"] [data-variant-app] { display: none; }
+.st-app-paid, .st-phone-note { margin: 8px 0 0; }
+.st-phone-note { display: none; }
+.st-waitlist label {
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.st-waitlist input[type="email"] {
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  margin-top: 6px;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--hp-line);
+  border-radius: var(--hp-radius-sm);
+  background: var(--hp-bg);
+  color: var(--hp-text);
+  font: inherit;
+}
+.st-waitlist p { margin: 8px 0 12px; }
+.st-waitlist .btn { margin-top: 4px; }
 .st-percent, .st-subline { margin: 8px 0; }
 .st-outcome-head {
   margin: 16px 0 6px;
@@ -212,6 +237,8 @@
   .st-hero-row, .st-meters, .st-plan-grid, .st-uses { grid-template-columns: 1fr; }
   .st-rabbit { height: auto; }
   .st-gauge { --dial: 200px; }
+  .st-app-download, .st-app-paid { display: none; }
+  .st-phone-note { display: block; }
 }
 @media (prefers-reduced-motion: reduce) {
   .st-rabbit.is-hop { animation: none; }
