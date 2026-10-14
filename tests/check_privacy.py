@@ -125,7 +125,12 @@ def main():
             "<td>Feedback service</td>",
             "<td>12 months</td>",
             "Last updated:",
-            "October 11, 2026",
+            "October 14, 2026",
+            "a summary of times your connection dropped or slowed, kept for 30 days. HonestPing uses it on your PC to decide whether to suggest a 7-day report. It isn't sent to us.",
+            "the internet plan details you enter (download and upload speeds, data cap and billing day, and provider name and monthly price if you add them). HonestPing uses them on your PC to compare your test results with your plan. They aren't sent to us. You can change or delete them in Settings.",
+            "Remove plan details with the",
+            "Delete plan details",
+            "button in Settings.",
             "bug reports you've written but haven't sent yet",
             "an app log, which stays on your PC unless you choose to attach recent lines to a bug report or feature request",
             "Cloudflare (website hosting, security, and our feedback service's servers and storage)",
@@ -178,7 +183,7 @@ def main():
         updated_js = (ROOT / "privacy-updated.js").read_text(encoding="utf-8")
         date_match = re.search(r'HONESTPING_POLICY_UPDATED = "([^"]+)"', updated_js)
         policy_date = date_match.group(1) if date_match else ""
-        check(policy_date == "October 11, 2026", f"policy date constant is {policy_date!r}")
+        check(policy_date == "October 14, 2026", f"policy date constant is {policy_date!r}")
 
         publication_paths = ("/privacy", "/privacy/subprocessors", "/privacy/history")
         for path in publication_paths:
@@ -207,6 +212,19 @@ def main():
         with urlopen(f"http://127.0.0.1:{port}/privacy/history") as response:
             history_body = response.read().decode("utf-8")
         check("First published." in history_body, "history page is missing the first published entry")
+        check(
+            "October 11, 2026: First published." in history_body,
+            "history page no longer keeps the October 11, 2026 first published entry",
+        )
+        check(
+            "Section 3.1 now lists two more things kept only on your PC: a 30 day summary of times your connection dropped or slowed, and the internet plan details you enter. Section 9 explains how to delete plan details."
+            in history_body,
+            "history page is missing the October 14 entry",
+        )
+        check(
+            'data-policy-updated>October 11, 2026' not in history_body,
+            "the October 11 history date is still bound to the current policy date",
+        )
 
         html_pages = pages()
         check(html_pages, "no HTML pages found")
