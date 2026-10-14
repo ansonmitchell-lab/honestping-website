@@ -3511,7 +3511,10 @@ select:focus-visible {
   min-width: 44px;
   padding: 10px 12px;
 }
-.free-bar-dismiss { white-space: nowrap; }
+.free-bar-dismiss { white-space: nowrap; flex: none; }
+@media (max-width: 980px) {
+  .free-bar { flex-wrap: wrap; }
+}
 .motion-pref:hover,
 .free-bar-dismiss:hover { color: var(--hp-text); }
 .free-bar-dismiss:focus-visible,
