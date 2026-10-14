@@ -1,0 +1,13 @@
+name: Speed test copy
+on:
+  pull_request:
+  push:
+    paths:
+      - "test/**"
+      - "scripts/check-speedtest-copy.mjs"
+jobs:
+  copy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: node scripts/check-speedtest-copy.mjs

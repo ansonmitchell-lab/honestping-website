@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Speed test · HonestPing</title>
+  <meta name="description" content="A short HonestPing speed snapshot. Download and upload are measured apart. One test is only a snapshot.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#07131f">
+  <link rel="canonical" href="https://www.honestping.com/test">
+  <link rel="icon" href="/assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="/styles.css?v=20261008a">
+  <link rel="stylesheet" href="/test/speedtest.css?v=20261014a">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/">
+        <img src="/assets/icon-display.png" width="40" height="40" alt="">
+        <div>
+          <strong>HonestPing</strong>
+          <span>Network health, explained</span>
+        </div>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/test" aria-current="page">Speed test</a>
+        <a class="btn btn-primary" href="/#waitlist">Join the waitlist</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="st-page" data-speedtest>
+    <div class="wrap">
+      <p class="st-preview">Preview. The meters use a stand-in until the test engine is chosen. This is not a measurement of your line.</p>
+      <section class="st-hero" aria-labelledby="st-heading">
+        <p class="st-kicker">Speed test</p>
+        <div class="st-hero-row">
+          <div>
+            <h1 id="st-heading">A snapshot of this connection.</h1>
+            <p class="st-lede">Download and upload each get their own meter. Neither one is filled from the other.</p>
+            <button class="btn btn-primary st-start" type="button" data-start>Start test</button>
+            <p class="st-phase" data-phase>Ready when you are</p>
+          </div>
+          <div class="st-rabbit" data-rabbit role="img" aria-label="HonestPing rabbit">
+            <img src="/assets/mascot/front-calm-dark.svg" width="88" height="190" alt="">
+          </div>
+        </div>
+        <p class="st-live" data-live aria-live="polite"></p>
+      </section>
+
+      <section class="st-section" aria-labelledby="st-meters-h">
+        <h2 id="st-meters-h">Download and upload</h2>
+        <div class="st-meters">
+          <article class="st-gauge-card">
+            <div class="st-gauge">
+              <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                <circle cx="60" cy="60" r="46" fill="none" stroke="#14303c" stroke-width="8"></circle>
+                <circle data-arc="down" cx="60" cy="60" r="46" fill="none" stroke="#45e5ad" stroke-width="8" stroke-linecap="round" stroke-dasharray="0 289" transform="rotate(-90 60 60)"></circle>
+              </svg>
+              <div class="st-gauge-face">
+                <div class="st-num" data-value="down">0</div>
+                <span class="st-unit">Mbps</span>
+                <span class="st-gauge-label">Download</span>
+              </div>
+            </div>
+            <p class="st-scale" data-scale="down">Scale follows this reading.</p>
+          </article>
+          <article class="st-gauge-card">
+            <div class="st-gauge">
+              <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                <circle cx="60" cy="60" r="46" fill="none" stroke="#14303c" stroke-width="8"></circle>
+                <circle data-arc="up" cx="60" cy="60" r="46" fill="none" stroke="#71def0" stroke-width="8" stroke-linecap="round" stroke-dasharray="0 289" transform="rotate(-90 60 60)"></circle>
+              </svg>
+              <div class="st-gauge-face">
+                <div class="st-num" data-value="up">0</div>
+                <span class="st-unit">Mbps</span>
+                <span class="st-gauge-label">Upload</span>
+              </div>
+            </div>
+            <p class="st-scale" data-scale="up">Scale follows this reading.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="st-section" aria-labelledby="st-quality-h">
+        <h2 id="st-quality-h">Quality</h2>
+        <div class="st-quality">
+          <article class="st-metric">
+            <strong>Ping</strong>
+            <span class="st-metric-value" data-metric="ping">Waiting</span>
+            <p data-note="ping">Waiting</p>
+          </article>
+          <article class="st-metric">
+            <strong>Jitter</strong>
+            <span class="st-metric-value" data-metric="jitter">Waiting</span>
+            <p data-note="jitter">Waiting</p>
+          </article>
+          <article class="st-metric">
+            <strong>Packet loss</strong>
+            <span class="st-metric-value" data-metric="loss">Not measured</span>
+            <p data-note="loss">Not in this preview.</p>
+          </article>
+          <article class="st-metric">
+            <strong>Ping while busy</strong>
+            <span class="st-metric-value" data-metric="busy">Waiting</span>
+            <p data-note="busy">Shows up while download or upload is running.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="st-section" aria-labelledby="st-uses-h">
+        <h2 id="st-uses-h">What this snapshot can suggest</h2>
+        <div class="st-uses">
+          <article class="st-use">
+            <strong>Calls</strong>
+            <p data-use="calls">Waiting for this snapshot.</p>
+          </article>
+          <article class="st-use">
+            <strong>Gaming</strong>
+            <p data-use="gaming">Waiting for this snapshot.</p>
+          </article>
+          <article class="st-use">
+            <strong>Streaming</strong>
+            <p data-use="streaming">Waiting for this snapshot.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="st-section" aria-labelledby="st-plan-h">
+        <h2 id="st-plan-h">Your plan, if you want a percent</h2>
+        <div class="st-plan">
+          <div class="st-plan-grid">
+            <label>Your plan download
+              <input data-plan-down type="text" inputmode="decimal" autocomplete="off" maxlength="8" placeholder="Mbps">
+            </label>
+            <label>Your plan upload
+              <input data-plan-up type="text" inputmode="decimal" autocomplete="off" maxlength="8" placeholder="Mbps">
+            </label>
+          </div>
+          <label class="st-check"><input data-remember type="checkbox"> Remember my plan on this device</label>
+          <p class="st-help">Optional. Used only to show a percent of plan. No price. Nothing here is sent.</p>
+        </div>
+      </section>
+
+      <section class="st-section" aria-labelledby="st-hook-h">
+        <h2 id="st-hook-h">After the snapshot</h2>
+        <div class="st-hook" data-hook>
+          <p><span class="st-tag">[LEGAL]</span> One test is a snapshot. Your evenings may differ.</p>
+          <p><span class="st-tag">[LEGAL]</span> <span data-percents>Enter a plan to see a percent of that plan.</span></p>
+          <p><span class="st-tag">[LEGAL]</span> <span data-outcome>The result line appears here.</span></p>
+          <p><span class="st-tag">[LEGAL] [MARKETING]</span> See your evenings. The HonestPing app tests every evening HonestPing is open and builds a 7 day report.</p>
+          <p><a class="btn btn-primary btn-lg" data-cta href="/?src=webtest#waitlist">Get the app</a></p>
+          <p class="st-fine">The app is not on this page. This opens the waitlist. No price on this page.</p>
+        </div>
+      </section>
+
+      <section class="st-section" aria-labelledby="st-privacy-h">
+        <h2 id="st-privacy-h">Privacy note</h2>
+        <div class="st-draft">
+          <p><span class="st-tag">[LEGAL]</span> Placeholder, not final. This preview runs a stand-in on this page. It does not contact outside test servers, and it does not save your result. If a live engine is turned on later, this note has to say which servers are contacted and whether those results are grouped. Remember my plan, if you tick it, stays on this device only.</p>
+        </div>
+      </section>
+
+      <section class="st-section">
+        <details class="st-draft">
+          <summary>Draft result lines for review</summary>
+          <ul>
+            <li><span class="st-tag">[LEGAL]</span> One test is a snapshot. Your evenings may differ.</li>
+            <li><span class="st-tag">[LEGAL]</span> Ping rose while the line was busy. That often shows up most in the evening.</li>
+            <li><span class="st-tag">[LEGAL]</span> This snapshot came in under the download you entered. One test cannot say why.</li>
+            <li><span class="st-tag">[LEGAL]</span> This snapshot looked steady. Evenings can still differ.</li>
+            <li><span class="st-tag">[LEGAL]</span> About 91% of your plan’s download. The percent is an example of the wording. The page uses the plan you enter.</li>
+            <li><span class="st-tag">[LEGAL] [MARKETING]</span> See your evenings. The HonestPing app tests every evening HonestPing is open and builds a 7 day report.</li>
+          </ul>
+        </details>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>© <span id="year">2026</span> Honest Ping LLC</p>
+      <p><a href="/about.html">About Us</a> · <a href="/privacy">Privacy</a> · <a href="https://www.honestping.com">www.honestping.com</a></p>
+      <p class="footer-privacy">Waitlist mail is only used to notify you when HonestPing is available. No extra newsletters unless you ask.</p>
+    </div>
+  </footer>
+  <script>
+  document.getElementById("year").textContent = String(new Date().getFullYear());
+  </script>
+  <script src="/test/speedtest-counters.js?v=20261014a" defer></script>
+  <script src="/test/speedtest-engine.js?v=20261014a" defer></script>
+  <script src="/test/speedtest-page.js?v=20261014a" defer></script>
+</body>
+</html>

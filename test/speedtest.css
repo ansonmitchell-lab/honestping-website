@@ -1,0 +1,204 @@
+.st-page { padding-bottom: 48px; }
+.st-preview {
+  margin: 18px 0 0;
+  padding: 10px 12px;
+  border: 1px solid var(--hp-line);
+  border-radius: var(--hp-radius-sm);
+  background: var(--hp-subtle);
+  color: var(--hp-muted);
+  font-size: 13px;
+}
+.st-hero { padding-top: 28px; }
+.st-kicker {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: var(--hp-brand);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.st-hero h1 {
+  margin: 0 0 8px;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.4px;
+}
+.st-lede {
+  margin: 0;
+  max-width: 38rem;
+  color: var(--hp-muted);
+  font-size: 16px;
+}
+.st-hero-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px;
+  gap: 18px;
+  align-items: end;
+  margin-top: 22px;
+}
+.st-rabbit {
+  width: 88px;
+  height: 190px;
+  justify-self: center;
+  transform-origin: 50% 70%;
+}
+.st-rabbit img { width: 88px; height: 190px; display: block; }
+.st-rabbit.is-hop { animation: st-hop 1.6s ease; }
+@keyframes st-hop {
+  0%, 100% { transform: none; }
+  35% { transform: translateY(-8px) rotate(-3deg); }
+  70% { transform: translateY(0) rotate(2deg); }
+}
+.st-start {
+  min-height: 64px;
+  min-width: 200px;
+  padding: 16px 28px;
+  font-size: 18px;
+}
+.st-phase {
+  min-height: 1.4em;
+  margin: 12px 0 0;
+  color: var(--hp-text);
+  font-variant-numeric: tabular-nums;
+}
+.st-section { margin-top: 28px; }
+.st-section h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+.st-meters, .st-quality, .st-uses, .st-plan-grid {
+  display: grid;
+  gap: 12px;
+}
+.st-meters { grid-template-columns: 1fr 1fr; }
+.st-quality, .st-uses { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.st-uses { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.st-plan-grid { grid-template-columns: 1fr 1fr; }
+.st-gauge-card, .st-metric, .st-use, .st-plan, .st-hook, .st-draft {
+  background: var(--hp-surface);
+  border: 1px solid var(--hp-line);
+  border-radius: var(--hp-radius);
+}
+.st-gauge-card, .st-metric, .st-use { padding: 16px; }
+.st-gauge {
+  --dial: 168px;
+  position: relative;
+  width: var(--dial);
+  height: var(--dial);
+  margin: 0 auto;
+}
+.st-gauge svg { width: 100%; height: 100%; display: block; }
+.st-gauge-face {
+  position: absolute;
+  inset: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 28% 12%, #1a424d, #0a2632 42%, var(--hp-dial) 72%);
+  text-align: center;
+}
+.st-num {
+  display: inline-block;
+  min-width: 5ch;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.st-unit { display: block; margin-top: 4px; color: var(--hp-muted); font-size: 12px; }
+.st-gauge-label { margin-top: 6px; color: #9bb6c4; font-size: 13px; }
+.st-scale {
+  min-height: 2.6em;
+  margin: 10px 0 0;
+  color: var(--hp-muted);
+  font-size: 12px;
+  text-align: center;
+}
+.st-metric strong, .st-use strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.st-metric-value {
+  display: block;
+  min-width: 3ch;
+  min-height: 1.3em;
+  font-size: 22px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.st-metric p, .st-use p {
+  min-height: 2.6em;
+  margin: 8px 0 0;
+  color: var(--hp-muted);
+  font-size: 13px;
+}
+.st-plan, .st-hook, .st-draft { padding: 16px; }
+.st-plan label, .st-check {
+  display: block;
+  color: var(--hp-text);
+  font-size: 14px;
+  font-weight: 600;
+}
+.st-plan input[type="text"] {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid var(--hp-line);
+  border-radius: var(--hp-radius-sm);
+  background: var(--hp-bg);
+  color: var(--hp-text);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+}
+.st-help, .st-fine {
+  margin: 10px 0 0;
+  color: var(--hp-muted);
+  font-size: 13px;
+}
+.st-check { margin-top: 14px; font-weight: 500; }
+.st-check input { margin-right: 8px; }
+.st-tag {
+  display: inline-block;
+  margin: 0 8px 6px 0;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--hp-amber-bg);
+  color: var(--hp-amber);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+}
+.st-hook p, .st-draft li { color: var(--hp-text); }
+.st-hook .st-fine { max-width: 40rem; }
+.st-draft summary { cursor: pointer; font-weight: 600; }
+.st-draft ul { margin: 12px 0 0; padding-left: 18px; }
+.st-draft li { margin: 8px 0; }
+.st-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+@media (max-width: 800px) {
+  .st-quality { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .st-hero-row, .st-meters, .st-plan-grid, .st-uses { grid-template-columns: 1fr; }
+  .st-rabbit { height: auto; }
+  .st-gauge { --dial: 200px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .st-rabbit.is-hop { animation: none; }
+  .st-gauge svg circle { transition: none; }
+}
+.st-gauge svg circle { transition: stroke-dasharray 0.2s ease; }
