@@ -375,10 +375,17 @@
     raf = requestAnimationFrame(tick);
   }
 
+  function quietCompanion() {
+    var pal = document.getElementById("scroll-pal");
+    if (!pal) return;
+    pal.classList.remove("is-breathe", "is-dust");
+  }
+
   function start(slot) {
     for (var i = 0; i < slots.length; i++) {
       if (slots[i] !== slot) rest(slots[i]);
     }
+    quietCompanion();
     slot.t0 = performance.now();
     active = slot;
     if (raf) cancelAnimationFrame(raf);

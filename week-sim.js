@@ -378,11 +378,11 @@
     var slowPct;
     var fit = paintFit();
     if (count <= 0) {
-      soFarEl.textContent = "Waiting for first test";
+      soFarEl.textContent = "Waiting for the first test";
       soFarEl.className = "app7-val";
       slowEl.textContent = "·";
       slowEl.className = "app7-val";
-      speedEl.textContent = "Waiting for first test";
+      speedEl.textContent = "Waiting for the first test";
       speedEl.className = "app7-val";
       detailEl.hidden = true;
       detailEl.textContent = "";
@@ -518,5 +518,12 @@
   });
   againBtn.addEventListener("click", function () {
     start();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape" || !running) return;
+    var box = document.getElementById("try-week");
+    if (box && !box.contains(document.activeElement)) return;
+    e.preventDefault();
+    finish(true);
   });
 })();

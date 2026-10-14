@@ -15,6 +15,8 @@ p, h1, h2, h3 { margin: 0; }
 a { color: var(--hp-blue); text-decoration: none; }
 a:hover { text-decoration: underline; }
 a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--hp-blue); outline-offset: 3px; }
+.skip { position: absolute; left: -9999px; top: 0; z-index: 100; padding: 8px 12px; background: var(--hp-brand); color: var(--hp-primary-text); font-weight: 600; }
+.skip:focus, .skip:focus-visible { left: 12px; top: 12px; outline: 3px solid var(--hp-blue); outline-offset: 3px; }
 .wrap { width: min(100% - 2rem, var(--max)); margin-inline: auto; }
 .site-header { border-bottom: 1px solid var(--hp-line); background: rgba(7, 19, 31, 0.92); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 40; }
 .site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; }

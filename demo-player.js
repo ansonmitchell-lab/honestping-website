@@ -56,9 +56,29 @@
     return Math.min(21, Math.floor((u / 0.86) * 21));
   }
 
+  var opener = null;
+  function modalItems() {
+    return Array.prototype.slice.call(modal.querySelectorAll("a[href], button, input, select, textarea")).filter(function (el) {
+      return !el.disabled && !el.hidden;
+    });
+  }
   function showModal(on) {
+    var was = !modal.hidden;
     modal.hidden = !on;
     root.classList.toggle("is-results", on);
+    if (on) modal.setAttribute("aria-modal", "true");
+    else modal.removeAttribute("aria-modal");
+    if (on && !was) {
+      var active = document.activeElement;
+      if (root.contains(active)) {
+        opener = active;
+        if (closeBtn) closeBtn.focus();
+      } else opener = null;
+    }
+    if (!on && was && opener && opener.focus && document.contains(opener)) {
+      opener.focus();
+      opener = null;
+    }
   }
 
   function clock(ms) {
@@ -206,10 +226,9 @@
     play();
   });
   if (closeBtn) closeBtn.addEventListener("click", function () {
-    showModal(false);
+    pause();
     if (t >= DUR * 0.9) t = DUR * 0.82;
     render();
-    showModal(false);
   });
 
   root.querySelectorAll(".week-seg button").forEach(function (btn) {
@@ -228,6 +247,10 @@
       var u = Math.max(0, Math.min(1, (event.clientX - r.left) / r.width));
       t = u * DUR;
       render();
+      if (!modal.hidden && closeBtn) {
+        opener = playBtn;
+        closeBtn.focus();
+      }
     });
   }
 
@@ -235,12 +258,45 @@
     if (document.hidden && playing) last = performance.now();
   });
 
-  if (reduce) {
-    t = 0;
+  document.addEventListener("keydown", function (e) {
+    if (modal.hidden) return;
+    var active = document.activeElement;
+    var inModal = modal.contains(active);
+    if (e.key === "Escape") {
+      var typing = active && /^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName) && !inModal;
+      if (typing) return;
+      e.preventDefault();
+      if (closeBtn) closeBtn.click();
+      return;
+    }
+    if (e.key !== "Tab" || !inModal) return;
+    var items = modalItems();
+    if (!items.length) return;
+    var first = items[0];
+    var last = items[items.length - 1];
+    if (e.shiftKey && active === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && active === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+
+  function arm() {
     render();
     setLabel();
-  } else {
-    render();
-    play();
+    if (reduce || !("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          if (!playing && t < DUR) play();
+        } else if (playing) {
+          pause();
+        }
+      });
+    }, { threshold: 0.4 });
+    io.observe(root);
   }
+  arm();
 })();

@@ -53,7 +53,9 @@ figcaption a {
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
-select:focus-visible {
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
   outline: 3px solid var(--hp-blue);
   outline-offset: 3px;
 }
@@ -68,7 +70,8 @@ select:focus-visible {
   color: var(--hp-primary-text);
   font-weight: 600;
 }
-.skip:focus { left: 12px; top: 12px; }
+.skip:focus,
+.skip:focus-visible { left: 12px; top: 12px; outline: 3px solid var(--hp-blue); outline-offset: 3px; }
 
 .wrap {
   width: min(100% - 2rem, var(--max));
@@ -2479,6 +2482,7 @@ select:focus-visible {
 .savings-field { display: flex; align-items: center; gap: 6px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--hp-line); background: var(--hp-surface); color: var(--hp-muted); font-size: 13px; min-width: 0; }
 .savings-field:focus-within { border-color: var(--hp-cyan); }
 .savings-field input { flex: 1 1 auto; min-width: 0; width: 100%; padding: 9px 0; border: 0; background: transparent; color: var(--hp-text); font: inherit; font-size: 15px; font-variant-numeric: tabular-nums; outline: none; }
+.savings-field input:focus-visible { outline: 3px solid var(--hp-blue); outline-offset: 2px; }
 .savings-field input:disabled, .savings-slider input:disabled { opacity: 0.85; }
 .savings-slider { display: flex; align-items: center; gap: 12px; }
 .savings-slider input[type="range"] { flex: 1 1 auto; min-width: 0; accent-color: var(--hp-brand); }

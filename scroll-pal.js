@@ -68,6 +68,7 @@
   var landI = 0;
   var pos = { x: 24, y: 120 };
   var hop = null;
+  var yieldSpot = null;
   var excursion = null;
   var cash = null;
   var cashPlayed = false;
@@ -559,6 +560,33 @@
     return true;
   }
 
+  function beginSlide(x, y, now) {
+    var from = { x: pos.x, y: pos.y };
+    if (Math.abs(x - from.x) < 4 && Math.abs(y - from.y) < 4) {
+      root.classList.remove("is-away");
+      return false;
+    }
+    var dx = x - from.x;
+    var dy = y - from.y;
+    hop = {
+      arcs: [{ from: from, to: { x: x, y: y } }],
+      i: 0,
+      t0: now,
+      dur: Math.abs(dx) > 160 || Math.abs(dy) > 160 ? 780 : 420,
+      dest: landI,
+      height: metrics().size * 0.35,
+      cross: Math.abs(dx) > 160,
+      down: dy >= 0,
+      turnUntil: 0,
+      puffed: false,
+      skid: false,
+      slide: true
+    };
+    showProp("");
+    clearIdle();
+    return true;
+  }
+
   function advance(now, box) {
     var arc = hop.arcs[hop.i];
     var u = Math.min(1, (now - hop.t0) / hop.dur);
@@ -827,7 +855,7 @@
     }
     if (!pts.length) build();
     var box = metrics();
-    root.classList.remove("is-away");
+    var scrolling = (now - lastAt) < 170;
     if (dustUntil && now > dustUntil) {
       root.classList.remove("is-dust");
       dustUntil = 0;
@@ -840,12 +868,14 @@
       idleWait = 0;
       excursion = null;
       hop = null;
+      root.classList.remove("is-breathe", "is-dust");
       var hold = pts[landI];
       showPose(hold ? hold.pose : "sit");
       showProp("");
       if (hits(pos.x, pos.y, box.size, false)) {
-        var safe = clearGutter(box, hold ? hold.side : -1, pos.y);
-        paint(safe.x, safe.y, 0, 0, 0);
+        root.classList.add("is-away");
+        yieldSpot = clearGutter(box, hold ? hold.side : -1, pos.y);
+        paint(pos.x, pos.y, 0, 0, 0);
       } else {
         paint(pos.x, pos.y, 0, 0, 0);
       }
@@ -877,7 +907,9 @@
         return;
       }
       landI = hop.dest;
+      var slid = hop.slide;
       hop = null;
+      if (slid) root.classList.remove("is-away");
       if (excursion && excursion.phase === "go") {
         excursion.phase = "sit";
         excursion.sitUntil = now + SIT_MS;
@@ -887,7 +919,15 @@
       }
     }
 
-    var scrolling = (now - lastAt) < 170;
+    if (yieldSpot && !hop) {
+      var parked = yieldSpot;
+      yieldSpot = null;
+      if (hits(pos.x, pos.y, box.size, false)) beginSlide(parked.x, parked.y, now);
+      else root.classList.remove("is-away");
+    } else if (!hop && !hits(pos.x, pos.y, box.size, false)) {
+      root.classList.remove("is-away");
+    }
+
     var goal = goalIndex();
     if (idle) {
       if (scrolling || motionBusy() || goal !== landI) {
