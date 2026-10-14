@@ -182,6 +182,14 @@ def main():
             "We delete reports and screenshots after 12 months, or sooner if you ask at hello@honestping.com."
         )
         check(preview_paragraph in preview, "/privacy is missing the Preview features paragraph")
+        speed_test_paragraph = (
+            "Website speed test. The test runs in your browser and your results are shown only to you. "
+            "We don't store them. To measure your speed, your browser exchanges test data with Cloudflare's servers, "
+            "which see your IP address as part of that connection. We've turned off Cloudflare's collection of test results. "
+            "If you tick 'Remember my plan', your plan speeds are saved in your browser only, and you can clear them with 'Forget my plan'. "
+            "We count how many tests are started and finished and how many people click to get the app, without cookies, IP addresses or results."
+        )
+        check(speed_test_paragraph in preview, "/privacy is missing the website speed test paragraph")
 
         updated_js = (ROOT / "privacy-updated.js").read_text(encoding="utf-8")
         date_match = re.search(r'HONESTPING_POLICY_UPDATED = "([^"]+)"', updated_js)
@@ -235,9 +243,24 @@ def main():
             "the Ears Up history date is still bound to the current policy date",
         )
         check(
-            "<span data-policy-updated>October 14, 2026</span>: Section 3.1 now lists evening gamer test results from a paid 7-day report, kept on your PC for 90 days. HonestPing uses them on your PC to build that report. They aren't sent to us unless you choose to share the report."
+            "Section 3.1 now lists evening gamer test results from a paid 7-day report, kept on your PC for 90 days. HonestPing uses them on your PC to build that report. They aren't sent to us unless you choose to share the report."
             in history_body,
             "history page is missing the evening gamer results entry",
+        )
+        check(
+            "October 14, 2026: Section 3.1 now lists evening gamer test results from a paid 7-day report"
+            in history_body,
+            "the evening gamer history entry is no longer dated October 14, 2026",
+        )
+        check(
+            "data-policy-updated>October 14, 2026</span>: Section 3.1 now lists evening gamer test results"
+            not in history_body,
+            "the evening gamer history date is still bound to the current policy date",
+        )
+        check(
+            "<span data-policy-updated>October 14, 2026</span>: Section 2 now explains the website speed test. The test runs in your browser and your results are shown only to you. We don't store them. To measure your speed, your browser exchanges test data with Cloudflare's servers, which see your IP address as part of that connection. We've turned off Cloudflare's collection of test results. If you tick 'Remember my plan', your plan speeds are saved in your browser only, and you can clear them with 'Forget my plan'. We count how many tests are started and finished and how many people click to get the app, without cookies, IP addresses or results."
+            in history_body,
+            "history page is missing the website speed test entry",
         )
         check(
             'data-policy-updated>October 11, 2026' not in history_body,
