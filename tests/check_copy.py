@@ -31,6 +31,7 @@ BLAME_PHRASES = (
     "your provider is lying",
     "the provider is lying",
     "problem is on your network",
+    "when it is the network",
     "honestping verified",
 )
 ISP_VERIFY = re.compile(r"\bverif(?:y|ied|ies|ication|ications)\b", re.I)
@@ -208,6 +209,8 @@ def self_test():
         ("You got ripped off", False, True),
         ("Whose fault is the glitch?", False, True),
         ("If the problem is on your network, the app says so.", False, True),
+        ("Shorter, calmer calls when it is the network.", False, True),
+        ("Shorter, calmer calls when the path points past the home.", False, False),
         ("HonestPing badge", True, False),
         ("Please verify this badge.", True, True),
         ("Please verify this badge.", False, False),
