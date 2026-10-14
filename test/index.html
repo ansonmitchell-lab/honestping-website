@@ -13,7 +13,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="stylesheet" href="/styles.css?v=20261008a">
-  <link rel="stylesheet" href="/test/speedtest.css?v=20261014c">
+  <link rel="stylesheet" href="/test/speedtest.css?v=20261014d">
   <script>
   document.documentElement.setAttribute("data-st-variant", /(?:^|[?&])variant=waitlist(?:&|$)/.test(location.search) ? "waitlist" : "app");
   </script>
@@ -166,14 +166,16 @@
             <p class="st-app-paid">Free to download for Windows. Pro and the 7-day report are paid.</p>
           </div>
           <div data-variant-waitlist>
-            <p data-waitlist-lead>See your evenings. HonestPing for Windows is coming soon.</p>
-            <form class="st-waitlist" id="waitlist-form" action="mailto:hello@honestping.com" method="get">
-              <label for="waitlist-email">Email address</label>
+            <p data-waitlist-lead>See your evenings. Join the waitlist for the HonestPing app for Windows, then add a 7-day Pro report when you want the full week.</p>
+            <form class="st-waitlist" id="waitlist-form" action="mailto:hello@honestping.com" method="get" novalidate>
+              <label for="waitlist-email">Your email</label>
               <input id="waitlist-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" inputmode="email">
               <p><a href="/privacy">Details in our privacy policy.</a></p>
+              <p class="st-wait-error" data-wait-error hidden>That email doesn't look right. Please check it and try again.</p>
               <button class="btn btn-primary btn-lg" data-cta type="submit">Join the waitlist</button>
             </form>
-            <p class="st-help">Waitlist mail is only used to notify you when HonestPing is available. No extra newsletters unless you ask.</p>
+            <p class="st-wait-paid" data-wait-paid>Free to download for Windows when it launches. Pro and the 7-day report are paid.</p>
+            <p class="st-wait-confirm" data-wait-confirm hidden>Thanks, you're on the waitlist. We'll email you when the HonestPing app for Windows is ready to download. Every email has an unsubscribe link.</p>
           </div>
           <p class="st-phone-note">HonestPing is coming to Android and iOS.</p>
         </div>
@@ -191,6 +193,6 @@
   <script>
   document.getElementById("year").textContent = String(new Date().getFullYear());
   </script>
-  <script type="module" src="/test/speedtest-page.js?v=20261014c"></script>
+  <script type="module" src="/test/speedtest-page.js?v=20261014d"></script>
 </body>
 </html>

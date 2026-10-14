@@ -176,7 +176,8 @@
 }
 [data-st-variant="app"] [data-variant-waitlist],
 [data-st-variant="waitlist"] [data-variant-app] { display: none; }
-.st-app-paid, .st-phone-note { margin: 8px 0 0; }
+.st-app-paid, .st-phone-note, .st-wait-error, .st-wait-confirm, .st-wait-paid { margin: 8px 0 0; }
+.st-wait-error, .st-wait-confirm, .st-wait-paid { color: var(--hp-text); font-weight: 400; }
 .st-phone-note { display: none; }
 .st-waitlist label {
   display: block;

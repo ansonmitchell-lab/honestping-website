@@ -47,8 +47,11 @@ import { count } from "./speedtest-counters.js";
     appLead: "See your evenings. Get the HonestPing app for Windows, then add a 7-day Pro report when you want the full week.",
     appPaid: "Free to download for Windows. Pro and the 7-day report are paid.",
     phone: "HonestPing is coming to Android and iOS.",
-    waitLead: "See your evenings. HonestPing for Windows is coming soon.",
-    waitPrivacy: "Details in our privacy policy."
+    waitLead: "See your evenings. Join the waitlist for the HonestPing app for Windows, then add a 7-day Pro report when you want the full week.",
+    waitPrivacy: "Details in our privacy policy.",
+    waitPaid: "Free to download for Windows when it launches. Pro and the 7-day report are paid.",
+    waitConfirm: "Thanks, you're on the waitlist. We'll email you when the HonestPing app for Windows is ready to download. Every email has an unsubscribe link.",
+    waitError: "That email doesn't look right. Please check it and try again."
   };
 
   function planNumber(input) {
@@ -374,6 +377,12 @@ import { count } from "./speedtest-counters.js";
   if (paid) paid.textContent = LINES.appPaid;
   if (phoneNote) phoneNote.textContent = LINES.phone;
   if (privacyLink) privacyLink.textContent = LINES.waitPrivacy;
+  var waitPaid = root.querySelector("[data-wait-paid]");
+  var waitError = root.querySelector("[data-wait-error]");
+  var waitConfirm = root.querySelector("[data-wait-confirm]");
+  if (waitPaid) waitPaid.textContent = LINES.waitPaid;
+  if (waitError) waitError.textContent = LINES.waitError;
+  if (waitConfirm) waitConfirm.textContent = LINES.waitConfirm;
   root.querySelectorAll("[data-cta]").forEach(function (el) {
     el.addEventListener("click", function () { count("cta_clicked"); });
   });
@@ -383,10 +392,15 @@ import { count } from "./speedtest-counters.js";
       e.preventDefault();
       var emailInput = waitForm.querySelector("input[type='email']");
       var email = ((emailInput && emailInput.value) || "").trim();
-      if (!emailInput || !email || !emailInput.checkValidity()) {
-        if (emailInput) emailInput.reportValidity();
+      var ok = emailInput && email.indexOf("@") > 0 && email.indexOf(".", email.indexOf("@")) > email.indexOf("@") + 1 && email.indexOf(" ") === -1;
+      if (!ok) {
+        if (waitConfirm) waitConfirm.hidden = true;
+        if (waitError) waitError.hidden = false;
+        if (emailInput) emailInput.focus();
         return;
       }
+      if (waitError) waitError.hidden = true;
+      if (waitConfirm) waitConfirm.hidden = false;
       var subject = encodeURIComponent("HonestPing waitlist");
       var body = encodeURIComponent(
         "Please add me to the HonestPing waitlist.\n\nEmail: " + email + "\n"
