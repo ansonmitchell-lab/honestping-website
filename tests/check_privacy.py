@@ -279,6 +279,9 @@ def main():
             "merchant of record",
         ):
             check(heading in planned, f"planned doc is missing {heading}")
+
+        import check_copy
+        failures.extend(check_copy.collect_failures())
     finally:
         server.shutdown()
 
