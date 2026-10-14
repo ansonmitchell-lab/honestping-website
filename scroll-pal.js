@@ -16,6 +16,8 @@
     var stillMover = root.querySelector(".scroll-pal-mover");
     var leapPose = root.querySelector("[data-pose='leap']");
     var sitPose = root.querySelector("[data-pose='sit']");
+    root.classList.remove("is-away");
+    root.classList.add("is-still");
     if (leapPose) leapPose.classList.remove("is-on");
     if (sitPose) sitPose.classList.add("is-on");
     if (stillMover) stillMover.style.transform = "translate3d(16px,140px,0)";

@@ -1443,13 +1443,12 @@ select:focus-visible {
   letter-spacing: -0.4px;
   line-height: 1.25;
   color: var(--hp-brand);
-  text-decoration: none;
-  border-bottom: 1px solid color-mix(in srgb, var(--hp-brand) 45%, transparent);
-  transition: color 0.15s ease, border-color 0.15s ease;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  transition: color 0.15s ease;
 }
 .hero-gaming-hook a:hover {
   color: var(--hp-cyan);
-  border-color: color-mix(in srgb, var(--hp-cyan) 55%, transparent);
 }
 .btn-ghost {
   background: transparent;
@@ -2193,8 +2192,8 @@ select:focus-visible {
 }
 .punch-sub a {
   color: var(--hp-cyan);
-  text-decoration: none;
-  border-bottom: 1px solid color-mix(in srgb, var(--hp-cyan) 40%, transparent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
 }
 .punch-sub a:hover { color: var(--hp-brand); }
 
@@ -3434,9 +3433,12 @@ select:focus-visible {
   .mascot-mini { width: 40px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .scroll-pal { display: block; }
-  .scroll-pal .pal-img { opacity: 0; }
-  .scroll-pal .pal-img[data-pose="sit"] { opacity: 1; }
+  .scroll-pal,
+  .scroll-pal.is-away { display: block; opacity: 1; visibility: visible; }
+  .scroll-pal .pal-img,
+  .scroll-pal .pal-img.is-on { opacity: 0; }
+  .scroll-pal .pal-img[data-pose="sit"],
+  .scroll-pal .pal-img[data-pose="sit"].is-on { opacity: 1; }
   .scroll-pal-mover { transform: translate3d(16px, 140px, 0); }
   .pal-act { animation: none !important; }
 }
@@ -3525,9 +3527,12 @@ select:focus-visible {
 .footer-prefs { width: 100%; margin: 0; }
 html.hp-bar-off .free-band { display: none; }
 html.hp-reduce { scroll-behavior: auto; }
-html.hp-reduce .scroll-pal { display: block; }
-html.hp-reduce .scroll-pal .pal-img { opacity: 0; }
-html.hp-reduce .scroll-pal .pal-img[data-pose="sit"] { opacity: 1; }
+html.hp-reduce .scroll-pal,
+html.hp-reduce .scroll-pal.is-away { display: block; opacity: 1; visibility: visible; }
+html.hp-reduce .scroll-pal .pal-img,
+html.hp-reduce .scroll-pal .pal-img.is-on { opacity: 0; }
+html.hp-reduce .scroll-pal .pal-img[data-pose="sit"],
+html.hp-reduce .scroll-pal .pal-img[data-pose="sit"].is-on { opacity: 1; }
 html.hp-reduce .scroll-pal-mover { transform: translate3d(16px, 140px, 0); }
 
 /* Privacy policy */
