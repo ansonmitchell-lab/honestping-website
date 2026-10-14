@@ -474,6 +474,16 @@
   });
 
   document.querySelectorAll("[data-act]").forEach(function (el) {
+    /* Section poses stay in the HTML as data-src so a cold load does not
+       fetch them before the first paint. Load them when this script starts,
+       which is also when the on-view animation can run. Do not mark the
+       page live: the scroll companion and the dial stay still until a
+       person scrolls, taps, or types. */
+    var held = el.querySelectorAll("img[data-src]");
+    for (var h = 0; h < held.length; h++) {
+      if (!held[h].getAttribute("src")) held[h].setAttribute("src", held[h].getAttribute("data-src"));
+      held[h].removeAttribute("data-src");
+    }
     var onceView = el.getAttribute("data-act") === "zoomies";
     addSlot(el, actApi(el), { priority: 16, replay: !onceView });
   });
