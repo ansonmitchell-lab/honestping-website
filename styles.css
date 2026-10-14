@@ -1743,10 +1743,10 @@ html.is-live .gauge-sweep circle { animation: gauge-sweep 2.4s linear infinite; 
 .mascot-call {
   position: relative;
   display: block;
-  width: 132px;
-  height: 118px;
+  width: 124px;
   margin: 0 0 8px auto;
   justify-self: end;
+  overflow: visible;
 }
 .wfh-title {
   font-size: clamp(22px, 3.4vw, 32px);
@@ -1768,9 +1768,10 @@ html.is-live .gauge-sweep circle { animation: gauge-sweep 2.4s linear infinite; 
   .mascot-call {
     grid-column: 2;
     grid-row: 1 / span 3;
-    width: 156px;
-    height: 128px;
-    margin: 0;
+    width: 128px;
+    height: auto;
+    margin: 0 0 0 auto;
+    align-self: center;
   }
 }
 .wfh-showcase {
@@ -3854,97 +3855,73 @@ html.hp-reduce *::after {
   .hero-stage { max-width: 100%; }
 }
 
-.mascot-call .call-self {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 86px;
+.mascot-call .call-pose {
+  position: relative;
+  display: block;
+  width: 96px;
+  transform-origin: 48% 92%;
+}
+.mascot-call .call-rabbit {
+  width: 96px;
   height: auto;
   display: block;
-  transform-origin: 50% 80%;
 }
-.mascot-call .call-headset {
+.mascot-call .call-phone {
   position: absolute;
-  left: 10px;
-  top: 22px;
-  width: 62px;
-  height: auto;
+  left: 46px;
+  top: 12px;
+  width: 14px;
+  height: 26px;
+  transform: rotate(18deg);
+  transform-origin: 28% 8%;
   pointer-events: none;
 }
-.mascot-call .call-peer {
+.mascot-call .call-arcs {
   position: absolute;
-  right: 0;
-  top: 0;
-  width: 52px;
-  height: 58px;
-  border-radius: 8px;
-  border: 1px solid #1a7d8d;
-  background: #0e2433;
-  overflow: hidden;
-  display: grid;
-  place-items: end center;
+  left: 68px;
+  top: 2px;
+  width: 30px;
+  height: 30px;
+  overflow: visible;
+  pointer-events: none;
 }
-.mascot-call .call-peer img { width: 40px; height: auto; transform-origin: 50% 80%; }
-.mascot-call .call-peer i {
-  position: absolute;
-  left: 6px;
-  top: 6px;
-  width: 3px;
-  height: 8px;
-  border-radius: 2px;
-  background: #45e5ad;
+.mascot-call .call-arcs path {
+  fill: none;
+  stroke: #71def0;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  opacity: 0;
 }
-.mascot-call .call-peer i:nth-child(3) { left: 12px; height: 12px; }
-.mascot-call .call-peer i:nth-child(4) { left: 18px; height: 6px; top: 8px; }
-.mascot-call .call-code {
-  position: absolute;
-  left: 62px;
-  top: 62px;
-  padding: 2px 6px;
-  border-radius: 999px;
-  background: #45e5ad;
-  color: #06202a;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-}
-.mascot-call.is-act .call-self { animation: call-wave 1.4s ease 2; }
-.mascot-call.is-act .call-headset { animation: call-band 1.4s ease 2; }
-.mascot-call.is-act .call-peer { animation: call-tile 1.4s ease 2; }
-.mascot-call.is-act .call-peer img { animation: call-mini 1.4s ease 2; }
-.mascot-call.is-act .call-code { animation: call-share 1.4s ease 2; }
-@keyframes call-wave {
+.mascot-call.is-act .call-pose { animation: call-talk 2.8s ease 1; }
+.mascot-call.is-act .call-phone { animation: call-press 2.8s ease 1; }
+.mascot-call.is-act .call-arcs path { animation: call-arc 2.8s ease 1; }
+.mascot-call.is-act .call-arcs path:nth-child(2) { animation-delay: 0.14s; }
+.mascot-call.is-act .call-arcs path:nth-child(3) { animation-delay: 0.28s; }
+@keyframes call-talk {
   0%, 100% { transform: rotate(0deg); }
-  18% { transform: rotate(-16deg); }
-  38% { transform: rotate(14deg); }
-  58% { transform: rotate(-8deg); }
-  78% { transform: rotate(0deg); }
+  6% { transform: rotate(-3.2deg); }
+  12% { transform: rotate(2.4deg); }
+  20% { transform: rotate(0deg); }
+  46% { transform: rotate(2.6deg); }
+  62% { transform: rotate(0deg); }
+  80% { transform: rotate(-1.6deg); }
 }
-@keyframes call-band {
-  0% { transform: scale(0.6); opacity: 0; }
-  22%, 100% { transform: scale(1); opacity: 1; }
+@keyframes call-press {
+  0%, 100% { transform: rotate(18deg); }
+  7% { transform: rotate(12deg) translate(-1px, 1px); }
+  16% { transform: rotate(18deg); }
+  48% { transform: rotate(13deg) translate(-1px, 1px); }
+  64% { transform: rotate(18deg); }
 }
-@keyframes call-tile {
-  0%, 18% { transform: translate3d(22px, -16px, 0) scale(0.35); opacity: 0; }
-  48%, 100% { transform: none; opacity: 1; }
-}
-@keyframes call-mini {
-  0%, 40% { transform: rotate(0deg); }
-  58% { transform: rotate(-16deg); }
-  76% { transform: rotate(12deg); }
-  100% { transform: rotate(0deg); }
-}
-@keyframes call-share {
-  0%, 22% { transform: translate3d(-26px, 16px, 0); opacity: 0; }
-  50% { transform: translate3d(0, -4px, 0); opacity: 1; }
-  100% { transform: translate3d(20px, -30px, 0); opacity: 1; }
+@keyframes call-arc {
+  0%, 10%, 40%, 100% { opacity: 0; transform: translate(0, 2px); }
+  18%, 32% { opacity: 0.95; transform: translate(2px, -1px); }
+  68%, 82% { opacity: 0.8; transform: translate(3px, -2px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .mascot-call.is-act .call-self,
-  .mascot-call.is-act .call-headset,
-  .mascot-call.is-act .call-peer,
-  .mascot-call.is-act .call-peer img,
-  .mascot-call.is-act .call-code,
+  .mascot-call.is-act .call-pose,
+  .mascot-call.is-act .call-phone,
+  .mascot-call.is-act .call-arcs path,
   .wfh-wave.is-smooth .wave-smooth,
   .wfh-wave.is-glitch .wave-glitch { animation: none; }
 }
