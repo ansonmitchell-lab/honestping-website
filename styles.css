@@ -3876,28 +3876,29 @@ html.hp-reduce *::after {
 .mascot-call.is-act .call-code { animation: call-share 1.4s ease 2; }
 @keyframes call-wave {
   0%, 100% { transform: rotate(0deg); }
-  18% { transform: rotate(-8deg); }
-  36% { transform: rotate(7deg); }
-  52% { transform: rotate(0deg); }
+  18% { transform: rotate(-16deg); }
+  38% { transform: rotate(14deg); }
+  58% { transform: rotate(-8deg); }
+  78% { transform: rotate(0deg); }
 }
 @keyframes call-band {
-  0% { transform: scale(0.7); opacity: 0.4; }
-  16%, 100% { transform: scale(1); opacity: 1; }
+  0% { transform: scale(0.6); opacity: 0; }
+  22%, 100% { transform: scale(1); opacity: 1; }
 }
 @keyframes call-tile {
-  0%, 20% { transform: translate3d(10px, -6px, 0); opacity: 0; }
-  40%, 100% { transform: none; opacity: 1; }
+  0%, 18% { transform: translate3d(22px, -16px, 0) scale(0.35); opacity: 0; }
+  48%, 100% { transform: none; opacity: 1; }
 }
 @keyframes call-mini {
-  0%, 42% { transform: rotate(0deg); }
-  58% { transform: rotate(-8deg); }
-  74% { transform: rotate(6deg); }
+  0%, 40% { transform: rotate(0deg); }
+  58% { transform: rotate(-16deg); }
+  76% { transform: rotate(12deg); }
   100% { transform: rotate(0deg); }
 }
 @keyframes call-share {
-  0%, 28% { transform: translate3d(-18px, 8px, 0); opacity: 0; }
-  48% { opacity: 1; }
-  78%, 100% { transform: translate3d(8px, -16px, 0); opacity: 1; }
+  0%, 22% { transform: translate3d(-26px, 16px, 0); opacity: 0; }
+  50% { transform: translate3d(0, -4px, 0); opacity: 1; }
+  100% { transform: translate3d(20px, -30px, 0); opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .mascot-call.is-act .call-self,
