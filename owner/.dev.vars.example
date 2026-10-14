@@ -1,0 +1,10 @@
+# Local wrangler only. This file is not deployed.
+# Copy to owner/.dev.vars and fill in local experiments. Never commit owner/.dev.vars.
+# ACCESS_TEAM_DOMAIN is the team URL, for example https://your-team.cloudflareaccess.com
+ACCESS_TEAM_DOMAIN=
+ACCESS_AUD=
+# Optional. Leave empty to show Connect site analytics.
+ZONE_ID=
+CF_ANALYTICS_TOKEN=
+# Optional. Leave empty to show not connected. Format is owner/name.
+GITHUB_REPO=
