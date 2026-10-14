@@ -1,12 +1,13 @@
-/* Page controller for the speed test preview. Results stay in this page. */
+/* Page controller. Results stay in this page. Counters never read the plan. */
+import { createEngine } from "./speedtest-engine.js";
+import { count } from "./speedtest-counters.js";
+
 (function () {
-  var engineApi = window.HonestPingSpeedEngine;
-  var counters = window.HonestPingSpeedCounters;
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var root = document.querySelector("[data-speedtest]");
-  if (!root || !engineApi) return;
+  if (!root) return;
 
-  var engine = engineApi.create(engineApi.recommended);
+  var engine = createEngine();
   var cancel = null;
   var running = false;
   var scaleDown = 100;
@@ -21,20 +22,27 @@
   var downInput = root.querySelector("[data-plan-down]");
   var upInput = root.querySelector("[data-plan-up]");
   var remember = root.querySelector("[data-remember]");
-  var hook = root.querySelector("[data-hook]");
+  var forget = root.querySelector("[data-forget]");
   var outcomeEl = root.querySelector("[data-outcome]");
+  var headlineEl = root.querySelector("[data-headline]");
   var percents = root.querySelector("[data-percents]");
+  var varyEl = root.querySelector("[data-variability]");
   var cta = root.querySelector("[data-cta]");
 
   var LINES = {
     snapshot: "One test is a snapshot. Your evenings may differ.",
-    busy: "Ping rose while the line was busy. That often shows up most in the evening.",
-    under: "This snapshot came in under the download you entered. One test cannot say why.",
-    steady: "This snapshot looked steady. Evenings can still differ.",
-    cta: "See your evenings. The HonestPing app tests every evening HonestPing is open and builds a 7 day report."
+    vary: "Speeds vary with Wi-Fi, devices and time of day, and plans usually promise speeds 'up to' a number.",
+    busy: "Ping rose while the line was busy. That can show up more in the evening.",
+    jitter: "Ping moved around a lot during this test. A week of tests shows whether that's a one off or a pattern.",
+    belowHead: "This test came in under your plan.",
+    below: "Lots of things can shape one test, at home and along the way. A week of tests, checked against your plan, gives a clearer picture.",
+    mixedHead: "Mostly healthy, with one thing to watch.",
+    goodHead: "This test looks healthy.",
+    good: "Good news is worth knowing. A week of tests shows whether evenings hold up too.",
+    unclearHead: "We couldn't get a clear reading this time.",
+    unclear: "The test may have been interrupted, or the numbers didn't line up.",
+    cta: "See your evenings. The HonestPing app tests every evening HonestPing is open and builds a 7-day report."
   };
-
-  function $(sel) { return root.querySelector(sel); }
 
   function planNumber(input) {
     var n = Number(String(input.value).replace(/,/g, ""));
@@ -45,7 +53,6 @@
   function fmtMbps(n) {
     if (n == null || !isFinite(n)) return null;
     if (n >= 100) return String(Math.round(n));
-    if (n >= 10) return n.toFixed(1);
     return n.toFixed(1);
   }
 
@@ -103,7 +110,7 @@
   function rateBusy(sample) {
     var busy = busyMs(sample);
     if (busy == null) return "Shows up while download or upload is running.";
-    if (sample.pingMs != null && busy > sample.pingMs + 30) return "Higher while the line is busy";
+    if (sample.pingMs != null && busy > sample.pingMs + 20) return "Higher while the line is busy";
     return "Close to the idle ping";
   }
 
@@ -136,7 +143,7 @@
     setScaleNote("up", scaleUp, planUp);
     setMetric("ping", sample.pingMs == null ? "Waiting" : sample.pingMs + " ms", ratePing(sample.pingMs));
     setMetric("jitter", sample.jitterMs == null ? "Waiting" : sample.jitterMs + " ms", rateJitter(sample.jitterMs));
-    setMetric("loss", "Not measured", "Not in this preview.");
+    setMetric("loss", "Not measured", "Not measured on this test.");
     var busy = busyMs(sample);
     setMetric("busy", busy == null ? "Waiting" : busy + " ms", rateBusy(sample));
     paintUses(sample);
@@ -174,7 +181,7 @@
     if (phase === "download") return "Measuring download";
     if (phase === "upload") return "Measuring upload";
     if (phase === "done") return "Snapshot ready";
-    if (phase === "latency") return "Checking delay";
+    if (phase === "latency" || phase === "latencyUnderLoad") return "Checking delay";
     return "Ready when you are";
   }
 
@@ -203,39 +210,87 @@
       loadedUpMs: null,
       loss: null
     });
-    if (percents) percents.textContent = "Enter a plan to see a percent of that plan.";
-    if (outcomeEl) outcomeEl.textContent = "The result line appears here.";
+    if (percents) {
+      percents.textContent = "";
+      percents.hidden = true;
+    }
+    if (varyEl) {
+      varyEl.textContent = LINES.vary;
+      varyEl.hidden = true;
+    }
+    if (headlineEl) {
+      headlineEl.textContent = "";
+      headlineEl.hidden = true;
+    }
+    if (outcomeEl) {
+      outcomeEl.textContent = "";
+      outcomeEl.hidden = true;
+    }
   }
 
-  function percentLine(measured, plan, which) {
-    if (!plan || measured == null) return "";
-    var n = Math.round((measured / plan) * 100);
-    return "About " + n + "% of your plan\u2019s " + which + ".";
+  function percentText(sample) {
+    var planDown = planNumber(downInput);
+    var planUp = planNumber(upInput);
+    var down = sample.downloadMbps;
+    var up = sample.uploadMbps;
+    if (planDown && down != null && planUp && up != null) {
+      return "About " + Math.round(down / planDown * 100) + "% of your plan's download and " + Math.round(up / planUp * 100) + "% of its upload on this test.";
+    }
+    if (planDown && down != null) {
+      return "About " + Math.round(down / planDown * 100) + "% of your plan's download on this test.";
+    }
+    if (planUp && up != null) {
+      return "About " + Math.round(up / planUp * 100) + "% of your plan's upload on this test.";
+    }
+    return "";
+  }
+
+  function chooseOutcome(sample) {
+    var planDown = planNumber(downInput);
+    var planUp = planNumber(upInput);
+    if (sample.downloadMbps == null && sample.uploadMbps == null) {
+      return { head: LINES.unclearHead, line: LINES.unclear };
+    }
+    var under = (planDown && sample.downloadMbps != null && sample.downloadMbps < planDown)
+      || (planUp && sample.uploadMbps != null && sample.uploadMbps < planUp);
+    if (under) return { head: LINES.belowHead, line: LINES.below };
+    var busy = busyMs(sample);
+    if (sample.pingMs != null && busy != null && busy > sample.pingMs + 20) {
+      return { head: LINES.mixedHead, line: LINES.busy };
+    }
+    if (sample.jitterMs != null && sample.jitterMs >= 20) {
+      return { head: LINES.mixedHead, line: LINES.jitter };
+    }
+    return { head: LINES.goodHead, line: LINES.good };
   }
 
   function finish(sample) {
     running = false;
     cancel = null;
     startBtn.disabled = false;
-    startBtn.textContent = "Run again";
+    startBtn.textContent = "Run it again";
     setPhase("done");
     paint(sample);
-    var planDown = planNumber(downInput);
-    var planUp = planNumber(upInput);
-    var bits = [];
-    var downLine = percentLine(sample.downloadMbps, planDown, "download");
-    var upLine = percentLine(sample.uploadMbps, planUp, "upload");
-    if (downLine) bits.push(downLine);
-    if (upLine) bits.push(upLine);
-    if (percents) percents.textContent = bits.length ? bits.join(" ") : "Enter a plan to see a percent of that plan.";
-    var busy = busyMs(sample);
-    var key = "steady";
-    if (sample.pingMs != null && busy != null && busy > sample.pingMs + 30) key = "busy";
-    else if (planDown && sample.downloadMbps < planDown * 0.8) key = "under";
-    if (outcomeEl) outcomeEl.textContent = LINES[key];
-    if (hook) hook.hidden = false;
+    var line = percentText(sample);
+    if (percents) {
+      percents.textContent = line;
+      percents.hidden = !line;
+    }
+    if (varyEl) {
+      varyEl.textContent = LINES.vary;
+      varyEl.hidden = !line;
+    }
+    var chosen = chooseOutcome(sample);
+    if (headlineEl) {
+      headlineEl.textContent = chosen.head;
+      headlineEl.hidden = !chosen.head;
+    }
+    if (outcomeEl) {
+      outcomeEl.textContent = chosen.line;
+      outcomeEl.hidden = !chosen.line;
+    }
     hop();
-    if (counters) counters.count("test_completed");
+    count("test_completed");
   }
 
   function start() {
@@ -243,13 +298,12 @@
     if (cancel) cancel();
     running = true;
     resetMeters();
-    if (hook) hook.hidden = false;
     startBtn.disabled = true;
     startBtn.textContent = "Running";
     setPhase("latency");
     hop();
-    if (counters) counters.count("test_started");
-    var active = engineApi.create(engineApi.recommended);
+    count("test_started");
+    var active = createEngine();
     cancel = active.start(function (sample) {
       setPhase(sample.phase);
       paint(sample);
@@ -257,6 +311,7 @@
   }
 
   function loadPlan() {
+    remember.checked = false;
     try {
       var raw = localStorage.getItem(planKey);
       if (!raw) return;
@@ -281,6 +336,14 @@
     } catch (e) {}
   }
 
+  function forgetPlan() {
+    downInput.value = "";
+    upInput.value = "";
+    remember.checked = false;
+    try { localStorage.removeItem(planKey); } catch (e) {}
+    resetMeters();
+  }
+
   if (rabbit) {
     rabbit.addEventListener("animationend", function () {
       rabbit.classList.remove("is-hop");
@@ -290,11 +353,8 @@
   downInput.addEventListener("input", savePlan);
   upInput.addEventListener("input", savePlan);
   remember.addEventListener("change", savePlan);
-  if (cta) {
-    cta.addEventListener("click", function () {
-      if (counters) counters.count("cta_clicked");
-    });
-  }
+  if (forget) forget.addEventListener("click", forgetPlan);
+  if (cta) cta.addEventListener("click", function () { count("cta_clicked"); });
   loadPlan();
   resetMeters();
   setPhase("idle");

@@ -1,12 +1,10 @@
 .st-page { padding-bottom: 48px; }
-.st-preview {
-  margin: 18px 0 0;
-  padding: 10px 12px;
-  border: 1px solid var(--hp-line);
-  border-radius: var(--hp-radius-sm);
-  background: var(--hp-subtle);
-  color: var(--hp-muted);
-  font-size: 13px;
+.st-privacy-line {
+  max-width: 36rem;
+  margin: 12px 0 0;
+  color: var(--hp-text);
+  font-size: 14px;
+  font-weight: 400;
 }
 .st-hero { padding-top: 28px; }
 .st-kicker {
@@ -163,8 +161,26 @@
   color: var(--hp-muted);
   font-size: 13px;
 }
-.st-check { margin-top: 14px; font-weight: 500; }
+.st-plan-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 14px;
+}
+.st-check { margin: 0; font-weight: 500; }
 .st-check input { margin-right: 8px; }
+.st-percent, .st-subline, .st-hook [data-outcome], .st-hook [data-snapshot], .st-hook [data-cta-lead] {
+  color: var(--hp-text);
+  font-weight: 400;
+}
+.st-percent, .st-subline { margin: 8px 0; }
+.st-outcome-head {
+  margin: 16px 0 6px;
+  color: var(--hp-text);
+  font-size: 18px;
+  font-weight: 600;
+}
 .st-tag {
   display: inline-block;
   margin: 0 8px 6px 0;

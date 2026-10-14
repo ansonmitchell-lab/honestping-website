@@ -13,7 +13,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="stylesheet" href="/styles.css?v=20261008a">
-  <link rel="stylesheet" href="/test/speedtest.css?v=20261014a">
+  <link rel="stylesheet" href="/test/speedtest.css?v=20261014b">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -36,14 +36,14 @@
 
   <main id="main" class="st-page" data-speedtest>
     <div class="wrap">
-      <p class="st-preview">Preview. The meters use a stand-in until the test engine is chosen. This is not a measurement of your line.</p>
       <section class="st-hero" aria-labelledby="st-heading">
         <p class="st-kicker">Speed test</p>
         <div class="st-hero-row">
           <div>
             <h1 id="st-heading">A snapshot of this connection.</h1>
             <p class="st-lede">Download and upload each get their own meter. Neither one is filled from the other.</p>
-            <button class="btn btn-primary st-start" type="button" data-start>Start test</button>
+            <button class="btn btn-primary st-start" type="button" data-start>Start</button>
+            <p class="st-privacy-line">Your results are worked out in your browser and shown only to you. We don't store them. <a href="/privacy">Details in our privacy policy</a>.</p>
             <p class="st-phase" data-phase>Ready when you are</p>
           </div>
           <div class="st-rabbit" data-rabbit role="img" aria-label="HonestPing rabbit">
@@ -103,7 +103,7 @@
           <article class="st-metric">
             <strong>Packet loss</strong>
             <span class="st-metric-value" data-metric="loss">Not measured</span>
-            <p data-note="loss">Not in this preview.</p>
+            <p data-note="loss">Not measured on this test.</p>
           </article>
           <article class="st-metric">
             <strong>Ping while busy</strong>
@@ -135,49 +135,32 @@
         <h2 id="st-plan-h">Your plan, if you want a percent</h2>
         <div class="st-plan">
           <div class="st-plan-grid">
-            <label>Your plan download
+            <label>Your plan download (Mbps)
               <input data-plan-down type="text" inputmode="decimal" autocomplete="off" maxlength="8" placeholder="Mbps">
             </label>
-            <label>Your plan upload
+            <label>Your plan upload (Mbps)
               <input data-plan-up type="text" inputmode="decimal" autocomplete="off" maxlength="8" placeholder="Mbps">
             </label>
           </div>
-          <label class="st-check"><input data-remember type="checkbox"> Remember my plan on this device</label>
-          <p class="st-help">Optional. Used only to show a percent of plan. No price. Nothing here is sent.</p>
+          <div class="st-plan-actions">
+            <label class="st-check"><input data-remember type="checkbox"> Remember my plan</label>
+            <button class="btn btn-ghost" type="button" data-forget>Forget my plan</button>
+          </div>
+          <p class="st-help">Optional. Your plan speeds stay in this page. Tick "Remember my plan" to keep them in this browser.</p>
         </div>
       </section>
 
       <section class="st-section" aria-labelledby="st-hook-h">
         <h2 id="st-hook-h">After the snapshot</h2>
         <div class="st-hook" data-hook>
-          <p><span class="st-tag">[LEGAL]</span> One test is a snapshot. Your evenings may differ.</p>
-          <p><span class="st-tag">[LEGAL]</span> <span data-percents>Enter a plan to see a percent of that plan.</span></p>
-          <p><span class="st-tag">[LEGAL]</span> <span data-outcome>The result line appears here.</span></p>
-          <p><span class="st-tag">[LEGAL] [MARKETING]</span> See your evenings. The HonestPing app tests every evening HonestPing is open and builds a 7 day report.</p>
+          <p data-snapshot>One test is a snapshot. Your evenings may differ.</p>
+          <p class="st-percent" data-percents hidden></p>
+          <p class="st-subline" data-variability hidden>Speeds vary with Wi-Fi, devices and time of day, and plans usually promise speeds 'up to' a number.</p>
+          <h3 class="st-outcome-head" data-headline hidden></h3>
+          <p data-outcome hidden></p>
+          <p data-cta-lead>See your evenings. The HonestPing app tests every evening HonestPing is open and builds a 7-day report.</p>
           <p><a class="btn btn-primary btn-lg" data-cta href="/?src=webtest#waitlist">Get the app</a></p>
-          <p class="st-fine">The app is not on this page. This opens the waitlist. No price on this page.</p>
         </div>
-      </section>
-
-      <section class="st-section" aria-labelledby="st-privacy-h">
-        <h2 id="st-privacy-h">Privacy note</h2>
-        <div class="st-draft">
-          <p><span class="st-tag">[LEGAL]</span> Placeholder, not final. This preview runs a stand-in on this page. It does not contact outside test servers, and it does not save your result. If a live engine is turned on later, this note has to say which servers are contacted and whether those results are grouped. Remember my plan, if you tick it, stays on this device only.</p>
-        </div>
-      </section>
-
-      <section class="st-section">
-        <details class="st-draft">
-          <summary>Draft result lines for review</summary>
-          <ul>
-            <li><span class="st-tag">[LEGAL]</span> One test is a snapshot. Your evenings may differ.</li>
-            <li><span class="st-tag">[LEGAL]</span> Ping rose while the line was busy. That often shows up most in the evening.</li>
-            <li><span class="st-tag">[LEGAL]</span> This snapshot came in under the download you entered. One test cannot say why.</li>
-            <li><span class="st-tag">[LEGAL]</span> This snapshot looked steady. Evenings can still differ.</li>
-            <li><span class="st-tag">[LEGAL]</span> About 91% of your plan’s download. The percent is an example of the wording. The page uses the plan you enter.</li>
-            <li><span class="st-tag">[LEGAL] [MARKETING]</span> See your evenings. The HonestPing app tests every evening HonestPing is open and builds a 7 day report.</li>
-          </ul>
-        </details>
       </section>
     </div>
   </main>
@@ -192,8 +175,6 @@
   <script>
   document.getElementById("year").textContent = String(new Date().getFullYear());
   </script>
-  <script src="/test/speedtest-counters.js?v=20261014a" defer></script>
-  <script src="/test/speedtest-engine.js?v=20261014a" defer></script>
-  <script src="/test/speedtest-page.js?v=20261014a" defer></script>
+  <script type="module" src="/test/speedtest-page.js?v=20261014b"></script>
 </body>
 </html>
