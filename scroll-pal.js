@@ -1,10 +1,10 @@
 /* Scroll companion. No rail. Scroll progress walks a path of perches
    down the page, and the rabbit hops between the left and right gutters.
-   It stays on screen at full opacity, including beside the hero, the
-   sample week, money tiles, legal notes, and the hops card.
-   It does not perch on those, and it stays off the gamer tier row.
+   It stays on screen at full opacity, including beside the hero and the
+   sample week, and it plays a short idle, then another every few seconds.
+   It never overlaps money tiles or legal text: those blocks push it aside.
+   It does not perch on them, and it stays off the gamer tier row.
    While another rabbit moves, it holds still. While it idles, the others hold.
-   After it settles, it plays a short idle, then another every few seconds.
    The coin-roll tumble stays in this file and stays off.
    Reduced motion leaves one still pose in the gutter. */
 (function () {
@@ -227,7 +227,7 @@
   }
 
   function cornerBlocked(x, y, size) {
-    var nodes = document.querySelectorAll("a.btn, button, input, textarea, .waitlist-form, .pal-hide");
+    var nodes = document.querySelectorAll("a.btn, button, input, textarea, .waitlist-form, .pal-hide, .week-tiles, .app7-money, .overpay-ways, .sourced-cite, .footer-privacy, .waitlist-privacy");
     for (var i = 0; i < nodes.length; i++) {
       var r = nodes[i].getBoundingClientRect();
       if (r.width < 2 || r.height < 2) continue;
@@ -252,7 +252,7 @@
         var win = el.closest("#preview .window");
         if (win && samples[i][1] <= win.getBoundingClientRect().top + 46) continue;
       }
-      if (el.closest(".mascot-accent, .crest-mark, .hero-mascot, .mascot-sleep, .hop-explain, .free-bar, .mascot-play, .pal-hide, .waitlist-form, button, a, input, textarea, h1, h2, h3, h4, p, li, figcaption, label, .section-label, .card, .tier-card, .tier-row")) return true;
+      if (el.closest(".mascot-accent, .crest-mark, .hero-mascot, .mascot-sleep, .hop-explain, .free-bar, .mascot-play, .pal-hide, .week-tiles, .app7-money, .overpay-ways, .sourced-cite, .footer-privacy, .waitlist-privacy, .waitlist-form, button, a, input, textarea, h1, h2, h3, h4, p, li, figcaption, label, .section-label, .card, .tier-card, .tier-row")) return true;
     }
     return false;
   }

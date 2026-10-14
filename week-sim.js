@@ -67,7 +67,7 @@
 
   function speedCopy(summary) {
     if (summary.good) return "Your plan held up this week.";
-    return "You may be paying about " + money(summary.monthly) + "/month for speed you don't get.";
+    return "You may not be getting what you pay for";
   }
 
   function pick(total, count) {
@@ -198,8 +198,8 @@
     }
     if (!summary.good) {
       return {
-        title: speedCopy(summary),
-        detail: "About " + money(summary.yearly) + " a year. Estimates only. Your provider decides."
+        title: "You may not be getting what you pay for",
+        detail: "About " + money(summary.monthly) + "/month, about " + money(summary.yearly) + " a year. Estimates only. Your provider decides."
       };
     }
     return {
@@ -252,8 +252,8 @@
   var detailEl = document.getElementById("try-detail");
   var strip = document.getElementById("try-strip");
   var againBtn = document.getElementById("try-again");
-  var quietEl = document.getElementById("try-quiet");
-  if (!form || !planEl || !billEl || !useEl || !errorEl || !runBtn || !skipBtn || !live || !stage || !ringNum || !countEl || !dayEl || !ring || !barEl || !nowEl || !soFarEl || !slowEl || !speedEl || !fitEl || !detailEl || !strip || !againBtn || !quietEl) return;
+  var againBtn = document.getElementById("try-again");
+  if (!form || !planEl || !billEl || !useEl || !errorEl || !runBtn || !skipBtn || !live || !stage || !ringNum || !countEl || !dayEl || !ring || !barEl || !nowEl || !soFarEl || !slowEl || !speedEl || !fitEl || !detailEl || !strip || !againBtn) return;
 
   ring.style.strokeDasharray = "0 " + RING_C;
 
@@ -450,7 +450,6 @@
     stage.hidden = false;
     skipBtn.hidden = false;
     againBtn.hidden = true;
-    quietEl.hidden = true;
   }
 
   function finish(announce) {
@@ -464,7 +463,6 @@
     stage.hidden = false;
     skipBtn.hidden = true;
     againBtn.hidden = false;
-    quietEl.hidden = false;
     summary = render(21);
     if (announce && summary) live.textContent = resultAnnouncement(summary, summary.fit);
     stage.focus();

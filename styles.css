@@ -2729,6 +2729,20 @@ summary:focus-visible {
 }
 .good-news h3 { font-size: 18px; font-weight: 600; color: var(--hp-green); }
 .good-news p { font-size: 14.5px; color: var(--hp-text); }
+.good-news-kicker {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--hp-muted);
+}
+.app7-verdict {
+  margin: 4px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--hp-text);
+}
 .user-types-head {
   display: grid;
   gap: 16px;
