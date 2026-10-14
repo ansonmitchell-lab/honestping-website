@@ -580,15 +580,15 @@
       x = arc.from.x + dx * e;
       y = arc.from.y + dy * e;
       lift = Math.sin(Math.PI * p) * hop.height;
-      if (p < 0.22) {
-        sy = 1.14;
-        sx = 0.9;
-      } else if (p > 0.84) {
-        var land = (p - 0.84) / 0.16;
-        var wave = Math.sin(land * Math.PI);
-        sy = 1 - wave * 0.18;
-        sx = 1 + wave * 0.1;
-        if (!hop.puffed && land > 0.12) {
+      var take = p < 0.2 ? Math.sin((p / 0.2) * Math.PI) : 0;
+      var landWave = p > 0.78 ? Math.sin(((p - 0.78) / 0.22) * Math.PI) : 0;
+      if (take) {
+        sy = 1 + 0.12 * take;
+        sx = 1 - 0.08 * take;
+      } else if (landWave) {
+        sy = 1 - 0.16 * landWave;
+        sx = 1 + 0.1 * landWave;
+        if (!hop.puffed && p > 0.86) {
           hop.puffed = true;
           puff(now);
         }
