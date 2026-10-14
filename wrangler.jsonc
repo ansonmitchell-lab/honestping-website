@@ -1,0 +1,52 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "honestping",
+  "pages_build_output_dir": ".",
+  "compatibility_date": "2026-10-07",
+  "account_id": "4e7e5db788ca85b49af0442d922ebc6e",
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "head_sampling_rate": 1 },
+    "traces": { "enabled": true, "head_sampling_rate": 1 }
+  },
+  // Pages Functions cannot use a send_email binding. Do not add one here.
+  // A Pages deploy will not email hello@honestping.com. The preview that can send mail is the
+  // Worker honestping-web-preview in wrangler.worker.jsonc (env.preview).
+  // Top level is the production Pages config and the local default.
+  // preview_database_id keeps `wrangler dev --remote` and `migrations apply --preview` off production.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "honestping-waitlist",
+      "database_id": "c732d15a-f4c9-4f7d-8588-41f7774d41d1",
+      "preview_database_id": "834af7c2-165f-4fb4-92b9-49b1aa0b3eb6",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "TURNSTILE_HOSTNAMES": "www.honestping.com,honestping.com"
+  },
+  "secrets": {
+    "required": ["TURNSTILE_SECRET"]
+  },
+  // Not the site preview. Pages cannot send the notification.
+  // Use wrangler.worker.jsonc env.preview (honestping-web-preview) for that.
+  "env": {
+    "preview": {
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "honestping-waitlist-preview",
+          "database_id": "834af7c2-165f-4fb4-92b9-49b1aa0b3eb6",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "vars": {
+        "TURNSTILE_HOSTNAMES": ".honestping.pages.dev"
+      },
+      "secrets": {
+        "required": ["TURNSTILE_SECRET"]
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "honestping-website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test --test-concurrency=1 test/*.test.mjs",
+    "dev": "wrangler pages dev . --port 8788",
+    "check:worker": "wrangler deploy --dry-run --outdir /tmp/honestping-worker-check --config wrangler.worker.jsonc"
+  },
+  "devDependencies": {
+    "wrangler": "^4.148.0"
+  }
+}
