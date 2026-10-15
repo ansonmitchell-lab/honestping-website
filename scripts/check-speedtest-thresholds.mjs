@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { BRANCH_HOOKS_ENABLED, THRESHOLDS, HOOK_THRESHOLDS, ratePing, rateJitter, rateBusy, useLine, isPoorResult } from "../test/speedtest-config.js";
+import { BRANCH_HOOKS_ENABLED, THRESHOLDS, HOOK_THRESHOLDS, ratePing, rateJitter, rateBusy, useLine, isPoorResult, loadedBusyMs } from "../test/speedtest-config.js";
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const page = fs.readFileSync(path.join(root, "test", "speedtest-page.js"), "utf8");
@@ -62,6 +62,47 @@ check(useLine("gaming", { pingMs: 35, jitterMs: 8 }) === "Looks playable in this
 check(useLine("gaming", { pingMs: 35, jitterMs: 8.1 }) === "A game may feel the delay in this snapshot.", "gaming just over jitter");
 check(useLine("streaming", calm) === "This snapshot has room for a high quality stream.", "stream at the high cutoff");
 check(useLine("streaming", { pingMs: 20, jitterMs: 2, downloadMbps: 4.9 }) === "A stream may pause on this snapshot.", "stream just under the step cutoff");
+
+function objFrom(src, name) {
+  const token = "var " + name + " = ";
+  const i = src.indexOf(token);
+  if (i < 0) throw new Error("no obj " + name);
+  const j = src.indexOf("{", i);
+  let d = 0;
+  for (let k = j; k < src.length; k++) {
+    if (src[k] === "{") d++;
+    else if (src[k] === "}" && --d === 0) return src.slice(j, k + 1);
+  }
+  throw new Error("unclosed " + name);
+}
+
+const LINES = new Function("return " + objFrom(page, "LINES"))();
+const chooseOutcome = new Function(
+  "THRESHOLDS",
+  "LINES",
+  "loadedBusyMs",
+  "var unclearRuns = 0;\n" + fnFrom(page, "busyMs") + "\n" + fnFrom(page, "chooseOutcome") + ";\nreturn chooseOutcome;"
+)(THRESHOLDS, LINES, loadedBusyMs);
+
+/* regress.js expected "good" for download 100, no upload, ping 20, jitter 14.9,
+   loaded 25. That contradicts the locked thresholds: 14.9 is under outcomeJitterMs
+   (15) but over callsJitterMs (10), so the call hint is negative and the headline
+   is mixed. A nearby reading must follow the same rule. */
+function headlineReading(jitterMs) {
+  return chooseOutcome(
+    { downloadMbps: 100, uploadMbps: null, pingMs: 20, jitterMs: jitterMs, loadedDownMs: 25 },
+    { show: false }
+  );
+}
+const callLine = "A call may notice the delay in this snapshot.";
+const near = headlineReading(14.8);
+const edge = headlineReading(14.9);
+const uneven = headlineReading(15);
+check(near.kind === "mixed" && near.head === LINES.mixedHead && near.line === callLine, "jitter 14.8 uses the call hint, not a healthy headline");
+check(edge.kind === near.kind && edge.head === near.head && edge.line === near.line, "jitter 14.9 matches the nearby reading");
+check(uneven.kind === "mixed" && uneven.head === LINES.mixedHead && uneven.line === LINES.jitter, "jitter 15 uses the uneven headline");
+check(near.head !== LINES.goodHead && edge.head !== LINES.goodHead && uneven.head !== LINES.goodHead, "these readings stay off the healthy headline");
+check(!fnFrom(page, "chooseOutcome").includes("14.9"), "chooseOutcome has no exact jitter special case");
 
 const growScale = new Function("THRESHOLDS", fnFrom(page, "growScale") + ";return growScale")(THRESHOLDS);
 check(growScale(100, 80, 100) === 125, "reading at or below plan x1.25 keeps that scale");

@@ -281,10 +281,6 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
     if (sample.jitterMs != null && sample.jitterMs >= THRESHOLDS.outcomeJitterMs) {
       return { kind: "mixed", head: LINES.mixedHead, line: LINES.jitter };
     }
-    /* 14.9 ms is under the uneven cutoff. This object is not a grid cell. */
-    if (sample.downloadMbps === 100 && sample.uploadMbps == null && sample.pingMs === 20 && sample.jitterMs === 14.9 && sample.loadedDownMs === 25) {
-      return { kind: "good", head: LINES.goodHead, line: LINES.good };
-    }
     if (sample.pingMs != null && sample.pingMs > THRESHOLDS.pingFineMs) {
       return { kind: "mixed", head: LINES.mixedHead, line: "A call may notice the delay in this snapshot." };
     }
