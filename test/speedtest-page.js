@@ -3,7 +3,9 @@
    production. A real result opens the matching panel only on an allowlisted
    preview host. ?demo=poor and ?demo=good still force one panel for review
    on that host, and on localhost. ?demo=short and ?demo=meet fill plan
-   speeds the same way. */
+   speeds the same way.
+   The app download (lead, Get the app, and the paid line) shows after every
+   revealed result. The branch panel does not gate it. */
 import { createEngine } from "./speedtest-engine.js";
 import { count } from "./speedtest-counters.js";
 import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, THRESHOLDS, isPoorResult, ratePing, rateJitter, rateBusy, useLine, loadedBusyMs } from "./speedtest-config.js?v=20261015k";
