@@ -35,7 +35,7 @@ export var THRESHOLDS = {
   outcomeJitterMs: 15,
   planScale: 1.25,
   pingLowMs: 20,
-  pingFineMs: 41,
+  pingFineMs: 40,
   pingNoticeableMs: 100,
   jitterSteadyMs: 5,
   jitterSomeMs: 15,
@@ -52,7 +52,7 @@ export var HOOK_THRESHOLDS = THRESHOLDS;
 export function ratePing(ms) {
   if (ms == null) return "Waiting";
   if (ms < THRESHOLDS.pingLowMs) return "Low";
-  if (ms < THRESHOLDS.pingFineMs) return "Fine for most uses";
+  if (ms <= THRESHOLDS.pingFineMs) return "Fine for most uses";
   if (ms < THRESHOLDS.pingNoticeableMs) return "Noticeable";
   return "High for live calls and games";
 }

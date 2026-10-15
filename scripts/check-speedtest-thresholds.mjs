@@ -26,7 +26,7 @@ check(BRANCH_HOOKS_ENABLED === false, "production flag stays off");
 check(HOOK_THRESHOLDS === THRESHOLDS, "hook thresholds are the same config");
 check(THRESHOLDS.planRatio === 0.5 && THRESHOLDS.loadedLatencyMs === 100 && THRESHOLDS.busyGapMs === 20 && THRESHOLDS.jitterMs === 30, "poor hook cutoffs stay locked");
 check(THRESHOLDS.outcomeJitterMs === 15, "mixed headline starts when jitter is uneven");
-check(THRESHOLDS.pingFineMs === 41, "fine ping includes 40 and noticeable starts at 41");
+check(THRESHOLDS.pingFineMs === 40, "fine ping includes 40 and noticeable starts at 41");
 check(THRESHOLDS.planScale === 1.25, "plan scale stays 1.25");
 
 check(isPoorResult({ downloadMbps: 50, uploadMbps: 20, pingMs: 20, jitterMs: 3, loadedDownMs: 25 }, { down: 100, up: null }) === false, "exactly half the plan is not poor");
