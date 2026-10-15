@@ -34,9 +34,7 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
   var outcomeEl = root.querySelector("[data-outcome]");
   var headlineEl = root.querySelector("[data-headline]");
   var shortfallEl = root.querySelector("[data-shortfall]");
-  var shortDownEl = root.querySelector("[data-short-down]");
-  var shortUpEl = root.querySelector("[data-short-up]");
-  var shortCalmEl = root.querySelector("[data-short-calm]");
+  var shortPlanEl = root.querySelector("[data-short-plan]");
   var varyEl = root.querySelector("[data-variability]");
   var snapshotEl = root.querySelector("[data-snapshot]");
   var ctaLead = root.querySelector("[data-cta-lead]");
@@ -52,15 +50,17 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
   var revealed = false;
 
   var LINES = {
-    snapshot: "One test is a snapshot. A 7-day report shows the full week.",
+    snapshot: "One test is a snapshot. Your evenings may differ.",
     busy: "Ping rose while the line was busy. That can show up more in the evening.",
-    jitter: "Ping moved around a lot during this test.",
+    jitter: "Ping moved around a lot during this test. A week of tests shows whether that's a one off or a pattern.",
     mixedHead: "Mostly healthy, with one thing to watch.",
+    belowHead: "This test came in under your plan.",
+    below: "Lots of things can shape one test, at home and along the way. A week of tests, checked against your plan, gives a clearer picture.",
     goodHead: "This test looks healthy.",
-    good: "Good news is worth knowing.",
+    good: "Good news is worth knowing. A week of tests shows whether evenings hold up too.",
     unclearHead: "We couldn't get a clear reading this time.",
     unclear: "The test may have been interrupted, or the numbers didn't line up.",
-    unclearAgain: "Some connections are hard to read in one go.",
+    unclearAgain: "Some connections are hard to read in one go. The app can test over a week and show what's typical.",
     appLead: "See your evenings. Get the HonestPing app for Windows, then add a 7-day Pro report when you want the full week.",
     appPaid: "Free to download for Windows. Pro and the 7-day report are paid.",
     phone: "HonestPing is coming to Android and iOS.",
@@ -294,18 +294,10 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
   function paintShortfall(sample) {
     var report = sample
       ? shortfallReport(sample, plansEntered())
-      : { show: false, downloadLine: "", uploadLine: "", calm: "", vary: "" };
-    if (shortDownEl) {
-      shortDownEl.textContent = report.downloadLine;
-      shortDownEl.hidden = !report.downloadLine;
-    }
-    if (shortUpEl) {
-      shortUpEl.textContent = report.uploadLine;
-      shortUpEl.hidden = !report.uploadLine;
-    }
-    if (shortCalmEl) {
-      shortCalmEl.textContent = report.show ? SHORTFALL_COPY.calm : "";
-      shortCalmEl.hidden = !report.show;
+      : { show: false, planLine: "", vary: "" };
+    if (shortPlanEl) {
+      shortPlanEl.textContent = report.planLine;
+      shortPlanEl.hidden = !report.planLine;
     }
     if (varyEl) {
       varyEl.textContent = report.show ? SHORTFALL_COPY.vary : "";
@@ -325,7 +317,7 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
       };
     }
     unclearRuns = 0;
-    if (report && report.show) return { kind: "below", head: "", line: "" };
+    if (report && report.show) return { kind: "below", head: LINES.belowHead, line: LINES.below };
     var busy = busyMs(sample);
     if (sample.pingMs != null && busy != null && busy > sample.pingMs + 20) {
       return { kind: "mixed", head: LINES.mixedHead, line: LINES.busy };
@@ -622,7 +614,6 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
     });
   }
   if (snapshotEl) snapshotEl.textContent = LINES.snapshot;
-  if (shortCalmEl) shortCalmEl.textContent = SHORTFALL_COPY.calm;
   if (varyEl) varyEl.textContent = SHORTFALL_COPY.vary;
   loadPlan();
   applyPreviewPlan();

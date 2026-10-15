@@ -207,23 +207,45 @@ if (/<input[^>]*type="checkbox"/i.test(waitlistBlock)) {
   problems.push("test/index.html waitlist block has a checkbox");
 }
 
-const snapshotLine = "One test is a snapshot. A 7-day report shows the full week.";
-const calmLine = "You may not be getting the speed you pay for.";
-const varyLine = "Speeds vary with Wi-Fi, devices and time of day, and plans usually promise speeds up to a number.";
+const snapshotLine = "One test is a snapshot. Your evenings may differ.";
+const varyLine = "Speeds vary with Wi-Fi, devices and time of day, and plans usually promise speeds 'up to' a number.";
+const planHelper = 'Optional. Your plan speeds stay in this page. Tick "Remember my plan" to keep them in this browser.';
+const fullGood = "Good news is worth knowing. A week of tests shows whether evenings hold up too.";
 for (const line of [snapshotLine]) {
   if (!page.includes(line)) problems.push("test/index.html is missing approved line: " + line);
   if (!pageJs.includes(line)) problems.push("test/speedtest-page.js is missing approved line: " + line);
 }
 for (const line of [
-  calmLine,
   varyLine,
-  "About {n}% of your plan's download speed in this test.",
-  "About {n}% of your plan's upload speed in this test."
+  "About {n}% of your plan's download and {m}% of its upload on this test.",
+  "About {n}% of your plan's download on this test.",
+  "About {n}% of your plan's upload on this test."
 ]) {
   if (!shortfallJs.includes(line)) problems.push("test/speedtest-shortfall.js is missing approved line: " + line);
 }
-for (const line of [calmLine, varyLine, "Forget my plan", "Remember my plan"]) {
+for (const line of [
+  fullGood,
+  "This test came in under your plan.",
+  "Lots of things can shape one test, at home and along the way. A week of tests, checked against your plan, gives a clearer picture.",
+  "Ping moved around a lot during this test. A week of tests shows whether that's a one off or a pattern.",
+  "Some connections are hard to read in one go. The app can test over a week and show what's typical."
+]) {
+  if (!pageJs.includes(line)) problems.push("test/speedtest-page.js is missing approved line: " + line);
+}
+for (const line of [varyLine, planHelper, "Forget my plan", "Remember my plan"]) {
   if (!page.includes(line)) problems.push("test/index.html is missing approved line: " + line);
+}
+function withoutFullGood(text) {
+  return text.split(fullGood).join("");
+}
+for (const [label, text] of [
+  ["test/index.html", page],
+  ["test/speedtest-page.js", pageJs],
+  ["test/speedtest-shortfall.js", shortfallJs]
+]) {
+  if (withoutFullGood(text).includes("Good news is worth knowing.")) {
+    problems.push(label + " has Good news is worth knowing. without the full prompt");
+  }
 }
 const privacy = fs.readFileSync(path.join(root, "privacy", "index.html"), "utf8");
 const privacyPlan = "If you tick 'Remember my plan', your plan speeds are saved in your browser only, and you can clear them with 'Forget my plan'.";
@@ -231,16 +253,16 @@ if (!privacy.includes(privacyPlan)) {
   problems.push("privacy page plan wording is not the Forget my plan line");
 }
 const retired = [
-  "One test is a snapshot. Your evenings may differ.",
-  "A week of tests",
-  "% of your plan's download and ",
-  "% of your plan's download on this test.",
-  "% of its upload on this test.",
-  "speeds 'up to' a number"
+  "You may not be getting the speed you pay for.",
+  "One test is a snapshot. A 7-day report shows the full week.",
+  "About {n}% of your plan's download speed in this test.",
+  "About {n}% of your plan's upload speed in this test.",
+  "speeds up to a number."
 ];
 for (const line of retired) {
   if (page.includes(line)) problems.push("test/index.html still has retired line: " + line);
   if (pageJs.includes(line)) problems.push("test/speedtest-page.js still has retired line: " + line);
+  if (shortfallJs.includes(line)) problems.push("test/speedtest-shortfall.js still has retired line: " + line);
 }
 for (const file of [pagePath, pageJsPath, shortfallPath, path.join(dir, "speedtest-config.js")]) {
   const text = fs.readFileSync(file, "utf8");
