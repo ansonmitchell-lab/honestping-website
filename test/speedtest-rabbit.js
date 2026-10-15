@@ -184,13 +184,17 @@ export function mountRabbit(root) {
       if (flipT > 0) {
         flipT -= dt;
         var f = 1 - Math.max(0, flipT) / 0.16;
+        if (f > 1) f = 1;
         var shown = flipFrom + (flipTo - flipFrom) * f;
-        face = f > 0.55 ? flipTo : flipFrom;
-        sx = shown;
-        sy = 1.08 - Math.abs(shown) * 0.08;
-        py = 2;
-        lead = 6;
-        followEar = -4;
+        var width = Math.abs(shown);
+        if (width < 0.45) width = 0.45;
+        face = f > 0.5 ? flipTo : flipFrom;
+        sx = (face < 0 ? -1 : 1) * width;
+        sy = 1.16 - width * 0.12;
+        py = 5 * Math.sin(f * Math.PI);
+        rot = face * 7 * (1 - f);
+        lead = 12 * (1 - f);
+        followEar = -5 * (1 - f);
       } else {
         runDir = face;
         x += runDir * rate * dt;

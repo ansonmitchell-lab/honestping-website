@@ -7,7 +7,7 @@ import { createEngine } from "./speedtest-engine.js";
 import { count } from "./speedtest-counters.js";
 import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-config.js";
 import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
-import { mountRabbit } from "./speedtest-rabbit.js?v=20261015e";
+import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
 
 (function () {
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
