@@ -13,7 +13,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="stylesheet" href="/styles.css?v=20261008a">
-  <link rel="stylesheet" href="/test/speedtest.css?v=20261014d">
+  <link rel="stylesheet" href="/test/speedtest.css?v=20261015b">
   <script>
   (function () {
     var search = location.search || "";
@@ -166,10 +166,18 @@
           <p class="st-subline" data-variability hidden>Speeds vary with Wi-Fi, devices and time of day, and plans usually promise speeds 'up to' a number.</p>
           <h3 class="st-outcome-head" data-headline hidden></h3>
           <p data-outcome hidden></p>
-          <div data-variant-app>
-            <p data-cta-lead>See your evenings. Get the HonestPing app for Windows, then add a 7-day Pro report when you want the full week.</p>
-            <p class="st-app-download"><a class="btn btn-primary btn-lg" data-cta href="/?src=webtest">Get the app</a></p>
-            <p class="st-app-paid">Free to download for Windows. Pro and the 7-day report are paid.</p>
+          <div class="st-branch" data-branch hidden>
+            <h3 class="st-branch-head" data-branch-head></h3>
+            <p class="st-branch-body" data-branch-body></p>
+            <div data-branch-slot></div>
+            <p class="st-branch-more" data-branch-more hidden><a data-branch-link data-cta href="/?src=webtest"></a></p>
+          </div>
+          <div data-app-anchor>
+            <div data-variant-app>
+              <p data-cta-lead>See your evenings. Get the HonestPing app for Windows, then add a 7-day Pro report when you want the full week.</p>
+              <p class="st-app-download"><a class="btn btn-primary btn-lg" data-cta href="/?src=webtest">Get the app</a></p>
+              <p class="st-app-paid">Free to download for Windows. Pro and the 7-day report are paid.</p>
+            </div>
           </div>
           <div data-variant-waitlist>
             <p data-waitlist-lead>See your evenings. Join the waitlist for the HonestPing app for Windows, then add a 7-day Pro report when you want the full week.</p>
@@ -199,6 +207,6 @@
   <script>
   document.getElementById("year").textContent = String(new Date().getFullYear());
   </script>
-  <script type="module" src="/test/speedtest-page.js?v=20261014d"></script>
+  <script type="module" src="/test/speedtest-page.js?v=20261015b"></script>
 </body>
 </html>

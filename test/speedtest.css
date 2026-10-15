@@ -176,6 +176,33 @@
 }
 [data-st-variant="app"] [data-variant-waitlist],
 [data-st-variant="waitlist"] [data-variant-app] { display: none; }
+[data-st-variant="waitlist"] .st-branch { display: none !important; }
+.st-branch {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--hp-line);
+}
+.st-branch-head {
+  margin: 0 0 6px;
+  color: var(--hp-text);
+  font-size: 18px;
+  font-weight: 600;
+}
+.st-branch-body {
+  margin: 0;
+  color: var(--hp-text);
+  font-weight: 400;
+}
+.st-branch-more { margin: 12px 0 0; }
+.st-branch-more a {
+  color: var(--hp-muted);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+[data-branch-kind="good"] .st-app-paid { display: none; }
 .st-app-paid, .st-phone-note, .st-wait-error, .st-wait-confirm, .st-wait-paid { margin: 8px 0 0; }
 .st-wait-error, .st-wait-confirm, .st-wait-paid { color: var(--hp-text); font-weight: 400; }
 .st-phone-note { display: none; }

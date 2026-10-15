@@ -1,6 +1,9 @@
-/* Page controller. Results stay in this page. Counters never read the plan. */
+/* Page controller. Results stay in this page. Counters never read the plan.
+   Branch hooks stay off unless BRANCH_HOOKS_ENABLED is true, or a preview
+   ?demo=poor / ?demo=good link forces one branch for review. */
 import { createEngine } from "./speedtest-engine.js";
 import { count } from "./speedtest-counters.js";
+import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-config.js";
 
 (function () {
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -29,6 +32,14 @@ import { count } from "./speedtest-counters.js";
   var varyEl = root.querySelector("[data-variability]");
   var ctaLead = root.querySelector("[data-cta-lead]");
   var waitLead = root.querySelector("[data-waitlist-lead]");
+  var branchEl = root.querySelector("[data-branch]");
+  var branchHead = root.querySelector("[data-branch-head]");
+  var branchBody = root.querySelector("[data-branch-body]");
+  var branchMore = root.querySelector("[data-branch-more]");
+  var branchLink = root.querySelector("[data-branch-link]");
+  var branchSlot = root.querySelector("[data-branch-slot]");
+  var appAnchor = root.querySelector("[data-app-anchor]");
+  var appBlock = root.querySelector("[data-variant-app]");
   var unclearRuns = 0;
 
   var LINES = {
@@ -236,6 +247,7 @@ import { count } from "./speedtest-counters.js";
       outcomeEl.textContent = "";
       outcomeEl.hidden = true;
     }
+    showBranch("none");
   }
 
   function percentText(sample) {
@@ -261,6 +273,7 @@ import { count } from "./speedtest-counters.js";
     if (sample.downloadMbps == null && sample.uploadMbps == null) {
       unclearRuns += 1;
       return {
+        kind: "unclear",
         head: LINES.unclearHead,
         line: unclearRuns >= 2 ? LINES.unclearAgain : LINES.unclear
       };
@@ -268,23 +281,54 @@ import { count } from "./speedtest-counters.js";
     unclearRuns = 0;
     var under = (planDown && sample.downloadMbps != null && sample.downloadMbps < planDown)
       || (planUp && sample.uploadMbps != null && sample.uploadMbps < planUp);
-    if (under) return { head: LINES.belowHead, line: LINES.below };
+    if (under) return { kind: "below", head: LINES.belowHead, line: LINES.below };
     var busy = busyMs(sample);
     if (sample.pingMs != null && busy != null && busy > sample.pingMs + 20) {
-      return { head: LINES.mixedHead, line: LINES.busy };
+      return { kind: "mixed", head: LINES.mixedHead, line: LINES.busy };
     }
     if (sample.jitterMs != null && sample.jitterMs >= 20) {
-      return { head: LINES.mixedHead, line: LINES.jitter };
+      return { kind: "mixed", head: LINES.mixedHead, line: LINES.jitter };
     }
-    return { head: LINES.goodHead, line: LINES.good };
+    return { kind: "good", head: LINES.goodHead, line: LINES.good };
   }
 
-  function finish(sample) {
-    running = false;
-    cancel = null;
-    startBtn.disabled = false;
-    startBtn.textContent = "Run it again";
-    setPhase("done");
+  function appVariant() {
+    return document.documentElement.getAttribute("data-st-variant") === "app";
+  }
+
+  function plansEntered() {
+    return { down: planNumber(downInput), up: planNumber(upInput) };
+  }
+
+  function hookKind(sample, outcomeKind) {
+    if (!appVariant()) return "none";
+    if (isPoorResult(sample, plansEntered())) return "poor";
+    if (outcomeKind === "good") return "good";
+    return "none";
+  }
+
+  function showBranch(kind) {
+    var show = appVariant() && (kind === "poor" || kind === "good");
+    if (appBlock && appAnchor && branchSlot) {
+      if (show) branchSlot.appendChild(appBlock);
+      else appAnchor.appendChild(appBlock);
+    }
+    if (!branchEl) return;
+    if (!show) {
+      branchEl.hidden = true;
+      branchEl.removeAttribute("data-branch-kind");
+      if (branchMore) branchMore.hidden = true;
+      return;
+    }
+    branchEl.hidden = false;
+    branchEl.setAttribute("data-branch-kind", kind);
+    if (branchHead) branchHead.textContent = kind === "poor" ? BRANCH_COPY.poorHead : BRANCH_COPY.goodHead;
+    if (branchBody) branchBody.textContent = kind === "poor" ? BRANCH_COPY.poorBody : BRANCH_COPY.goodBody;
+    if (branchLink) branchLink.textContent = BRANCH_COPY.poorLink;
+    if (branchMore) branchMore.hidden = kind !== "poor";
+  }
+
+  function paintReading(sample) {
     paint(sample);
     var line = percentText(sample);
     if (percents) {
@@ -304,6 +348,73 @@ import { count } from "./speedtest-counters.js";
       outcomeEl.textContent = chosen.line;
       outcomeEl.hidden = !chosen.line;
     }
+    return chosen;
+  }
+
+  function previewDemo() {
+    var host = location.hostname;
+    var preview = host === "localhost" || host === "127.0.0.1" || /\.pages\.dev$/i.test(host);
+    if (!preview) return "";
+    var demo = "";
+    try { demo = new URLSearchParams(location.search).get("demo") || ""; } catch (e) { return ""; }
+    if (demo === "poor" || demo === "good") return demo;
+    return "";
+  }
+
+  function poorSample() {
+    var plans = plansEntered();
+    if (plans.down != null || plans.up != null) {
+      return {
+        downloadMbps: plans.down != null ? plans.down * 0.4 : 80,
+        uploadMbps: plans.up != null ? plans.up * 0.4 : 20,
+        pingMs: 22,
+        jitterMs: 3,
+        loadedDownMs: 28,
+        loadedUpMs: 24
+      };
+    }
+    return {
+      downloadMbps: 80,
+      uploadMbps: 20,
+      pingMs: 24,
+      jitterMs: 4,
+      loadedDownMs: 120,
+      loadedUpMs: 30
+    };
+  }
+
+  function goodSample() {
+    var plans = plansEntered();
+    return {
+      downloadMbps: plans.down != null ? plans.down : 150,
+      uploadMbps: plans.up != null ? plans.up : 30,
+      pingMs: 18,
+      jitterMs: 3,
+      loadedDownMs: 24,
+      loadedUpMs: 22
+    };
+  }
+
+  function runDemo(which) {
+    if (!appVariant()) return;
+    var sample = which === "poor" ? poorSample() : goodSample();
+    startBtn.disabled = false;
+    startBtn.textContent = "Run it again";
+    setPhase("done");
+    paintReading(sample);
+    showBranch(which);
+    hop();
+  }
+
+  function finish(sample) {
+    running = false;
+    cancel = null;
+    startBtn.disabled = false;
+    startBtn.textContent = "Run it again";
+    setPhase("done");
+    var chosen = paintReading(sample);
+    var kind = BRANCH_HOOKS_ENABLED ? hookKind(sample, chosen.kind) : "none";
+    showBranch(kind);
     hop();
     count("test_completed");
   }
@@ -383,8 +494,14 @@ import { count } from "./speedtest-counters.js";
   if (waitPaid) waitPaid.textContent = LINES.waitPaid;
   if (waitError) waitError.textContent = LINES.waitError;
   if (waitConfirm) waitConfirm.textContent = LINES.waitConfirm;
+  function branchOpen() {
+    return appVariant() && branchEl && !branchEl.hidden;
+  }
   root.querySelectorAll("[data-cta]").forEach(function (el) {
-    el.addEventListener("click", function () { count("cta_clicked"); });
+    el.addEventListener("click", function () {
+      if (branchOpen()) count("cta_clicked", { hook: true });
+      else count("cta_clicked");
+    });
   });
   var waitForm = root.querySelector("#waitlist-form");
   if (waitForm) {
@@ -411,4 +528,6 @@ import { count } from "./speedtest-counters.js";
   loadPlan();
   resetMeters();
   setPhase("idle");
+  var demo = previewDemo();
+  if (demo) runDemo(demo);
 })();
