@@ -93,6 +93,22 @@
             <p class="st-scale" data-scale="up">Scale follows this reading.</p>
           </article>
         </div>
+        <h2 id="st-plan-h" class="st-subhead">Your plan speeds</h2>
+        <div class="st-plan">
+          <div class="st-plan-grid">
+            <label>Your plan download (Mbps)
+              <input data-plan-down type="text" inputmode="decimal" autocomplete="off" maxlength="8" placeholder="Mbps">
+            </label>
+            <label>Your plan upload (Mbps)
+              <input data-plan-up type="text" inputmode="decimal" autocomplete="off" maxlength="8" placeholder="Mbps">
+            </label>
+          </div>
+          <div class="st-plan-actions">
+            <label class="st-check"><input data-remember type="checkbox"> Remember my plan</label>
+            <button class="btn btn-ghost" type="button" data-forget>Forget my plan</button>
+          </div>
+          <p class="st-help">Optional. Your plan speeds stay in this browser only if you tick "Remember my plan". "Forget my plan" clears them. They are not sent.</p>
+        </div>
         <h2 id="st-quality-h" class="st-subhead">Quality</h2>
         <div class="st-quality">
           <article class="st-gauge-card st-gauge-card-sm">
@@ -150,22 +166,6 @@
             <p class="st-gauge-label">Packet loss</p>
             <p class="st-q-note" data-note="loss">Not measured on this test.</p>
           </article>
-        </div>
-        <h2 id="st-plan-h" class="st-subhead">Your plan speeds</h2>
-        <div class="st-plan">
-          <div class="st-plan-grid">
-            <label>Your plan download (Mbps)
-              <input data-plan-down type="text" inputmode="decimal" autocomplete="off" maxlength="8" placeholder="Mbps">
-            </label>
-            <label>Your plan upload (Mbps)
-              <input data-plan-up type="text" inputmode="decimal" autocomplete="off" maxlength="8" placeholder="Mbps">
-            </label>
-          </div>
-          <div class="st-plan-actions">
-            <label class="st-check"><input data-remember type="checkbox"> Remember my plan</label>
-            <button class="btn btn-ghost" type="button" data-forget>Forget my plan</button>
-          </div>
-          <p class="st-help">Optional. Your plan speeds stay in this browser only if you tick "Remember my plan". "Forget my plan" clears them. They are not sent.</p>
         </div>
       </section>
 
