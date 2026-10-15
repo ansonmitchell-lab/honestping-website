@@ -8,6 +8,10 @@ tooltips, CSS content strings, and string literals in page scripts.
 Does not scan CSS class names, file names, PAGE-SUMMARY.md, or docs/.
 Legal privacy pages are scanned with the same rules. A UTC offset minus
 (UTC-6 or UTC−6) is not sentence punctuation.
+
+Also fails on the whole phrases "for life" and "lifetime" (any capitalization).
+"Life" by itself is allowed. Legal's approved Founding Member line is allowed:
+"$39 a year, locked for as long as your Founding Member plan stays active".
 """
 
 import re
@@ -37,6 +41,9 @@ BLAME_PHRASES = (
 ISP_VERIFY = re.compile(r"\bverif(?:y|ied|ies|ication|ications)\b", re.I)
 SPACED_HYPHEN = re.compile(r"\s-\s")
 WORD_PATTERNS = tuple(re.compile(r"\b" + re.escape(word) + r"\b", re.I) for word in BANNED_WORDS)
+# Whole phrases only. "Life" alone, "for a year", and "lifelong" stay allowed.
+LIFE_PHRASES = ("for life", "lifetime")
+LIFE_PATTERNS = tuple(re.compile(r"\b" + re.escape(phrase) + r"\b", re.I) for phrase in LIFE_PHRASES)
 
 
 class PageText(HTMLParser):
@@ -177,6 +184,9 @@ def lint_piece(text, isp):
     for word, pattern in zip(BANNED_WORDS, WORD_PATTERNS):
         if pattern.search(text):
             hits.append(f"banned word {word}")
+    for phrase, pattern in zip(LIFE_PHRASES, LIFE_PATTERNS):
+        if pattern.search(text):
+            hits.append(f"banned phrase {phrase}")
     for phrase in BLAME_PHRASES:
         if phrase in lowered:
             hits.append(f"provider blame ({phrase})")
@@ -216,6 +226,14 @@ def self_test():
         ("Please verify this badge.", False, False),
         ("Your provider decides.", False, False),
         ("The app says where the measurements point, including past the home.", False, False),
+        ("locked for life", False, True),
+        ("lifetime price", False, True),
+        ("FOR LIFE", False, True),
+        ("$39 a year, locked for as long as your Founding Member plan stays active", False, False),
+        ("for a year", False, False),
+        ("Life is short", False, False),
+        ("lifelong plan", False, False),
+        ("for lifestyle", False, False),
     )
     problems = []
     for text, isp, bad in expect:
@@ -276,7 +294,10 @@ def main():
         for message in failures:
             print("FAIL:", message)
         raise SystemExit(1)
-    print(f"OK: visible copy on {len(pages())} pages has no em dashes, en dashes, spaced hyphens, or banned words")
+    print(
+        f"OK: visible copy on {len(pages())} pages has no em dashes, en dashes, "
+        "spaced hyphens, banned words, or for life / lifetime"
+    )
 
 
 if __name__ == "__main__":
