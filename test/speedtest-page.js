@@ -1,6 +1,7 @@
-/* Page controller. Results stay in this page. Counters never read the plan.
-   Branch hooks stay off unless BRANCH_HOOKS_ENABLED is true, or a preview
-   ?demo=poor / ?demo=good link forces one branch for review. */
+/* Page controller. Results stay on this page, inside the gauges.
+   BRANCH_HOOKS_ENABLED stays false for production. A *.pages.dev preview
+   alias opens the matching panel for a real result. ?demo=poor and
+   ?demo=good still force one panel for review. */
 import { createEngine } from "./speedtest-engine.js";
 import { count } from "./speedtest-counters.js";
 import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-config.js";
