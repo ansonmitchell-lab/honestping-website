@@ -7,6 +7,7 @@ import { createEngine } from "./speedtest-engine.js";
 import { count } from "./speedtest-counters.js";
 import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-config.js";
 import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
+import { mountRabbit } from "./speedtest-rabbit.js?v=20261015e";
 
 (function () {
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -24,7 +25,8 @@ import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
   var startBtn = root.querySelector("[data-start]");
   var phaseEl = root.querySelector("[data-phase]");
   var liveEl = root.querySelector("[data-live]");
-  var rabbit = root.querySelector("[data-rabbit]");
+  var signal = mountRabbit(root);
+  var resultCard = root.querySelector("[data-result]");
   var downInput = root.querySelector("[data-plan-down]");
   var upInput = root.querySelector("[data-plan-up]");
   var remember = root.querySelector("[data-remember]");
@@ -194,6 +196,7 @@ import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
     }
     if (lossNote) lossNote.textContent = "Not measured on this test.";
     paintUses(sample);
+    if (signal) signal.sample(sample);
   }
 
   function useLine(kind, sample) {
@@ -236,17 +239,33 @@ import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
     var text = phaseText(phase);
     if (phaseEl) phaseEl.textContent = text;
     if (liveEl && liveEl.textContent !== text) liveEl.textContent = text;
+    if (signal) signal.phase(phase);
   }
 
-  function hop() {
-    if (reduce || !rabbit) return;
-    rabbit.classList.remove("is-hop");
-    void rabbit.offsetWidth;
-    rabbit.classList.add("is-hop");
+  function bringResult() {
+    if (!resultCard) return;
+    var rect = resultCard.getBoundingClientRect();
+    var off = rect.top < 8 || rect.top > window.innerHeight - 80;
+    if (!off) return;
+    resultCard.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    resultCard.focus({ preventScroll: true });
   }
 
-  function resetMeters() {
-    revealed = false;
+  function revealResult() {
+    if (!resultCard) return;
+    var first = !resultCard.classList.contains("is-ready");
+    resultCard.classList.add("is-ready");
+    var grow = resultCard.querySelector("[data-result-grow]");
+    if (grow) {
+      grow.removeAttribute("aria-hidden");
+      grow.inert = false;
+    }
+    if (reduce || !first) bringResult();
+    else window.setTimeout(bringResult, 220);
+  }
+
+  function resetMeters(opts) {
+    var keep = opts && opts.keepResult && resultCard && resultCard.classList.contains("is-ready");
     scaleDown = planNumber(downInput) ? planNumber(downInput) * 1.25 : 100;
     scaleUp = planNumber(upInput) ? planNumber(upInput) * 1.25 : 25;
     paint({
@@ -258,6 +277,8 @@ import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
       loadedUpMs: null,
       loss: null
     });
+    if (keep) return;
+    revealed = false;
     paintShortfall(null);
     if (headlineEl) {
       headlineEl.textContent = "";
@@ -486,7 +507,7 @@ import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
     paintReading(sample);
     if (which === "poor" || which === "good") showBranch(which);
     else showBranch("none");
-    hop();
+    revealResult();
   }
 
   function finish(sample) {
@@ -499,7 +520,7 @@ import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
     var chosen = paintReading(sample);
     var kind = hooksForRealResults() ? hookKind(sample, chosen.kind) : "none";
     showBranch(kind);
-    hop();
+    revealResult();
     count("test_completed");
   }
 
@@ -507,12 +528,10 @@ import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
     if (running) return;
     if (cancel) cancel();
     running = true;
-    revealed = false;
-    resetMeters();
+    resetMeters({ keepResult: true });
     startBtn.disabled = true;
     startBtn.textContent = "Running";
     setPhase("latency");
-    hop();
     count("test_started");
     var active = createEngine();
     cancel = active.start(function (sample) {
@@ -555,11 +574,6 @@ import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
     resetMeters();
   }
 
-  if (rabbit) {
-    rabbit.addEventListener("animationend", function () {
-      rabbit.classList.remove("is-hop");
-    });
-  }
   startBtn.addEventListener("click", start);
   downInput.addEventListener("input", savePlan);
   upInput.addEventListener("input", savePlan);

@@ -61,26 +61,92 @@
   color: var(--hp-muted);
   font-size: 16px;
 }
-.st-hero-row {
+.st-hero-row { margin-top: 22px; }
+.st-result {
+  position: relative;
+  min-height: 72px;
+  padding: 16px 18px;
+  scroll-margin-top: 76px;
+}
+.st-result:focus { outline: none; }
+.st-result:focus-visible {
+  outline: 2px solid var(--hp-green);
+  outline-offset: 3px;
+}
+.st-result-grow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 120px;
-  gap: 18px;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.48s cubic-bezier(0.22, 0.8, 0.3, 1), opacity 0.4s ease;
+}
+.st-result.is-ready .st-result-grow {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.st-result-grow-inner { overflow: hidden; min-height: 0; }
+.st-result:not(.is-ready) .st-result-grow { pointer-events: none; }
+.st-meter-head {
+  display: grid;
+  grid-template-columns: auto minmax(140px, 1fr);
   align-items: end;
-  margin-top: 22px;
+  gap: 8px 16px;
+  margin: 0 0 8px;
+}
+.st-meter-head h2 { margin: 0 0 6px; }
+.st-lane {
+  position: relative;
+  height: 168px;
+  overflow: hidden;
+  pointer-events: none;
+  container-type: inline-size;
+  contain: layout paint;
+}
+.st-perch {
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+  width: 36px;
+  height: 16px;
 }
 .st-rabbit {
-  width: 88px;
-  height: 190px;
-  justify-self: center;
-  transform-origin: 50% 70%;
+  position: absolute;
+  left: 0;
+  bottom: 2px;
+  width: 64px;
+  height: 136px;
+  overflow: visible;
 }
-.st-rabbit img { width: 88px; height: 190px; display: block; }
-.st-rabbit.is-hop { animation: st-hop 1.6s ease; }
-@keyframes st-hop {
-  0%, 100% { transform: none; }
-  35% { transform: translateY(-8px) rotate(-3deg); }
-  70% { transform: translateY(0) rotate(2deg); }
+.st-rabbit-mover,
+.st-rabbit-squash {
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 100%;
 }
+.st-rabbit[data-pose="home"] .st-rabbit-mover {
+  transform: translate3d(calc(100cqw - 72px), 0, 0);
+}
+.st-rabbit-art { display: block; width: 100%; height: 100%; overflow: visible; }
+.st-rabbit-ear {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+.st-rabbit-lid {
+  position: absolute;
+  left: 30%;
+  top: 42%;
+  width: 16%;
+  height: 7%;
+  border-radius: 40%;
+  background: #07131f;
+  opacity: 0;
+}
+.st-rabbit-lid-r { left: 54%; }
+.st-rabbit:not([data-pose="home"]):not([data-pose="back"]) .st-rabbit-mover,
+.st-rabbit:not([data-pose="home"]):not([data-pose="back"]) .st-rabbit-squash,
+.st-rabbit:not([data-pose="home"]):not([data-pose="back"]) .st-rabbit-ear {
+  will-change: transform;
+}
+.st-mascot-busy #scroll-pal { visibility: hidden; }
 .st-start {
   min-height: 64px;
   min-width: 200px;
@@ -107,7 +173,7 @@
 .st-subhead { margin-top: 22px; }
 .st-uses { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .st-plan-grid { grid-template-columns: 1fr 1fr; }
-.st-gauge-card, .st-metric, .st-use, .st-plan, .st-hook, .st-draft {
+.st-gauge-card, .st-metric, .st-use, .st-plan, .st-hook, .st-result, .st-draft {
   background: var(--hp-surface);
   border: 1px solid var(--hp-line);
   border-radius: var(--hp-radius);
@@ -205,6 +271,12 @@
   font-size: 13px;
 }
 .st-plan, .st-hook, .st-draft { padding: 16px; }
+.st-result .st-hook {
+  background: none;
+  border: 0;
+  padding: 0;
+  box-shadow: none;
+}
 .st-plan label, .st-check {
   display: block;
   color: var(--hp-text);
@@ -359,15 +431,16 @@
 }
 @media (max-width: 640px) {
   .st-hero { padding: 20px 16px 16px; }
-  .st-hero-row, .st-meters, .st-plan-grid, .st-uses { grid-template-columns: 1fr; }
+  .st-meter-head, .st-meters, .st-plan-grid, .st-uses { grid-template-columns: 1fr; }
   .st-quality { grid-template-columns: 1fr 1fr; }
-  .st-rabbit { height: auto; }
+  .st-lane { height: 148px; }
+  .st-rabbit { width: 56px; height: 120px; }
   .st-meters .st-gauge { --dial: min(200px, 100%); }
   .st-gauge-sm { --dial: min(128px, 100%); }
   .st-phone-note { display: block; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .st-rabbit.is-hop { animation: none; }
+  .st-result-grow { transition: none; }
   .st-gauge svg circle { transition: none; }
 }
 .st-gauge svg circle { transition: stroke-dasharray 0.2s ease; }
