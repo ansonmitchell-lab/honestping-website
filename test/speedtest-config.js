@@ -78,9 +78,8 @@ export function rateBusy(sample) {
 }
 
 export function useLine(kind, sample) {
-  if (!sample || sample.pingMs == null) return "Waiting for this snapshot.";
   if (kind === "calls" || kind === "gaming") {
-    if (sample.jitterMs == null) return "Not measured";
+    if (!sample || sample.pingMs == null || sample.jitterMs == null) return "Not measured";
     if (kind === "calls") {
       return sample.pingMs <= THRESHOLDS.callsPingMs && sample.jitterMs <= THRESHOLDS.callsJitterMs
         ? "Looks calm enough for a call in this snapshot."
@@ -90,7 +89,7 @@ export function useLine(kind, sample) {
       ? "Looks playable in this snapshot."
       : "A game may feel the delay in this snapshot.";
   }
-  if (sample.downloadMbps == null) return "Waiting for the download reading.";
+  if (!sample || sample.downloadMbps == null) return "Waiting for the download reading.";
   if (sample.downloadMbps >= THRESHOLDS.streamHighMbps) return "This snapshot has room for a high quality stream.";
   if (sample.downloadMbps >= THRESHOLDS.streamStepMbps) return "A stream may step down in quality on this snapshot.";
   return "A stream may pause on this snapshot.";

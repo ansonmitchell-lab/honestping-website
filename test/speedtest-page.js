@@ -6,7 +6,7 @@
    speeds the same way. */
 import { createEngine } from "./speedtest-engine.js";
 import { count } from "./speedtest-counters.js";
-import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, THRESHOLDS, isPoorResult, ratePing, rateJitter, rateBusy, useLine, loadedBusyMs } from "./speedtest-config.js";
+import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, THRESHOLDS, isPoorResult, ratePing, rateJitter, rateBusy, useLine, loadedBusyMs } from "./speedtest-config.js?v=20261015j";
 import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
 import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
 
