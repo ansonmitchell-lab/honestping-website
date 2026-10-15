@@ -1,8 +1,9 @@
 /* Production config for the poor and good branch hooks.
    BRANCH_HOOKS_ENABLED stays false until the app's background checking ships.
-   On a *.pages.dev preview alias, a real measured result still opens the
-   matching panel. honestping.com and the production pages host do not.
-   ?demo=poor and ?demo=good force one branch on a preview host for review.
+   A real measured result opens the matching panel only on an allowlisted
+   preview host. honestping.com and other hosts do not.
+   ?demo=poor and ?demo=good force one branch on that preview host, or on
+   localhost, for review.
 
    Poor uses measured values only. Thresholds:
    - planRatio 0.5: when a plan speed was entered, that direction is poor only if
@@ -16,24 +17,25 @@
    - If download and upload are both missing, the result stays unclear. No hook.
 
    A result that is not poor and not the approved good outcome stays on the
-   current flow. Good means the existing outcome: not under an entered plan,
-   loaded ping not more than 20 ms above idle, and jitter under 20 ms.
+   current flow. Good means nothing negative is on the page: not under an
+   entered plan, loaded ping not more than busyGapMs above idle, jitter under
+   outcomeJitterMs, and no negative rating or hint.
 */
 
 export var BRANCH_HOOKS_ENABLED = false;
 
 /* One locked set. A rating word is chosen only from a measured value and
-   one of these cutoffs. Hook jitter and the mixed-result jitter are
-   different cutoffs, both listed here. */
+   one of these cutoffs. Hook jitter (30) and the mixed-result jitter (15)
+   are different cutoffs, both listed here. */
 export var THRESHOLDS = {
   planRatio: 0.5,
   loadedLatencyMs: 100,
   busyGapMs: 20,
   jitterMs: 30,
-  outcomeJitterMs: 20,
+  outcomeJitterMs: 15,
   planScale: 1.25,
   pingLowMs: 20,
-  pingFineMs: 50,
+  pingFineMs: 41,
   pingNoticeableMs: 100,
   jitterSteadyMs: 5,
   jitterSomeMs: 15,
@@ -78,7 +80,7 @@ export function rateBusy(sample) {
 export function useLine(kind, sample) {
   if (!sample || sample.pingMs == null) return "Waiting for this snapshot.";
   if (kind === "calls" || kind === "gaming") {
-    if (sample.jitterMs == null) return "Waiting for this snapshot.";
+    if (sample.jitterMs == null) return "Not measured";
     if (kind === "calls") {
       return sample.pingMs <= THRESHOLDS.callsPingMs && sample.jitterMs <= THRESHOLDS.callsJitterMs
         ? "Looks calm enough for a call in this snapshot."

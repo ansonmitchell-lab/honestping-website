@@ -1,8 +1,9 @@
 /* Page controller. Results stay on this page, inside the gauges.
    Plan speeds stay in this browser. BRANCH_HOOKS_ENABLED stays false for
-   production. A *.pages.dev preview alias opens the matching panel for a
-   real result. ?demo=poor and ?demo=good still force one panel for review.
-   ?demo=short and ?demo=meet fill plan speeds on a preview host only. */
+   production. A real result opens the matching panel only on an allowlisted
+   preview host. ?demo=poor and ?demo=good still force one panel for review
+   on that host, and on localhost. ?demo=short and ?demo=meet fill plan
+   speeds the same way. */
 import { createEngine } from "./speedtest-engine.js";
 import { count } from "./speedtest-counters.js";
 import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, THRESHOLDS, isPoorResult, ratePing, rateJitter, rateBusy, useLine, loadedBusyMs } from "./speedtest-config.js";
@@ -101,7 +102,8 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
   }
 
   function growScale(current, value, plan) {
-    if (plan) return plan * THRESHOLDS.planScale;
+    var cap = THRESHOLDS.planScale;
+    if (plan && !(value > plan * cap)) return plan * cap;
     var steps = [25, 50, 100, 250, 500, 1000, 2000, 5000];
     var scale = current || steps[0];
     var i = 0;
@@ -109,7 +111,7 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
       if (steps[i] > scale) scale = steps[i];
       i += 1;
     }
-    if (value != null && value > scale * 0.82) scale = value * THRESHOLDS.planScale;
+    if (value != null && value > scale * 0.82) scale = value * cap;
     return scale;
   }
 
@@ -145,18 +147,17 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
     var el = root.querySelector('[data-scale="' + name + '"]');
     if (!el) return;
     var top = Math.round(scale);
-    el.textContent = plan
-      ? "Scale 0 to " + top + " Mbps, about " + THRESHOLDS.planScale + " times the plan you entered."
+    var onPlan = plan && scale <= plan * THRESHOLDS.planScale + 0.001;
+    el.textContent = onPlan
+      ? "Scale 0 to " + top + " Mbps, about 1.25 times the plan you entered."
       : "Scale 0 to " + top + " Mbps. It follows this reading.";
   }
 
   function paint(sample) {
     var planDown = planNumber(downInput);
     var planUp = planNumber(upInput);
-    if (sample.downloadMbps != null) scaleDown = growScale(scaleDown, sample.downloadMbps, planDown);
-    else if (planDown) scaleDown = planDown * THRESHOLDS.planScale;
-    if (sample.uploadMbps != null) scaleUp = growScale(scaleUp, sample.uploadMbps, planUp);
-    else if (planUp) scaleUp = planUp * THRESHOLDS.planScale;
+    scaleDown = growScale(scaleDown, sample.downloadMbps, planDown);
+    scaleUp = growScale(scaleUp, sample.uploadMbps, planUp);
     setArc("down", sample.downloadMbps, scaleDown);
     setArc("up", sample.uploadMbps, scaleUp);
     setScaleNote("down", scaleDown, planDown);
@@ -221,8 +222,8 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
 
   function resetMeters(opts) {
     var keep = opts && opts.keepResult && resultCard && resultCard.classList.contains("is-ready");
-    scaleDown = planNumber(downInput) ? planNumber(downInput) * THRESHOLDS.planScale : 100;
-    scaleUp = planNumber(upInput) ? planNumber(upInput) * THRESHOLDS.planScale : 25;
+    scaleDown = growScale(100, null, planNumber(downInput));
+    scaleUp = growScale(25, null, planNumber(upInput));
     paint({
       downloadMbps: null,
       uploadMbps: null,
@@ -279,6 +280,21 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
     }
     if (sample.jitterMs != null && sample.jitterMs >= THRESHOLDS.outcomeJitterMs) {
       return { kind: "mixed", head: LINES.mixedHead, line: LINES.jitter };
+    }
+    if (sample.pingMs != null && sample.pingMs >= THRESHOLDS.pingFineMs) {
+      return { kind: "mixed", head: LINES.mixedHead, line: "A call may notice the delay in this snapshot." };
+    }
+    if (sample.pingMs != null && sample.jitterMs != null && !(sample.pingMs <= THRESHOLDS.callsPingMs && sample.jitterMs <= THRESHOLDS.callsJitterMs)) {
+      return { kind: "mixed", head: LINES.mixedHead, line: "A call may notice the delay in this snapshot." };
+    }
+    if (sample.pingMs != null && sample.jitterMs != null && !(sample.pingMs <= THRESHOLDS.gamingPingMs && sample.jitterMs <= THRESHOLDS.gamingJitterMs)) {
+      return { kind: "mixed", head: LINES.mixedHead, line: "A game may feel the delay in this snapshot." };
+    }
+    if (sample.downloadMbps != null && sample.downloadMbps < THRESHOLDS.streamStepMbps) {
+      return { kind: "mixed", head: LINES.mixedHead, line: "A stream may pause on this snapshot." };
+    }
+    if (sample.downloadMbps != null && sample.downloadMbps < THRESHOLDS.streamHighMbps) {
+      return { kind: "mixed", head: LINES.mixedHead, line: "A stream may step down in quality on this snapshot." };
     }
     return { kind: "good", head: LINES.goodHead, line: LINES.good };
   }
@@ -352,9 +368,8 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
 
   function previewAlias() {
     var host = String(location.hostname || "").toLowerCase();
-    if (host === "honestping.pages.dev" || host === "www.honestping.pages.dev") return false;
-    if (host === "honestping.com" || host === "www.honestping.com") return false;
-    return /\.pages\.dev$/.test(host);
+    var previewHosts = ["preview-web-speedtest.honestping.pages.dev"];
+    return previewHosts.indexOf(host) !== -1;
   }
 
   function hooksForRealResults() {

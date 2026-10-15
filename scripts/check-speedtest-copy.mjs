@@ -278,7 +278,7 @@ for (const file of [pagePath, pageJsPath, shortfallPath, path.join(dir, "speedte
     if (text.includes(name)) problems.push(rel + " names a service: " + name);
   }
 }
-if (!configJs.includes("export var THRESHOLDS")) {
+if (!configJs.includes("export var THRESHOLDS") || !configJs.includes("export var HOOK_THRESHOLDS")) {
   problems.push("test/speedtest-config.js is missing the thresholds config");
 }
 for (const line of [
@@ -292,7 +292,8 @@ for (const line of [
   "High for live calls and games",
   "Fine for most uses",
   "Higher while the line is busy",
-  "Close to the idle ping"
+  "Close to the idle ping",
+  "Not measured"
 ]) {
   if (!configJs.includes(line)) problems.push("test/speedtest-config.js is missing approved rating: " + line);
 }
