@@ -125,7 +125,13 @@ def main():
             "<td>Feedback service</td>",
             "<td>12 months</td>",
             "Last updated:",
-            "October 11, 2026",
+            "October 15, 2026",
+            "a summary of times your connection dropped or slowed, kept for 30 days. HonestPing uses it on your PC to decide whether to suggest a 7-day report. It isn't sent to us.",
+            "the internet plan details you enter (download and upload speeds, data cap and billing day, and provider name and monthly price if you add them). HonestPing uses them on your PC to compare your test results with your plan. They aren't sent to us. You can change or delete them in Settings.",
+            "evening gamer test results from a paid 7-day report (ping, jitter, packet loss, lag while busy and the network route, which includes the addresses of routers along the way), kept on your PC for 90 days. HonestPing uses them on your PC to build that report. They aren't sent to us unless you choose to share the report.",
+            "Remove plan details with the",
+            "Delete plan details",
+            "button in Settings.",
             "bug reports you've written but haven't sent yet",
             "an app log, which stays on your PC unless you choose to attach recent lines to a bug report or feature request",
             "Cloudflare (website hosting, security, and our feedback service's servers and storage)",
@@ -153,7 +159,9 @@ def main():
         check("GitHub" not in body, "/privacy names GitHub")
         check("Site analytics" not in body, "/privacy still contains the analytics paragraph")
         check("An AI service" not in body, "/privacy still describes an AI service")
-        check("90 days" not in body, "/privacy still states a 90-day retention period")
+        check(body.count("90 days") == 1, f"/privacy mentions 90 days {body.count('90 days')} times, expected only the evening gamer line")
+        check("Raw reports are deleted within 90 days." not in body, "/privacy still states the planned crash-report 90-day retention")
+        check("Otherwise we delete them within 90 days." not in body, "/privacy still states the planned crash-signature 90-day retention")
         check("Two things are sent automatically" not in body, "/privacy still says two things are sent automatically")
         check(
             "bug reports you've written but haven't sent yet, which you can delete" not in body,
@@ -174,11 +182,22 @@ def main():
             "We delete reports and screenshots after 12 months, or sooner if you ask at hello@honestping.com."
         )
         check(preview_paragraph in preview, "/privacy is missing the Preview features paragraph")
+        speed_test_paragraph = (
+            "Website speed test. The test runs in your browser and your results are shown only to you. "
+            "We don't store them. To measure your speed, your browser exchanges test data with Cloudflare's servers, "
+            "which see your IP address as part of that connection. We've turned off Cloudflare's collection of test results. "
+            "If you tick 'Remember my plan', your plan speeds are saved in your browser only, and you can clear them with 'Forget my plan'."
+        )
+        check(speed_test_paragraph in preview, "/privacy is missing the website speed test paragraph")
+        check(
+            "We count how many tests are started and finished" not in body,
+            "/privacy still counts how many website speed tests are started and finished",
+        )
 
         updated_js = (ROOT / "privacy-updated.js").read_text(encoding="utf-8")
         date_match = re.search(r'HONESTPING_POLICY_UPDATED = "([^"]+)"', updated_js)
         policy_date = date_match.group(1) if date_match else ""
-        check(policy_date == "October 11, 2026", f"policy date constant is {policy_date!r}")
+        check(policy_date == "October 15, 2026", f"policy date constant is {policy_date!r}")
 
         publication_paths = ("/privacy", "/privacy/subprocessors", "/privacy/history")
         for path in publication_paths:
@@ -207,6 +226,59 @@ def main():
         with urlopen(f"http://127.0.0.1:{port}/privacy/history") as response:
             history_body = response.read().decode("utf-8")
         check("First published." in history_body, "history page is missing the first published entry")
+        check(
+            "October 11, 2026: First published." in history_body,
+            "history page no longer keeps the October 11, 2026 first published entry",
+        )
+        check(
+            "Section 3.1 now lists two more things kept only on your PC: a 30 day summary of times your connection dropped or slowed, and the internet plan details you enter. Section 9 explains how to delete plan details."
+            in history_body,
+            "history page is missing the October 14 Ears Up and plan details entry",
+        )
+        check(
+            "October 14, 2026: Section 3.1 now lists two more things kept only on your PC:"
+            in history_body,
+            "the Ears Up and plan details history entry is no longer dated October 14, 2026",
+        )
+        check(
+            "data-policy-updated>October 14, 2026</span>: Section 3.1 now lists two more things"
+            not in history_body,
+            "the Ears Up history date is still bound to the current policy date",
+        )
+        check(
+            "Section 3.1 now lists evening gamer test results from a paid 7-day report, kept on your PC for 90 days. HonestPing uses them on your PC to build that report. They aren't sent to us unless you choose to share the report."
+            in history_body,
+            "history page is missing the evening gamer results entry",
+        )
+        check(
+            "October 14, 2026: Section 3.1 now lists evening gamer test results from a paid 7-day report"
+            in history_body,
+            "the evening gamer history entry is no longer dated October 14, 2026",
+        )
+        check(
+            "data-policy-updated>October 14, 2026</span>: Section 3.1 now lists evening gamer test results"
+            not in history_body,
+            "the evening gamer history date is still bound to the current policy date",
+        )
+        check(
+            "<span data-policy-updated>October 15, 2026</span>: Section 2 now explains the website speed test. The test runs in your browser and your results are shown only to you. We don't store them. To measure your speed, your browser exchanges test data with Cloudflare's servers, which see your IP address as part of that connection. We've turned off Cloudflare's collection of test results. If you tick 'Remember my plan', your plan speeds are saved in your browser only, and you can clear them with 'Forget my plan'.</li>"
+            in history_body,
+            "history page is missing the website speed test entry",
+        )
+        check(
+            "October 14, 2026: Section 2 now explains the website speed test. The test runs in your browser and your results are shown only to you. We don't store them. To measure your speed, your browser exchanges test data with Cloudflare's servers, which see your IP address as part of that connection. We've turned off Cloudflare's collection of test results. If you tick 'Remember my plan', your plan speeds are saved in your browser only, and you can clear them with 'Forget my plan'. We count how many tests are started and finished and how many people click to get the app, without cookies, IP addresses or results."
+            in history_body,
+            "history page is missing the October 14 website speed test entry",
+        )
+        check(
+            "data-policy-updated>October 14, 2026</span>: Section 2 now explains the website speed test"
+            not in history_body,
+            "the October 14 website speed test history date is still bound to the current policy date",
+        )
+        check(
+            'data-policy-updated>October 11, 2026' not in history_body,
+            "the October 11 history date is still bound to the current policy date",
+        )
 
         html_pages = pages()
         check(html_pages, "no HTML pages found")
