@@ -12,6 +12,11 @@ Legal privacy pages are scanned with the same rules. A UTC offset minus
 Also fails on the whole phrases "for life" and "lifetime" (any capitalization).
 "Life" by itself is allowed. Legal's approved Founding Member line is allowed:
 "$39 a year, locked for as long as your Founding Member plan stays active".
+
+Legal's Oct 13 evening rule: "every evening" may appear only when the next words
+are exactly "HonestPing is open" (brand spelling is case-sensitive). Bare
+"each evening" and "every night" fail unless an open-app qualifier follows:
+"HonestPing is open", or "while HonestPing is open".
 """
 
 import re
@@ -44,6 +49,10 @@ WORD_PATTERNS = tuple(re.compile(r"\b" + re.escape(word) + r"\b", re.I) for word
 # Whole phrases only. "Life" alone, "for a year", and "lifelong" stay allowed.
 LIFE_PHRASES = ("for life", "lifetime")
 LIFE_PATTERNS = tuple(re.compile(r"\b" + re.escape(phrase) + r"\b", re.I) for phrase in LIFE_PHRASES)
+# Schedule phrases. The brand in the qualifier stays case-sensitive.
+EVENING_PROMISE = re.compile(r"\b(every evening|each evening|every night)\b", re.I)
+HONESTPING_OPEN = re.compile(r"\s+HonestPing is open\b")
+WHILE_HONESTPING_OPEN = re.compile(r"\s+(?i:while)\s+HonestPing is open\b")
 
 
 class PageText(HTMLParser):
@@ -192,6 +201,27 @@ def lint_piece(text, isp):
             hits.append(f"provider blame ({phrase})")
     if isp and ISP_VERIFY.search(text):
         hits.append("verify language on a For ISPs page")
+    hits.extend(evening_hits(text))
+    return hits
+
+
+def evening_hits(text):
+    """Fail schedule promises that lack Legal's open-app qualifier."""
+    hits = []
+
+    def add(label):
+        if label not in hits:
+            hits.append(label)
+
+    for match in EVENING_PROMISE.finditer(text):
+        phrase = match.group(1).lower()
+        rest = text[match.end():]
+        if phrase == "every evening":
+            if HONESTPING_OPEN.match(rest) is None:
+                add('every evening without "HonestPing is open"')
+            continue
+        if HONESTPING_OPEN.match(rest) is None and WHILE_HONESTPING_OPEN.match(rest) is None:
+            add(f"{phrase} without an open-app qualifier")
     return hits
 
 
@@ -234,6 +264,29 @@ def self_test():
         ("Life is short", False, False),
         ("lifelong plan", False, False),
         ("for lifestyle", False, False),
+        ("every evening HonestPing is open", False, False),
+        ("A gamer test every evening HonestPing is open", False, False),
+        ("One gamer test every evening HonestPing is open, for a week.", False, False),
+        ("Every evening HonestPing is open", False, False),
+        ("each evening while HonestPing is open", False, False),
+        ("Each evening while HonestPing is open", False, False),
+        ("each evening HonestPing is open", False, False),
+        ("every night HonestPing is open", False, False),
+        ("every night while HonestPing is open", False, False),
+        ("Prime time is the evening.", False, False),
+        ("in the evening, when more people are online", False, False),
+        ("delivered at least 90% of advertised download speed in evening hours.", False, False),
+        ("on a game night", False, False),
+        ("A gamer test every evening", False, True),
+        ("every evening of the week", False, True),
+        ("every evening while HonestPing is open", False, True),
+        ("every evening honestping is open", False, True),
+        ("every evening Honestping is open", False, True),
+        ("every evening HonestPing Is Open", False, True),
+        ("One gamer test each evening, for a week.", False, True),
+        ("each evening while honestping is open", False, True),
+        ("We test every night.", False, True),
+        ("every night the app is open", False, True),
     )
     problems = []
     for text, isp, bad in expect:
@@ -296,7 +349,8 @@ def main():
         raise SystemExit(1)
     print(
         f"OK: visible copy on {len(pages())} pages has no em dashes, en dashes, "
-        "spaced hyphens, banned words, or for life / lifetime"
+        "spaced hyphens, banned words, or for life / lifetime, and evening "
+        "promises keep the HonestPing is open qualifier"
     )
 
 
