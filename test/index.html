@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-st-variant="app">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +15,13 @@
   <link rel="stylesheet" href="/styles.css?v=20261008a">
   <link rel="stylesheet" href="/test/speedtest.css?v=20261014d">
   <script>
-  document.documentElement.setAttribute("data-st-variant", /(?:^|[?&])variant=waitlist(?:&|$)/.test(location.search) ? "waitlist" : "app");
+  (function () {
+    var search = location.search || "";
+    var variant = "";
+    if (/(?:^|[?&])variant=waitlist(?:&|$)/.test(search)) variant = "waitlist";
+    else if (/(?:^|[?&])variant=app(?:&|$)/.test(search)) variant = "app";
+    if (variant) document.documentElement.setAttribute("data-st-variant", variant);
+  })();
   </script>
 </head>
 <body>

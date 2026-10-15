@@ -172,6 +172,39 @@ for (const file of walk(dir)) {
   }
 }
 
+const pagePath = path.join(dir, "index.html");
+const pageJsPath = path.join(dir, "speedtest-page.js");
+const page = fs.readFileSync(pagePath, "utf8");
+const pageJs = fs.readFileSync(pageJsPath, "utf8");
+const requiredInBoth = [
+  "See your evenings. Join the waitlist for the HonestPing app for Windows, then add a 7-day Pro report when you want the full week.",
+  "Details in our privacy policy.",
+  "Free to download for Windows when it launches. Pro and the 7-day report are paid.",
+  "Thanks, you're on the waitlist. We'll email you when the HonestPing app for Windows is ready to download. Every email has an unsubscribe link.",
+  "That email doesn't look right. Please check it and try again.",
+  "See your evenings. Get the HonestPing app for Windows, then add a 7-day Pro report when you want the full week.",
+  "Free to download for Windows. Pro and the 7-day report are paid."
+];
+for (const line of requiredInBoth) {
+  if (!page.includes(line)) problems.push("test/index.html is missing approved line: " + line);
+  if (!pageJs.includes(line)) problems.push("test/speedtest-page.js is missing approved line: " + line);
+}
+for (const line of ["Your email", "Join the waitlist"]) {
+  if (!page.includes(line)) problems.push("test/index.html is missing approved line: " + line);
+}
+if (!page.includes('action="mailto:hello@honestping.com"')) {
+  problems.push("test/index.html waitlist is not the mailto form");
+}
+if (!page.includes('href="/privacy"')) {
+  problems.push("test/index.html privacy link is missing");
+}
+const waitlistBlock = (page.match(/<div data-variant-waitlist>([\s\S]*?)<\/div>/) || ["", ""])[1];
+if (!waitlistBlock) problems.push("test/index.html is missing the waitlist block");
+if (waitlistBlock.includes("src=")) problems.push("test/index.html waitlist block has a source tag");
+if (/<input[^>]*type="checkbox"/i.test(waitlistBlock)) {
+  problems.push("test/index.html waitlist block has a checkbox");
+}
+
 if (problems.length) {
   console.error(problems.join("\n"));
   process.exit(1);
