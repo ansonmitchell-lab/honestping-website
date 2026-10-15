@@ -5,9 +5,12 @@ on:
     paths:
       - "test/**"
       - "scripts/check-speedtest-copy.mjs"
+      - "scripts/check-speedtest-shortfall.mjs"
+      - "privacy/index.html"
 jobs:
   copy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: node scripts/check-speedtest-copy.mjs
+      - run: node scripts/check-speedtest-shortfall.mjs

@@ -1,4 +1,20 @@
-.st-page { padding-bottom: 48px; }
+.st-page {
+  position: relative;
+  padding-bottom: 64px;
+}
+.st-page::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 680px;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 70% at 8% 0%, rgba(109, 92, 255, 0.28), transparent 62%),
+    radial-gradient(ellipse 42% 55% at 96% 8%, rgba(5, 209, 232, 0.14), transparent 60%);
+}
+.st-page > .wrap { position: relative; }
 .st-privacy-line {
   max-width: 36rem;
   margin: 12px 0 0;
@@ -6,11 +22,24 @@
   font-size: 14px;
   font-weight: 400;
 }
-.st-hero { padding-top: 28px; }
+.st-hero {
+  margin-top: 22px;
+  padding: 26px 26px 22px;
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  border-radius: 20px;
+  background:
+    linear-gradient(165deg, rgba(109, 92, 255, 0.2), rgba(13, 30, 46, 0.15) 46%),
+    var(--hp-surface);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
 .st-kicker {
   display: inline-block;
-  margin-bottom: 8px;
-  color: var(--hp-brand);
+  margin-bottom: 10px;
+  padding: 4px 10px;
+  border: 1px solid rgba(167, 139, 250, 0.45);
+  border-radius: 999px;
+  background: rgba(109, 92, 255, 0.16);
+  color: #d9d0ff;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -18,9 +47,13 @@
 }
 .st-hero h1 {
   margin: 0 0 8px;
-  font-size: clamp(28px, 4vw, 40px);
-  line-height: 1.15;
-  letter-spacing: -0.4px;
+  font-size: clamp(34px, 5vw, 52px);
+  line-height: 1.08;
+  letter-spacing: -1.1px;
+  background: linear-gradient(105deg, #f7f4ff 0%, #d5ccff 46%, #c8fff2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 .st-lede {
   margin: 0;
@@ -79,13 +112,26 @@
   border: 1px solid var(--hp-line);
   border-radius: var(--hp-radius);
 }
+.st-gauge-card {
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 0%, rgba(109, 92, 255, 0.16), transparent 62%),
+    var(--hp-surface);
+  border-color: rgba(167, 139, 250, 0.32);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
+}
+.st-hook {
+  border-color: rgba(167, 139, 250, 0.28);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+}
 .st-gauge-card, .st-metric, .st-use { padding: 16px; }
 .st-gauge {
-  --dial: 168px;
+  --dial: 188px;
   position: relative;
   width: var(--dial);
   height: var(--dial);
   margin: 0 auto;
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px rgba(109, 92, 255, 0.28), 0 0 28px rgba(109, 92, 255, 0.2);
 }
 .st-gauge svg { width: 100%; height: 100%; display: block; }
 .st-gauge-face {
@@ -112,7 +158,7 @@
 .st-unit[hidden] { display: none; }
 .st-gauge-label { margin-top: 6px; color: #9bb6c4; font-size: 13px; }
 .st-gauge-card-sm { padding: 12px 8px 14px; min-width: 0; }
-.st-gauge-sm { --dial: 112px; }
+.st-gauge-sm { --dial: 112px; box-shadow: none; }
 .st-gauge-sm .st-gauge-face { inset: 16px; }
 .st-gauge-sm .st-num { font-size: 22px; min-width: 3ch; }
 .st-gauge-sm .st-num.is-word {
@@ -250,6 +296,34 @@
 .st-waitlist p { margin: 8px 0 12px; }
 .st-waitlist .btn { margin-top: 4px; }
 .st-percent, .st-subline { margin: 8px 0; }
+.st-shortfall {
+  margin: 0 0 4px;
+  color: var(--hp-text);
+}
+.st-shortfall p {
+  margin: 0 0 8px;
+  color: var(--hp-text);
+  font-size: 15px;
+  font-weight: 400;
+}
+.st-shortfall .st-subline {
+  margin: 0;
+  color: var(--hp-muted);
+  font-size: 13px;
+}
+.st-nudge {
+  margin: 14px 0 8px;
+  padding: 14px 16px;
+  border: 1px solid rgba(167, 139, 250, 0.45);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(109, 92, 255, 0.18), rgba(13, 30, 46, 0.35));
+  color: var(--hp-text);
+  font-size: 16px;
+  line-height: 1.45;
+}
+.st-shortfall[hidden],
+.st-nudge[hidden],
+.st-shortfall [hidden] { display: none; }
 .st-outcome-head {
   margin: 16px 0 6px;
   color: var(--hp-text);
@@ -284,6 +358,7 @@
   .st-quality { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 640px) {
+  .st-hero { padding: 20px 16px 16px; }
   .st-hero-row, .st-meters, .st-plan-grid, .st-uses { grid-template-columns: 1fr; }
   .st-quality { grid-template-columns: 1fr 1fr; }
   .st-rabbit { height: auto; }

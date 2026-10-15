@@ -1,10 +1,12 @@
 /* Page controller. Results stay on this page, inside the gauges.
-   BRANCH_HOOKS_ENABLED stays false for production. A *.pages.dev preview
-   alias opens the matching panel for a real result. ?demo=poor and
-   ?demo=good still force one panel for review. */
+   Plan speeds stay in this browser. BRANCH_HOOKS_ENABLED stays false for
+   production. A *.pages.dev preview alias opens the matching panel for a
+   real result. ?demo=poor and ?demo=good still force one panel for review.
+   ?demo=short and ?demo=meet fill plan speeds on a preview host only. */
 import { createEngine } from "./speedtest-engine.js";
 import { count } from "./speedtest-counters.js";
 import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-config.js";
+import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
 
 (function () {
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -29,8 +31,12 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
   var forget = root.querySelector("[data-forget]");
   var outcomeEl = root.querySelector("[data-outcome]");
   var headlineEl = root.querySelector("[data-headline]");
-  var percents = root.querySelector("[data-percents]");
+  var shortfallEl = root.querySelector("[data-shortfall]");
+  var shortDownEl = root.querySelector("[data-short-down]");
+  var shortUpEl = root.querySelector("[data-short-up]");
+  var shortCalmEl = root.querySelector("[data-short-calm]");
   var varyEl = root.querySelector("[data-variability]");
+  var snapshotEl = root.querySelector("[data-snapshot]");
   var ctaLead = root.querySelector("[data-cta-lead]");
   var waitLead = root.querySelector("[data-waitlist-lead]");
   var branchEl = root.querySelector("[data-branch]");
@@ -42,20 +48,18 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
   var appAnchor = root.querySelector("[data-app-anchor]");
   var appBlock = root.querySelector("[data-variant-app]");
   var unclearRuns = 0;
+  var revealed = false;
 
   var LINES = {
-    snapshot: "One test is a snapshot. Your evenings may differ.",
-    vary: "Speeds vary with Wi-Fi, devices and time of day, and plans usually promise speeds 'up to' a number.",
+    snapshot: "One test is a snapshot. A 7-day report shows the full week.",
     busy: "Ping rose while the line was busy. That can show up more in the evening.",
-    jitter: "Ping moved around a lot during this test. A week of tests shows whether that's a one off or a pattern.",
-    belowHead: "This test came in under your plan.",
-    below: "Lots of things can shape one test, at home and along the way. A week of tests, checked against your plan, gives a clearer picture.",
+    jitter: "Ping moved around a lot during this test.",
     mixedHead: "Mostly healthy, with one thing to watch.",
     goodHead: "This test looks healthy.",
-    good: "Good news is worth knowing. A week of tests shows whether evenings hold up too.",
+    good: "Good news is worth knowing.",
     unclearHead: "We couldn't get a clear reading this time.",
     unclear: "The test may have been interrupted, or the numbers didn't line up.",
-    unclearAgain: "Some connections are hard to read in one go. The app can test over a week and show what's typical.",
+    unclearAgain: "Some connections are hard to read in one go.",
     appLead: "See your evenings. Get the HonestPing app for Windows, then add a 7-day Pro report when you want the full week.",
     appPaid: "Free to download for Windows. Pro and the 7-day report are paid.",
     phone: "HonestPing is coming to Android and iOS.",
@@ -243,6 +247,7 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
   }
 
   function resetMeters() {
+    revealed = false;
     scaleDown = planNumber(downInput) ? planNumber(downInput) * 1.25 : 100;
     scaleUp = planNumber(upInput) ? planNumber(upInput) * 1.25 : 25;
     paint({
@@ -254,14 +259,7 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
       loadedUpMs: null,
       loss: null
     });
-    if (percents) {
-      percents.textContent = "";
-      percents.hidden = true;
-    }
-    if (varyEl) {
-      varyEl.textContent = LINES.vary;
-      varyEl.hidden = true;
-    }
+    paintShortfall(null);
     if (headlineEl) {
       headlineEl.textContent = "";
       headlineEl.hidden = true;
@@ -273,26 +271,31 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
     showBranch("none");
   }
 
-  function percentText(sample) {
-    var planDown = planNumber(downInput);
-    var planUp = planNumber(upInput);
-    var down = sample.downloadMbps;
-    var up = sample.uploadMbps;
-    if (planDown && down != null && planUp && up != null) {
-      return "About " + Math.round(down / planDown * 100) + "% of your plan's download and " + Math.round(up / planUp * 100) + "% of its upload on this test.";
+  function paintShortfall(sample) {
+    var report = sample
+      ? shortfallReport(sample, plansEntered())
+      : { show: false, downloadLine: "", uploadLine: "", calm: "", vary: "" };
+    if (shortDownEl) {
+      shortDownEl.textContent = report.downloadLine;
+      shortDownEl.hidden = !report.downloadLine;
     }
-    if (planDown && down != null) {
-      return "About " + Math.round(down / planDown * 100) + "% of your plan's download on this test.";
+    if (shortUpEl) {
+      shortUpEl.textContent = report.uploadLine;
+      shortUpEl.hidden = !report.uploadLine;
     }
-    if (planUp && up != null) {
-      return "About " + Math.round(up / planUp * 100) + "% of your plan's upload on this test.";
+    if (shortCalmEl) {
+      shortCalmEl.textContent = report.show ? SHORTFALL_COPY.calm : "";
+      shortCalmEl.hidden = !report.show;
     }
-    return "";
+    if (varyEl) {
+      varyEl.textContent = report.show ? SHORTFALL_COPY.vary : "";
+      varyEl.hidden = !report.show;
+    }
+    if (shortfallEl) shortfallEl.hidden = !report.show;
+    return report;
   }
 
-  function chooseOutcome(sample) {
-    var planDown = planNumber(downInput);
-    var planUp = planNumber(upInput);
+  function chooseOutcome(sample, report) {
     if (sample.downloadMbps == null && sample.uploadMbps == null) {
       unclearRuns += 1;
       return {
@@ -302,9 +305,7 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
       };
     }
     unclearRuns = 0;
-    var under = (planDown && sample.downloadMbps != null && sample.downloadMbps < planDown)
-      || (planUp && sample.uploadMbps != null && sample.uploadMbps < planUp);
-    if (under) return { kind: "below", head: LINES.belowHead, line: LINES.below };
+    if (report && report.show) return { kind: "below", head: "", line: "" };
     var busy = busyMs(sample);
     if (sample.pingMs != null && busy != null && busy > sample.pingMs + 20) {
       return { kind: "mixed", head: LINES.mixedHead, line: LINES.busy };
@@ -336,33 +337,37 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
       if (show) branchSlot.appendChild(appBlock);
       else appAnchor.appendChild(appBlock);
     }
-    if (!branchEl) return;
-    if (!show) {
-      branchEl.hidden = true;
-      branchEl.removeAttribute("data-branch-kind");
-      if (branchMore) branchMore.hidden = true;
-      return;
+    if (branchEl) {
+      if (!show) {
+        branchEl.hidden = true;
+        branchEl.removeAttribute("data-branch-kind");
+        if (branchMore) branchMore.hidden = true;
+      } else {
+        branchEl.hidden = false;
+        branchEl.setAttribute("data-branch-kind", kind);
+        if (branchHead) branchHead.textContent = kind === "poor" ? BRANCH_COPY.poorHead : BRANCH_COPY.goodHead;
+        if (branchBody) branchBody.textContent = kind === "poor" ? BRANCH_COPY.poorBody : BRANCH_COPY.goodBody;
+        if (branchLink) branchLink.textContent = BRANCH_COPY.poorLink;
+        if (branchMore) branchMore.hidden = kind !== "poor";
+      }
     }
-    branchEl.hidden = false;
-    branchEl.setAttribute("data-branch-kind", kind);
-    if (branchHead) branchHead.textContent = kind === "poor" ? BRANCH_COPY.poorHead : BRANCH_COPY.goodHead;
-    if (branchBody) branchBody.textContent = kind === "poor" ? BRANCH_COPY.poorBody : BRANCH_COPY.goodBody;
-    if (branchLink) branchLink.textContent = BRANCH_COPY.poorLink;
-    if (branchMore) branchMore.hidden = kind !== "poor";
+    syncNudge();
+  }
+
+  function branchOpen() {
+    return appVariant() && branchEl && !branchEl.hidden;
+  }
+
+  function syncNudge() {
+    if (!snapshotEl) return;
+    snapshotEl.textContent = LINES.snapshot;
+    snapshotEl.hidden = !revealed || branchOpen();
   }
 
   function paintReading(sample) {
     paint(sample);
-    var line = percentText(sample);
-    if (percents) {
-      percents.textContent = line;
-      percents.hidden = !line;
-    }
-    if (varyEl) {
-      varyEl.textContent = LINES.vary;
-      varyEl.hidden = !line;
-    }
-    var chosen = chooseOutcome(sample);
+    var report = paintShortfall(sample);
+    var chosen = chooseOutcome(sample, report);
     if (headlineEl) {
       headlineEl.textContent = chosen.head;
       headlineEl.hidden = !chosen.head;
@@ -385,14 +390,39 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
     return BRANCH_HOOKS_ENABLED === true || previewAlias();
   }
 
-  function previewDemo() {
+  function previewQuery() {
     var host = String(location.hostname || "").toLowerCase();
     var preview = host === "localhost" || host === "127.0.0.1" || previewAlias();
-    if (!preview) return "";
-    var demo = "";
-    try { demo = new URLSearchParams(location.search).get("demo") || ""; } catch (e) { return ""; }
-    if (demo === "poor" || demo === "good") return demo;
+    if (!preview) return null;
+    try { return new URLSearchParams(location.search); } catch (e) { return null; }
+  }
+
+  function previewDemo() {
+    var q = previewQuery();
+    if (!q) return "";
+    var demo = q.get("demo") || "";
+    if (demo === "poor" || demo === "good" || demo === "short" || demo === "meet") return demo;
     return "";
+  }
+
+  function cleanPlan(value) {
+    return String(value == null ? "" : value).replace(/[^0-9.]/g, "").slice(0, 8);
+  }
+
+  function applyPreviewPlan() {
+    var q = previewQuery();
+    if (!q) return;
+    var demo = q.get("demo") || "";
+    var down = q.get("planDown");
+    var up = q.get("planUp");
+    if ((demo === "short" || demo === "meet") && !down) down = "300";
+    if ((demo === "short" || demo === "meet") && !up) up = "30";
+    down = cleanPlan(down);
+    up = cleanPlan(up);
+    if (!down && !up) return;
+    if (down) downInput.value = down;
+    if (up) upInput.value = up;
+    remember.checked = false;
   }
 
   function poorSample() {
@@ -429,14 +459,30 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
     };
   }
 
+  function ratioSample(ratio) {
+    var plans = plansEntered();
+    var down = plans.down != null ? plans.down : 300;
+    var up = plans.up != null ? plans.up : 30;
+    return {
+      downloadMbps: down * ratio,
+      uploadMbps: up * ratio,
+      pingMs: 18,
+      jitterMs: 3,
+      loadedDownMs: 22,
+      loadedUpMs: 20
+    };
+  }
+
   function runDemo(which) {
-    if (!appVariant()) return;
-    var sample = which === "poor" ? poorSample() : goodSample();
+    if ((which === "poor" || which === "good") && !appVariant()) return;
+    var sample = which === "poor" ? poorSample() : which === "short" ? ratioSample(0.7) : which === "meet" ? ratioSample(1) : goodSample();
     startBtn.disabled = false;
     startBtn.textContent = "Run it again";
     setPhase("done");
+    revealed = true;
     paintReading(sample);
-    showBranch(which);
+    if (which === "poor" || which === "good") showBranch(which);
+    else showBranch("none");
     hop();
   }
 
@@ -446,6 +492,7 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
     startBtn.disabled = false;
     startBtn.textContent = "Run it again";
     setPhase("done");
+    revealed = true;
     var chosen = paintReading(sample);
     var kind = hooksForRealResults() ? hookKind(sample, chosen.kind) : "none";
     showBranch(kind);
@@ -457,6 +504,7 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
     if (running) return;
     if (cancel) cancel();
     running = true;
+    revealed = false;
     resetMeters();
     startBtn.disabled = true;
     startBtn.textContent = "Running";
@@ -528,9 +576,6 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
   if (waitPaid) waitPaid.textContent = LINES.waitPaid;
   if (waitError) waitError.textContent = LINES.waitError;
   if (waitConfirm) waitConfirm.textContent = LINES.waitConfirm;
-  function branchOpen() {
-    return appVariant() && branchEl && !branchEl.hidden;
-  }
   root.querySelectorAll("[data-cta]").forEach(function (el) {
     el.addEventListener("click", function () {
       if (branchOpen()) count("cta_clicked", { hook: true });
@@ -559,7 +604,11 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
       window.location.href = "mailto:hello@honestping.com?subject=" + subject + "&body=" + body;
     });
   }
+  if (snapshotEl) snapshotEl.textContent = LINES.snapshot;
+  if (shortCalmEl) shortCalmEl.textContent = SHORTFALL_COPY.calm;
+  if (varyEl) varyEl.textContent = SHORTFALL_COPY.vary;
   loadPlan();
+  applyPreviewPlan();
   resetMeters();
   setPhase("idle");
   var demo = previewDemo();

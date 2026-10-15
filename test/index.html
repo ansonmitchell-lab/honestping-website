@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Speed test · HonestPing</title>
-  <meta name="description" content="A short HonestPing speed snapshot. Download and upload are measured apart. One test is only a snapshot.">
+  <meta name="description" content="A short HonestPing speed test. Download and upload are measured apart.">
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#07131f">
   <link rel="canonical" href="https://www.honestping.com/test">
@@ -45,7 +45,7 @@
   <main id="main" class="st-page" data-speedtest>
     <div class="wrap">
       <section class="st-hero" aria-labelledby="st-heading">
-        <p class="st-kicker">Speed test</p>
+        <p class="st-kicker">Free snapshot</p>
         <div class="st-hero-row">
           <div>
             <h1 id="st-heading">A snapshot of this connection.</h1>
@@ -151,7 +151,7 @@
             <p class="st-q-note" data-note="loss">Not measured on this test.</p>
           </article>
         </div>
-        <h2 id="st-plan-h" class="st-subhead">Your plan, if you want a percent</h2>
+        <h2 id="st-plan-h" class="st-subhead">Your plan speeds</h2>
         <div class="st-plan">
           <div class="st-plan-grid">
             <label>Your plan download (Mbps)
@@ -165,18 +165,22 @@
             <label class="st-check"><input data-remember type="checkbox"> Remember my plan</label>
             <button class="btn btn-ghost" type="button" data-forget>Forget my plan</button>
           </div>
-          <p class="st-help">Optional. Your plan speeds stay in this page. Tick "Remember my plan" to keep them in this browser.</p>
-          <p class="st-percent" data-percents hidden></p>
-          <p class="st-subline" data-variability hidden>Speeds vary with Wi-Fi, devices and time of day, and plans usually promise speeds 'up to' a number.</p>
+          <p class="st-help">Optional. Your plan speeds stay in this browser only if you tick "Remember my plan". "Forget my plan" clears them. They are not sent.</p>
         </div>
       </section>
 
       <section class="st-section" aria-labelledby="st-hook-h">
-        <h2 id="st-hook-h">After the snapshot</h2>
+        <h2 id="st-hook-h">Your result</h2>
         <div class="st-hook" data-hook>
-          <p data-snapshot>One test is a snapshot. Your evenings may differ.</p>
+          <div class="st-shortfall" data-shortfall hidden>
+            <p data-short-down hidden></p>
+            <p data-short-up hidden></p>
+            <p data-short-calm hidden>You may not be getting the speed you pay for.</p>
+            <p class="st-subline" data-variability hidden>Speeds vary with Wi-Fi, devices and time of day, and plans usually promise speeds up to a number.</p>
+          </div>
           <h3 class="st-outcome-head" data-headline hidden></h3>
           <p data-outcome hidden></p>
+          <p class="st-nudge" data-snapshot hidden>One test is a snapshot. A 7-day report shows the full week.</p>
           <div class="st-branch" data-branch hidden>
             <h3 class="st-branch-head" data-branch-head></h3>
             <p class="st-branch-body" data-branch-body></p>

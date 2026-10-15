@@ -174,8 +174,10 @@ for (const file of walk(dir)) {
 
 const pagePath = path.join(dir, "index.html");
 const pageJsPath = path.join(dir, "speedtest-page.js");
+const shortfallPath = path.join(dir, "speedtest-shortfall.js");
 const page = fs.readFileSync(pagePath, "utf8");
 const pageJs = fs.readFileSync(pageJsPath, "utf8");
+const shortfallJs = fs.readFileSync(shortfallPath, "utf8");
 const requiredInBoth = [
   "See your evenings. Join the waitlist for the HonestPing app for Windows, then add a 7-day Pro report when you want the full week.",
   "Details in our privacy policy.",
@@ -203,6 +205,48 @@ if (!waitlistBlock) problems.push("test/index.html is missing the waitlist block
 if (waitlistBlock.includes("src=")) problems.push("test/index.html waitlist block has a source tag");
 if (/<input[^>]*type="checkbox"/i.test(waitlistBlock)) {
   problems.push("test/index.html waitlist block has a checkbox");
+}
+
+const snapshotLine = "One test is a snapshot. A 7-day report shows the full week.";
+const calmLine = "You may not be getting the speed you pay for.";
+const varyLine = "Speeds vary with Wi-Fi, devices and time of day, and plans usually promise speeds up to a number.";
+for (const line of [snapshotLine]) {
+  if (!page.includes(line)) problems.push("test/index.html is missing approved line: " + line);
+  if (!pageJs.includes(line)) problems.push("test/speedtest-page.js is missing approved line: " + line);
+}
+for (const line of [
+  calmLine,
+  varyLine,
+  "About {n}% of your plan's download speed in this test.",
+  "About {n}% of your plan's upload speed in this test."
+]) {
+  if (!shortfallJs.includes(line)) problems.push("test/speedtest-shortfall.js is missing approved line: " + line);
+}
+for (const line of [calmLine, varyLine, "Forget my plan", "Remember my plan"]) {
+  if (!page.includes(line)) problems.push("test/index.html is missing approved line: " + line);
+}
+const privacy = fs.readFileSync(path.join(root, "privacy", "index.html"), "utf8");
+const privacyPlan = "If you tick 'Remember my plan', your plan speeds are saved in your browser only, and you can clear them with 'Forget my plan'.";
+if (!privacy.includes(privacyPlan)) {
+  problems.push("privacy page plan wording is not the Forget my plan line");
+}
+const retired = [
+  "One test is a snapshot. Your evenings may differ.",
+  "A week of tests",
+  "% of your plan's download and ",
+  "% of your plan's download on this test.",
+  "% of its upload on this test.",
+  "speeds 'up to' a number"
+];
+for (const line of retired) {
+  if (page.includes(line)) problems.push("test/index.html still has retired line: " + line);
+  if (pageJs.includes(line)) problems.push("test/speedtest-page.js still has retired line: " + line);
+}
+for (const file of [pagePath, pageJsPath, shortfallPath, path.join(dir, "speedtest-config.js")]) {
+  const text = fs.readFileSync(file, "utf8");
+  const rel = path.relative(root, file);
+  if (/\$\s*\d/.test(text)) problems.push(rel + " has a dollar figure");
+  if (/cheaper plan/i.test(text)) problems.push(rel + " pitches a cheaper plan");
 }
 
 if (problems.length) {
