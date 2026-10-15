@@ -270,7 +270,6 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-[data-branch-kind="good"] .st-app-paid { display: none; }
 .st-app-paid, .st-phone-note, .st-wait-error, .st-wait-confirm, .st-wait-paid { margin: 8px 0 0; }
 .st-wait-error, .st-wait-confirm, .st-wait-paid { color: var(--hp-text); font-weight: 400; }
 .st-phone-note { display: none; }
@@ -323,7 +322,8 @@
 }
 .st-shortfall[hidden],
 .st-nudge[hidden],
-.st-shortfall [hidden] { display: none; }
+.st-shortfall [hidden],
+[data-app-anchor][hidden] { display: none; }
 .st-outcome-head {
   margin: 16px 0 6px;
   color: var(--hp-text);
@@ -364,7 +364,6 @@
   .st-rabbit { height: auto; }
   .st-meters .st-gauge { --dial: min(200px, 100%); }
   .st-gauge-sm { --dial: min(128px, 100%); }
-  .st-app-download, .st-app-paid { display: none; }
   .st-phone-note { display: block; }
 }
 @media (prefers-reduced-motion: reduce) {

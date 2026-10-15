@@ -44,7 +44,6 @@ import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
   var branchBody = root.querySelector("[data-branch-body]");
   var branchMore = root.querySelector("[data-branch-more]");
   var branchLink = root.querySelector("[data-branch-link]");
-  var branchSlot = root.querySelector("[data-branch-slot]");
   var appAnchor = root.querySelector("[data-app-anchor]");
   var appBlock = root.querySelector("[data-variant-app]");
   var unclearRuns = 0;
@@ -333,10 +332,7 @@ import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
 
   function showBranch(kind) {
     var show = appVariant() && (kind === "poor" || kind === "good");
-    if (appBlock && appAnchor && branchSlot) {
-      if (show) branchSlot.appendChild(appBlock);
-      else appAnchor.appendChild(appBlock);
-    }
+    if (appBlock && appAnchor && appBlock.parentNode !== appAnchor) appAnchor.appendChild(appBlock);
     if (branchEl) {
       if (!show) {
         branchEl.hidden = true;
@@ -348,10 +344,11 @@ import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
         if (branchHead) branchHead.textContent = kind === "poor" ? BRANCH_COPY.poorHead : BRANCH_COPY.goodHead;
         if (branchBody) branchBody.textContent = kind === "poor" ? BRANCH_COPY.poorBody : BRANCH_COPY.goodBody;
         if (branchLink) branchLink.textContent = BRANCH_COPY.poorLink;
-        if (branchMore) branchMore.hidden = kind !== "poor";
+        if (branchMore) branchMore.hidden = true;
       }
     }
     syncNudge();
+    syncDownload();
   }
 
   function branchOpen() {
@@ -362,6 +359,12 @@ import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
     if (!snapshotEl) return;
     snapshotEl.textContent = LINES.snapshot;
     snapshotEl.hidden = !revealed || branchOpen();
+  }
+
+  function syncDownload() {
+    if (appBlock && appAnchor && appBlock.parentNode !== appAnchor) appAnchor.appendChild(appBlock);
+    if (appAnchor) appAnchor.hidden = !revealed;
+    if (appBlock) appBlock.hidden = false;
   }
 
   function paintReading(sample) {
