@@ -5,7 +5,7 @@
    ?demo=short and ?demo=meet fill plan speeds on a preview host only. */
 import { createEngine } from "./speedtest-engine.js";
 import { count } from "./speedtest-counters.js";
-import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-config.js";
+import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, THRESHOLDS, isPoorResult, ratePing, rateJitter, rateBusy, useLine, loadedBusyMs } from "./speedtest-config.js";
 import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
 import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
 
@@ -101,7 +101,7 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
   }
 
   function growScale(current, value, plan) {
-    if (plan) return plan * 1.25;
+    if (plan) return plan * THRESHOLDS.planScale;
     var steps = [25, 50, 100, 250, 500, 1000, 2000, 5000];
     var scale = current || steps[0];
     var i = 0;
@@ -109,36 +109,12 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
       if (steps[i] > scale) scale = steps[i];
       i += 1;
     }
-    if (value != null && value > scale * 0.82) scale = value * 1.25;
+    if (value != null && value > scale * 0.82) scale = value * THRESHOLDS.planScale;
     return scale;
   }
 
-  function ratePing(ms) {
-    if (ms == null) return "Waiting";
-    if (ms < 20) return "Low";
-    if (ms < 50) return "Fine for most uses";
-    if (ms < 100) return "Noticeable";
-    return "High for live calls and games";
-  }
-
-  function rateJitter(ms) {
-    if (ms == null) return "Waiting";
-    if (ms < 5) return "Steady";
-    if (ms < 15) return "Some variation";
-    return "Uneven";
-  }
-
   function busyMs(sample) {
-    var vals = [sample.loadedDownMs, sample.loadedUpMs].filter(function (n) { return n != null; });
-    if (!vals.length) return null;
-    return Math.max.apply(null, vals);
-  }
-
-  function rateBusy(sample) {
-    var busy = busyMs(sample);
-    if (busy == null) return "Shows up while download or upload is running.";
-    if (sample.pingMs != null && busy > sample.pingMs + 20) return "Higher while the line is busy";
-    return "Close to the idle ping";
+    return loadedBusyMs(sample);
   }
 
   function setMsArc(name, ms, scale, noteText) {
@@ -170,7 +146,7 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
     if (!el) return;
     var top = Math.round(scale);
     el.textContent = plan
-      ? "Scale 0 to " + top + " Mbps, about 1.25 times the plan you entered."
+      ? "Scale 0 to " + top + " Mbps, about " + THRESHOLDS.planScale + " times the plan you entered."
       : "Scale 0 to " + top + " Mbps. It follows this reading.";
   }
 
@@ -178,9 +154,9 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
     var planDown = planNumber(downInput);
     var planUp = planNumber(upInput);
     if (sample.downloadMbps != null) scaleDown = growScale(scaleDown, sample.downloadMbps, planDown);
-    else if (planDown) scaleDown = planDown * 1.25;
+    else if (planDown) scaleDown = planDown * THRESHOLDS.planScale;
     if (sample.uploadMbps != null) scaleUp = growScale(scaleUp, sample.uploadMbps, planUp);
-    else if (planUp) scaleUp = planUp * 1.25;
+    else if (planUp) scaleUp = planUp * THRESHOLDS.planScale;
     setArc("down", sample.downloadMbps, scaleDown);
     setArc("up", sample.uploadMbps, scaleUp);
     setScaleNote("down", scaleDown, planDown);
@@ -197,27 +173,6 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
     if (lossNote) lossNote.textContent = "Not measured on this test.";
     paintUses(sample);
     if (signal) signal.sample(sample);
-  }
-
-  function useLine(kind, sample) {
-    if (!sample || sample.pingMs == null) return "Waiting for this snapshot.";
-    var ping = sample.pingMs;
-    var jitter = sample.jitterMs == null ? 0 : sample.jitterMs;
-    var down = sample.downloadMbps;
-    if (kind === "calls") {
-      return ping <= 40 && jitter <= 10
-        ? "Looks calm enough for a call in this snapshot."
-        : "A call may notice the delay in this snapshot.";
-    }
-    if (kind === "gaming") {
-      return ping <= 35 && jitter <= 8
-        ? "Looks playable in this snapshot."
-        : "A game may feel the delay in this snapshot.";
-    }
-    if (down == null) return "Waiting for the download reading.";
-    if (down >= 25) return "This snapshot has room for a high quality stream.";
-    if (down >= 5) return "A stream may step down in quality on this snapshot.";
-    return "A stream may pause on this snapshot.";
   }
 
   function paintUses(sample) {
@@ -266,8 +221,8 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
 
   function resetMeters(opts) {
     var keep = opts && opts.keepResult && resultCard && resultCard.classList.contains("is-ready");
-    scaleDown = planNumber(downInput) ? planNumber(downInput) * 1.25 : 100;
-    scaleUp = planNumber(upInput) ? planNumber(upInput) * 1.25 : 25;
+    scaleDown = planNumber(downInput) ? planNumber(downInput) * THRESHOLDS.planScale : 100;
+    scaleUp = planNumber(upInput) ? planNumber(upInput) * THRESHOLDS.planScale : 25;
     paint({
       downloadMbps: null,
       uploadMbps: null,
@@ -319,10 +274,10 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
     unclearRuns = 0;
     if (report && report.show) return { kind: "below", head: LINES.belowHead, line: LINES.below };
     var busy = busyMs(sample);
-    if (sample.pingMs != null && busy != null && busy > sample.pingMs + 20) {
+    if (sample.pingMs != null && busy != null && busy > sample.pingMs + THRESHOLDS.busyGapMs) {
       return { kind: "mixed", head: LINES.mixedHead, line: LINES.busy };
     }
-    if (sample.jitterMs != null && sample.jitterMs >= 20) {
+    if (sample.jitterMs != null && sample.jitterMs >= THRESHOLDS.outcomeJitterMs) {
       return { kind: "mixed", head: LINES.mixedHead, line: LINES.jitter };
     }
     return { kind: "good", head: LINES.goodHead, line: LINES.good };

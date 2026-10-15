@@ -22,12 +22,77 @@
 
 export var BRANCH_HOOKS_ENABLED = false;
 
-export var HOOK_THRESHOLDS = {
+/* One locked set. A rating word is chosen only from a measured value and
+   one of these cutoffs. Hook jitter and the mixed-result jitter are
+   different cutoffs, both listed here. */
+export var THRESHOLDS = {
   planRatio: 0.5,
   loadedLatencyMs: 100,
   busyGapMs: 20,
-  jitterMs: 30
+  jitterMs: 30,
+  outcomeJitterMs: 20,
+  planScale: 1.25,
+  pingLowMs: 20,
+  pingFineMs: 50,
+  pingNoticeableMs: 100,
+  jitterSteadyMs: 5,
+  jitterSomeMs: 15,
+  callsPingMs: 40,
+  callsJitterMs: 10,
+  gamingPingMs: 35,
+  gamingJitterMs: 8,
+  streamHighMbps: 25,
+  streamStepMbps: 5
 };
+
+export var HOOK_THRESHOLDS = THRESHOLDS;
+
+export function ratePing(ms) {
+  if (ms == null) return "Waiting";
+  if (ms < THRESHOLDS.pingLowMs) return "Low";
+  if (ms < THRESHOLDS.pingFineMs) return "Fine for most uses";
+  if (ms < THRESHOLDS.pingNoticeableMs) return "Noticeable";
+  return "High for live calls and games";
+}
+
+export function rateJitter(ms) {
+  if (ms == null) return "Waiting";
+  if (ms < THRESHOLDS.jitterSteadyMs) return "Steady";
+  if (ms < THRESHOLDS.jitterSomeMs) return "Some variation";
+  return "Uneven";
+}
+
+export function loadedBusyMs(sample) {
+  var vals = [sample && sample.loadedDownMs, sample && sample.loadedUpMs].filter(function (n) { return n != null; });
+  if (!vals.length) return null;
+  return Math.max.apply(null, vals);
+}
+
+export function rateBusy(sample) {
+  var busy = loadedBusyMs(sample);
+  if (busy == null || !sample || sample.pingMs == null) return "Shows up while download or upload is running.";
+  if (busy > sample.pingMs + THRESHOLDS.busyGapMs) return "Higher while the line is busy";
+  return "Close to the idle ping";
+}
+
+export function useLine(kind, sample) {
+  if (!sample || sample.pingMs == null) return "Waiting for this snapshot.";
+  if (kind === "calls" || kind === "gaming") {
+    if (sample.jitterMs == null) return "Waiting for this snapshot.";
+    if (kind === "calls") {
+      return sample.pingMs <= THRESHOLDS.callsPingMs && sample.jitterMs <= THRESHOLDS.callsJitterMs
+        ? "Looks calm enough for a call in this snapshot."
+        : "A call may notice the delay in this snapshot.";
+    }
+    return sample.pingMs <= THRESHOLDS.gamingPingMs && sample.jitterMs <= THRESHOLDS.gamingJitterMs
+      ? "Looks playable in this snapshot."
+      : "A game may feel the delay in this snapshot.";
+  }
+  if (sample.downloadMbps == null) return "Waiting for the download reading.";
+  if (sample.downloadMbps >= THRESHOLDS.streamHighMbps) return "This snapshot has room for a high quality stream.";
+  if (sample.downloadMbps >= THRESHOLDS.streamStepMbps) return "A stream may step down in quality on this snapshot.";
+  return "A stream may pause on this snapshot.";
+}
 
 export var BRANCH_COPY = {
   poorHead: "Want to know if this keeps happening?",
@@ -37,24 +102,18 @@ export var BRANCH_COPY = {
   goodBody: "One good test is a snapshot. Connections can change, especially in the evening. The free HonestPing app keeps checking in the background while it's open and saves the results on your PC, so you can see how your plan holds up over time."
 };
 
-function loadedMs(sample) {
-  var vals = [sample.loadedDownMs, sample.loadedUpMs].filter(function (n) { return n != null; });
-  if (!vals.length) return null;
-  return Math.max.apply(null, vals);
-}
-
 export function isPoorResult(sample, plans) {
   if (!sample || (sample.downloadMbps == null && sample.uploadMbps == null)) return false;
   var planDown = plans && plans.down != null ? plans.down : null;
   var planUp = plans && plans.up != null ? plans.up : null;
   if (planDown != null || planUp != null) {
-    if (planDown != null && sample.downloadMbps != null && sample.downloadMbps < planDown * HOOK_THRESHOLDS.planRatio) return true;
-    if (planUp != null && sample.uploadMbps != null && sample.uploadMbps < planUp * HOOK_THRESHOLDS.planRatio) return true;
+    if (planDown != null && sample.downloadMbps != null && sample.downloadMbps < planDown * THRESHOLDS.planRatio) return true;
+    if (planUp != null && sample.uploadMbps != null && sample.uploadMbps < planUp * THRESHOLDS.planRatio) return true;
     return false;
   }
-  var loaded = loadedMs(sample);
-  var rose = sample.pingMs != null && loaded != null && loaded > sample.pingMs + HOOK_THRESHOLDS.busyGapMs;
-  if (loaded != null && loaded >= HOOK_THRESHOLDS.loadedLatencyMs && rose) return true;
-  if (sample.jitterMs != null && sample.jitterMs >= HOOK_THRESHOLDS.jitterMs) return true;
+  var loaded = loadedBusyMs(sample);
+  var rose = sample.pingMs != null && loaded != null && loaded > sample.pingMs + THRESHOLDS.busyGapMs;
+  if (loaded != null && loaded >= THRESHOLDS.loadedLatencyMs && rose) return true;
+  if (sample.jitterMs != null && sample.jitterMs >= THRESHOLDS.jitterMs) return true;
   return false;
 }

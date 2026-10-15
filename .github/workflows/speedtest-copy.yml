@@ -6,6 +6,7 @@ on:
       - "test/**"
       - "scripts/check-speedtest-copy.mjs"
       - "scripts/check-speedtest-shortfall.mjs"
+      - "scripts/check-speedtest-thresholds.mjs"
       - "privacy/index.html"
 jobs:
   copy:
@@ -14,3 +15,4 @@ jobs:
       - uses: actions/checkout@v4
       - run: node scripts/check-speedtest-copy.mjs
       - run: node scripts/check-speedtest-shortfall.mjs
+      - run: node scripts/check-speedtest-thresholds.mjs

@@ -232,7 +232,8 @@ for (const line of [
 ]) {
   if (!pageJs.includes(line)) problems.push("test/speedtest-page.js is missing approved line: " + line);
 }
-for (const line of [varyLine, planHelper, "Forget my plan", "Remember my plan"]) {
+const waitlistLine = "We'll only use your email to tell you when HonestPing is ready to download. We won't send anything else unless you sign up for it.";
+for (const line of [varyLine, planHelper, waitlistLine, "Forget my plan", "Remember my plan"]) {
   if (!page.includes(line)) problems.push("test/index.html is missing approved line: " + line);
 }
 function withoutFullGood(text) {
@@ -257,13 +258,45 @@ const retired = [
   "One test is a snapshot. A 7-day report shows the full week.",
   "About {n}% of your plan's download speed in this test.",
   "About {n}% of your plan's upload speed in this test.",
-  "speeds up to a number."
+  "speeds up to a number.",
+  "Waitlist mail is only used to notify you when HonestPing is available. No extra newsletters unless you ask."
 ];
 for (const line of retired) {
   if (page.includes(line)) problems.push("test/index.html still has retired line: " + line);
   if (pageJs.includes(line)) problems.push("test/speedtest-page.js still has retired line: " + line);
   if (shortfallJs.includes(line)) problems.push("test/speedtest-shortfall.js still has retired line: " + line);
 }
+const services = [
+  "netflix", "youtube", "twitch", "hulu", "disney", "zoom", "skype", "facetime",
+  "discord", "whatsapp", "fortnite", "valorant", "spotify", "xbox", "playstation"
+];
+const configJs = fs.readFileSync(path.join(dir, "speedtest-config.js"), "utf8");
+for (const file of [pagePath, pageJsPath, shortfallPath, path.join(dir, "speedtest-config.js")]) {
+  const text = fs.readFileSync(file, "utf8").toLowerCase();
+  const rel = path.relative(root, file);
+  for (const name of services) {
+    if (text.includes(name)) problems.push(rel + " names a service: " + name);
+  }
+}
+if (!configJs.includes("export var THRESHOLDS")) {
+  problems.push("test/speedtest-config.js is missing the thresholds config");
+}
+for (const line of [
+  "Looks calm enough for a call in this snapshot.",
+  "A call may notice the delay in this snapshot.",
+  "Looks playable in this snapshot.",
+  "A game may feel the delay in this snapshot.",
+  "This snapshot has room for a high quality stream.",
+  "A stream may step down in quality on this snapshot.",
+  "A stream may pause on this snapshot.",
+  "High for live calls and games",
+  "Fine for most uses",
+  "Higher while the line is busy",
+  "Close to the idle ping"
+]) {
+  if (!configJs.includes(line)) problems.push("test/speedtest-config.js is missing approved rating: " + line);
+}
+
 for (const file of [pagePath, pageJsPath, shortfallPath, path.join(dir, "speedtest-config.js")]) {
   const text = fs.readFileSync(file, "utf8");
   const rel = path.relative(root, file);
