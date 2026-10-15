@@ -1,8 +1,8 @@
 /* Production config for the poor and good branch hooks.
    BRANCH_HOOKS_ENABLED stays false until the app's background checking ships.
-   While it is false, a real result keeps the existing approved outcome lines.
-   On a preview host, ?demo=poor and ?demo=good force one branch on for review.
-   They do not run on honestping.com.
+   On a *.pages.dev preview alias, a real measured result still opens the
+   matching panel. honestping.com and the production pages host do not.
+   ?demo=poor and ?demo=good force one branch on a preview host for review.
 
    Poor uses measured values only. Thresholds:
    - planRatio 0.5: when a plan speed was entered, that direction is poor only if

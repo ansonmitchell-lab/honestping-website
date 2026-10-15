@@ -135,11 +135,28 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
     return "Close to the idle ping";
   }
 
-  function setMetric(name, text, sub) {
-    var el = root.querySelector('[data-metric="' + name + '"]');
+  function setMsArc(name, ms, scale, noteText) {
+    var arc = root.querySelector('[data-arc="' + name + '"]');
+    var value = root.querySelector('[data-value="' + name + '"]');
     var note = root.querySelector('[data-note="' + name + '"]');
-    if (el) el.textContent = text;
-    if (note) note.textContent = sub;
+    var unit = value && value.parentElement ? value.parentElement.querySelector(".st-unit") : null;
+    if (arc) {
+      if (ms == null) {
+        arc.setAttribute("stroke-dasharray", "0 " + CIRC.toFixed(1));
+        arc.setAttribute("stroke-opacity", "0");
+      } else {
+        var frac = scale > 0 ? Math.max(0, Math.min(1, ms / scale)) : 0;
+        var len = frac * CIRC;
+        arc.setAttribute("stroke-dasharray", len.toFixed(1) + " " + CIRC.toFixed(1));
+        arc.setAttribute("stroke-opacity", frac > 0 ? "1" : "0");
+      }
+    }
+    if (value) {
+      value.textContent = ms == null ? "Waiting" : String(ms);
+      value.classList.toggle("is-word", ms == null);
+    }
+    if (unit) unit.hidden = ms == null;
+    if (note && noteText) note.textContent = noteText;
   }
 
   function setScaleNote(name, scale, plan) {
@@ -162,11 +179,16 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
     setArc("up", sample.uploadMbps, scaleUp);
     setScaleNote("down", scaleDown, planDown);
     setScaleNote("up", scaleUp, planUp);
-    setMetric("ping", sample.pingMs == null ? "Waiting" : sample.pingMs + " ms", ratePing(sample.pingMs));
-    setMetric("jitter", sample.jitterMs == null ? "Waiting" : sample.jitterMs + " ms", rateJitter(sample.jitterMs));
-    setMetric("loss", "Not measured", "Not measured on this test.");
-    var busy = busyMs(sample);
-    setMetric("busy", busy == null ? "Waiting" : busy + " ms", rateBusy(sample));
+    setMsArc("ping", sample.pingMs, 100, ratePing(sample.pingMs));
+    setMsArc("jitter", sample.jitterMs, 30, rateJitter(sample.jitterMs));
+    setMsArc("busy", busyMs(sample), 150, rateBusy(sample));
+    var lossValue = root.querySelector('[data-value="loss"]');
+    var lossNote = root.querySelector('[data-note="loss"]');
+    if (lossValue) {
+      lossValue.textContent = "Not measured";
+      lossValue.classList.add("is-word");
+    }
+    if (lossNote) lossNote.textContent = "Not measured on this test.";
     paintUses(sample);
   }
 
@@ -351,9 +373,20 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
     return chosen;
   }
 
+  function previewAlias() {
+    var host = String(location.hostname || "").toLowerCase();
+    if (host === "honestping.pages.dev" || host === "www.honestping.pages.dev") return false;
+    if (host === "honestping.com" || host === "www.honestping.com") return false;
+    return /\.pages\.dev$/.test(host);
+  }
+
+  function hooksForRealResults() {
+    return BRANCH_HOOKS_ENABLED === true || previewAlias();
+  }
+
   function previewDemo() {
-    var host = location.hostname;
-    var preview = host === "localhost" || host === "127.0.0.1" || /\.pages\.dev$/i.test(host);
+    var host = String(location.hostname || "").toLowerCase();
+    var preview = host === "localhost" || host === "127.0.0.1" || previewAlias();
     if (!preview) return "";
     var demo = "";
     try { demo = new URLSearchParams(location.search).get("demo") || ""; } catch (e) { return ""; }
@@ -413,7 +446,7 @@ import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, isPoorResult } from "./speedtest-con
     startBtn.textContent = "Run it again";
     setPhase("done");
     var chosen = paintReading(sample);
-    var kind = BRANCH_HOOKS_ENABLED ? hookKind(sample, chosen.kind) : "none";
+    var kind = hooksForRealResults() ? hookKind(sample, chosen.kind) : "none";
     showBranch(kind);
     hop();
     count("test_completed");

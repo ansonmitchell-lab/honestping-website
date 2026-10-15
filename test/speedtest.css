@@ -70,7 +70,8 @@
   gap: 12px;
 }
 .st-meters { grid-template-columns: 1fr 1fr; }
-.st-quality, .st-uses { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.st-quality { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.st-subhead { margin-top: 22px; }
 .st-uses { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .st-plan-grid { grid-template-columns: 1fr 1fr; }
 .st-gauge-card, .st-metric, .st-use, .st-plan, .st-hook, .st-draft {
@@ -108,7 +109,28 @@
   line-height: 1;
 }
 .st-unit { display: block; margin-top: 4px; color: var(--hp-muted); font-size: 12px; }
+.st-unit[hidden] { display: none; }
 .st-gauge-label { margin-top: 6px; color: #9bb6c4; font-size: 13px; }
+.st-gauge-card-sm { padding: 12px 8px 14px; min-width: 0; }
+.st-gauge-sm { --dial: 112px; }
+.st-gauge-sm .st-gauge-face { inset: 16px; }
+.st-gauge-sm .st-num { font-size: 22px; min-width: 3ch; }
+.st-gauge-sm .st-num.is-word {
+  min-width: 0;
+  max-width: 6.2em;
+  font-size: 12px;
+  line-height: 1.15;
+}
+.st-gauge-card-sm .st-gauge-label,
+.st-q-note {
+  margin: 8px 0 0;
+  color: var(--hp-muted);
+  font-size: 12px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.st-gauge-card-sm .st-gauge-label { font-weight: 600; }
+.st-q-note { font-weight: 400; min-height: 2.4em; }
 .st-scale {
   min-height: 2.6em;
   margin: 10px 0 0;
@@ -263,8 +285,10 @@
 }
 @media (max-width: 640px) {
   .st-hero-row, .st-meters, .st-plan-grid, .st-uses { grid-template-columns: 1fr; }
+  .st-quality { grid-template-columns: 1fr 1fr; }
   .st-rabbit { height: auto; }
-  .st-gauge { --dial: 200px; }
+  .st-meters .st-gauge { --dial: min(200px, 100%); }
+  .st-gauge-sm { --dial: min(128px, 100%); }
   .st-app-download, .st-app-paid { display: none; }
   .st-phone-note { display: block; }
 }

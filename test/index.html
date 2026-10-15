@@ -13,7 +13,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="stylesheet" href="/styles.css?v=20261008a">
-  <link rel="stylesheet" href="/test/speedtest.css?v=20261015b">
+  <link rel="stylesheet" href="/test/speedtest.css?v=20261015c">
   <script>
   (function () {
     var search = location.search || "";
@@ -93,54 +93,65 @@
             <p class="st-scale" data-scale="up">Scale follows this reading.</p>
           </article>
         </div>
-      </section>
-
-      <section class="st-section" aria-labelledby="st-quality-h">
-        <h2 id="st-quality-h">Quality</h2>
+        <h2 id="st-quality-h" class="st-subhead">Quality</h2>
         <div class="st-quality">
-          <article class="st-metric">
-            <strong>Ping</strong>
-            <span class="st-metric-value" data-metric="ping">Waiting</span>
-            <p data-note="ping">Waiting</p>
+          <article class="st-gauge-card st-gauge-card-sm">
+            <div class="st-gauge st-gauge-sm">
+              <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                <circle cx="60" cy="60" r="46" fill="none" stroke="#14303c" stroke-width="8"></circle>
+                <circle data-arc="ping" cx="60" cy="60" r="46" fill="none" stroke="#9ad7ff" stroke-width="8" stroke-linecap="round" stroke-dasharray="0 289" transform="rotate(-90 60 60)"></circle>
+              </svg>
+              <div class="st-gauge-face">
+                <div class="st-num" data-value="ping" data-metric="ping">Waiting</div>
+                <span class="st-unit">ms</span>
+              </div>
+            </div>
+            <p class="st-gauge-label">Ping</p>
+            <p class="st-q-note" data-note="ping">Waiting</p>
           </article>
-          <article class="st-metric">
-            <strong>Jitter</strong>
-            <span class="st-metric-value" data-metric="jitter">Waiting</span>
-            <p data-note="jitter">Waiting</p>
+          <article class="st-gauge-card st-gauge-card-sm">
+            <div class="st-gauge st-gauge-sm">
+              <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                <circle cx="60" cy="60" r="46" fill="none" stroke="#14303c" stroke-width="8"></circle>
+                <circle data-arc="jitter" cx="60" cy="60" r="46" fill="none" stroke="#c9d4dc" stroke-width="8" stroke-linecap="round" stroke-dasharray="0 289" transform="rotate(-90 60 60)"></circle>
+              </svg>
+              <div class="st-gauge-face">
+                <div class="st-num" data-value="jitter" data-metric="jitter">Waiting</div>
+                <span class="st-unit">ms</span>
+              </div>
+            </div>
+            <p class="st-gauge-label">Jitter</p>
+            <p class="st-q-note" data-note="jitter">Waiting</p>
           </article>
-          <article class="st-metric">
-            <strong>Packet loss</strong>
-            <span class="st-metric-value" data-metric="loss">Not measured</span>
-            <p data-note="loss">Not measured on this test.</p>
+          <article class="st-gauge-card st-gauge-card-sm">
+            <div class="st-gauge st-gauge-sm">
+              <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                <circle cx="60" cy="60" r="46" fill="none" stroke="#14303c" stroke-width="8"></circle>
+                <circle data-arc="busy" cx="60" cy="60" r="46" fill="none" stroke="#ffc478" stroke-width="8" stroke-linecap="round" stroke-dasharray="0 289" transform="rotate(-90 60 60)"></circle>
+              </svg>
+              <div class="st-gauge-face">
+                <div class="st-num" data-value="busy" data-metric="busy">Waiting</div>
+                <span class="st-unit">ms</span>
+              </div>
+            </div>
+            <p class="st-gauge-label">Ping while busy</p>
+            <p class="st-q-note" data-note="busy">Shows up while download or upload is running.</p>
           </article>
-          <article class="st-metric">
-            <strong>Ping while busy</strong>
-            <span class="st-metric-value" data-metric="busy">Waiting</span>
-            <p data-note="busy">Shows up while download or upload is running.</p>
+          <article class="st-gauge-card st-gauge-card-sm">
+            <div class="st-gauge st-gauge-sm">
+              <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                <circle cx="60" cy="60" r="46" fill="none" stroke="#14303c" stroke-width="8"></circle>
+                <circle data-arc="loss" cx="60" cy="60" r="46" fill="none" stroke="#8aa0ae" stroke-width="8" stroke-linecap="round" stroke-dasharray="0 289" transform="rotate(-90 60 60)"></circle>
+              </svg>
+              <div class="st-gauge-face">
+                <div class="st-num is-word" data-value="loss" data-metric="loss">Not measured</div>
+              </div>
+            </div>
+            <p class="st-gauge-label">Packet loss</p>
+            <p class="st-q-note" data-note="loss">Not measured on this test.</p>
           </article>
         </div>
-      </section>
-
-      <section class="st-section" aria-labelledby="st-uses-h">
-        <h2 id="st-uses-h">What this snapshot can suggest</h2>
-        <div class="st-uses">
-          <article class="st-use">
-            <strong>Calls</strong>
-            <p data-use="calls">Waiting for this snapshot.</p>
-          </article>
-          <article class="st-use">
-            <strong>Gaming</strong>
-            <p data-use="gaming">Waiting for this snapshot.</p>
-          </article>
-          <article class="st-use">
-            <strong>Streaming</strong>
-            <p data-use="streaming">Waiting for this snapshot.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="st-section" aria-labelledby="st-plan-h">
-        <h2 id="st-plan-h">Your plan, if you want a percent</h2>
+        <h2 id="st-plan-h" class="st-subhead">Your plan, if you want a percent</h2>
         <div class="st-plan">
           <div class="st-plan-grid">
             <label>Your plan download (Mbps)
@@ -155,6 +166,8 @@
             <button class="btn btn-ghost" type="button" data-forget>Forget my plan</button>
           </div>
           <p class="st-help">Optional. Your plan speeds stay in this page. Tick "Remember my plan" to keep them in this browser.</p>
+          <p class="st-percent" data-percents hidden></p>
+          <p class="st-subline" data-variability hidden>Speeds vary with Wi-Fi, devices and time of day, and plans usually promise speeds 'up to' a number.</p>
         </div>
       </section>
 
@@ -162,8 +175,6 @@
         <h2 id="st-hook-h">After the snapshot</h2>
         <div class="st-hook" data-hook>
           <p data-snapshot>One test is a snapshot. Your evenings may differ.</p>
-          <p class="st-percent" data-percents hidden></p>
-          <p class="st-subline" data-variability hidden>Speeds vary with Wi-Fi, devices and time of day, and plans usually promise speeds 'up to' a number.</p>
           <h3 class="st-outcome-head" data-headline hidden></h3>
           <p data-outcome hidden></p>
           <div class="st-branch" data-branch hidden>
@@ -194,6 +205,24 @@
           <p class="st-phone-note">HonestPing is coming to Android and iOS.</p>
         </div>
       </section>
+
+      <section class="st-section" aria-labelledby="st-uses-h">
+        <h2 id="st-uses-h">What this snapshot can suggest</h2>
+        <div class="st-uses">
+          <article class="st-use">
+            <strong>Calls</strong>
+            <p data-use="calls">Waiting for this snapshot.</p>
+          </article>
+          <article class="st-use">
+            <strong>Gaming</strong>
+            <p data-use="gaming">Waiting for this snapshot.</p>
+          </article>
+          <article class="st-use">
+            <strong>Streaming</strong>
+            <p data-use="streaming">Waiting for this snapshot.</p>
+          </article>
+        </div>
+      </section>
     </div>
   </main>
 
@@ -207,6 +236,6 @@
   <script>
   document.getElementById("year").textContent = String(new Date().getFullYear());
   </script>
-  <script type="module" src="/test/speedtest-page.js?v=20261015b"></script>
+  <script type="module" src="/test/speedtest-page.js?v=20261015c"></script>
 </body>
 </html>
