@@ -6,12 +6,19 @@
    A different engine can replace createEngine() if it keeps start(onUpdate, onDone). */
 import SpeedTest from "./vendor/speedtest.js";
 
+/* Loaded ping only counts a transfer that lasts at least 250 ms.
+   Later rounds run only while the shortest request in a round is still under one second. */
 var MEASUREMENTS = [
   { type: "latency", numPackets: 10 },
   { type: "download", bytes: 1e5, count: 8, bypassMinDuration: true },
   { type: "download", bytes: 1e6, count: 4 },
+  { type: "download", bytes: 1e7, count: 6 },
+  { type: "download", bytes: 25e6, count: 4 },
+  { type: "download", bytes: 1e8, count: 3 },
   { type: "upload", bytes: 1e5, count: 6 },
-  { type: "upload", bytes: 1e6, count: 3 }
+  { type: "upload", bytes: 1e6, count: 3 },
+  { type: "upload", bytes: 1e7, count: 4 },
+  { type: "upload", bytes: 25e6, count: 3 }
 ];
 
 function mbps(bps) {
@@ -21,7 +28,14 @@ function mbps(bps) {
 
 function whole(ms) {
   if (ms == null || !isFinite(ms)) return null;
+  if (ms > 0 && ms < 10) return Math.round(ms * 10) / 10;
   return Math.round(ms);
+}
+
+function loadedReading(engine, pointsName, valueName) {
+  var points = engine.results[pointsName]();
+  if (!points || !points.length) return null;
+  return whole(engine.results[valueName]());
 }
 
 function read(engine, phase) {
@@ -33,8 +47,8 @@ function read(engine, phase) {
     uploadMbps: mbps(results.getUploadBandwidth()),
     pingMs: whole(results.getUnloadedLatency()),
     jitterMs: whole(jitter),
-    loadedDownMs: whole(results.getDownLoadedLatency()),
-    loadedUpMs: whole(results.getUpLoadedLatency()),
+    loadedDownMs: loadedReading(engine, "getDownLoadedLatencyPoints", "getDownLoadedLatency"),
+    loadedUpMs: loadedReading(engine, "getUpLoadedLatencyPoints", "getUpLoadedLatency"),
     loss: null
   };
 }
