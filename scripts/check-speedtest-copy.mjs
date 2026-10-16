@@ -26,6 +26,32 @@ const APPROVED_FOUNDING =
 const HONESTPING_OPEN = /^\s+HonestPing is open\b/;
 const WHILE_HONESTPING_OPEN = /^\s+[Ww][Hh][Ii][Ll][Ee]\s+HonestPing is open\b/;
 
+// Whole phrases only. Case does not matter. Extra spaces and line breaks still count.
+// "blameless", "blame your ISPs", "provider is at faulty", bare "ISP" or "provider",
+// and "an outage at home that isn't your provider's fault" stay allowed.
+const PROVIDER_BLAME = [
+  "blame your ISP",
+  "blame your provider",
+  "blame the ISP",
+  "blame the provider",
+  "your ISP is at fault",
+  "your provider is at fault",
+  "ISP is at fault",
+  "provider is at fault",
+  "fault of your ISP",
+  "fault of your provider",
+  "your ISP ripped",
+  "your provider ripped",
+  "ISP is ripping",
+  "provider is ripping",
+  "your ISP is cheating",
+  "your provider is cheating",
+  "your ISP is lying",
+  "your provider is lying",
+  "sue your ISP",
+  "sue your provider"
+];
+
 function lifeHits(text) {
   const stripped = text.split(APPROVED_FOUNDING).join("\n");
   const hits = [];
@@ -57,10 +83,48 @@ function eveningHits(text) {
   return hits;
 }
 
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function providerBlamePattern(phrase) {
+  const body = phrase.split(/\s+/).map(escapeRegExp).join("\\s+");
+  return new RegExp("\\b" + body + "\\b", "gi");
+}
+
+function providerBlameMatches(text) {
+  const hits = [];
+  for (const phrase of PROVIDER_BLAME) {
+    for (const match of text.matchAll(providerBlamePattern(phrase))) {
+      hits.push({
+        phrase,
+        index: match.index,
+        line: text.slice(0, match.index).split("\n").length,
+        text: match[0].replace(/\s+/g, " ")
+      });
+    }
+  }
+  hits.sort((a, b) =>
+    a.line - b.line ||
+    a.index - b.index ||
+    PROVIDER_BLAME.indexOf(a.phrase) - PROVIDER_BLAME.indexOf(b.phrase)
+  );
+  return hits;
+}
+
+function providerBlameHits(text) {
+  const hits = [];
+  for (const phrase of PROVIDER_BLAME) {
+    if (providerBlamePattern(phrase).test(text)) hits.push(phrase);
+  }
+  return hits;
+}
+
 function copyHits(text) {
   return [
     ...lifeHits(text).map((phrase) => "banned phrase " + phrase),
-    ...eveningHits(text)
+    ...eveningHits(text),
+    ...providerBlameHits(text).map((phrase) => "provider blame " + phrase)
   ];
 }
 
@@ -105,7 +169,45 @@ function selfTest() {
     ["One gamer test each evening, for a week.", true],
     ["each evening while honestping is open", true],
     ["We test every night.", true],
-    ["every night the app is open", true]
+    ["every night the app is open", true],
+    ["blame your ISP", true],
+    ["blame your provider", true],
+    ["blame the ISP", true],
+    ["blame the provider", true],
+    ["your ISP is at fault", true],
+    ["your provider is at fault", true],
+    ["ISP is at fault", true],
+    ["provider is at fault", true],
+    ["fault of your ISP", true],
+    ["fault of your provider", true],
+    ["your ISP ripped", true],
+    ["your provider ripped", true],
+    ["ISP is ripping", true],
+    ["provider is ripping", true],
+    ["your ISP is cheating", true],
+    ["your provider is cheating", true],
+    ["your ISP is lying", true],
+    ["your provider is lying", true],
+    ["sue your ISP", true],
+    ["sue your provider", true],
+    ["BLAME YOUR ISP", true],
+    ["blame  your   ISP", true],
+    ["blame\nyour\nISP", true],
+    ["blame\n\nyour\n\nprovider", true],
+    ["ISP\nis\nat\nfault", true],
+    ["your\tprovider\tis\tat\tfault", true],
+    ["Don't blame your ISP.", true],
+    ["Sue Your Provider", true],
+    ["Share a 7-day report with your ISP", false],
+    ["talk to your ISP", false],
+    ["contact your ISP", false],
+    ["ask your ISP", false],
+    ["ISP", false],
+    ["provider", false],
+    ["blameless", false],
+    ["blame your ISPs", false],
+    ["provider is at faulty", false],
+    ["an outage at home that isn't your provider's fault", false]
   ];
   const problems = [];
   for (const [text, bad] of expect) {
@@ -129,6 +231,32 @@ function selfTest() {
   if (!secondEvening.includes('every evening without "HonestPing is open"')) {
     problems.push("missed a later unqualified every evening");
   }
+  const allBlame = providerBlameHits(PROVIDER_BLAME.join(". "));
+  if (allBlame.join("|") !== PROVIDER_BLAME.join("|")) {
+    problems.push("expected every provider blame phrase, got " + JSON.stringify(allBlame));
+  }
+  const spacedBlame = providerBlameHits("Please BLAME   your\nISP.");
+  if (spacedBlame.join("|") !== "blame your ISP") {
+    problems.push("expected spaced blame your ISP, got " + JSON.stringify(spacedBlame));
+  }
+  const nestedFault = providerBlameHits("your ISP is at fault");
+  if (nestedFault.join("|") !== "your ISP is at fault|ISP is at fault") {
+    problems.push("expected both ISP fault phrases, got " + JSON.stringify(nestedFault));
+  }
+  const nestedProvider = providerBlameHits("your provider is at fault");
+  if (nestedProvider.join("|") !== "your provider is at fault|provider is at fault") {
+    problems.push("expected both provider fault phrases, got " + JSON.stringify(nestedProvider));
+  }
+  const plural = providerBlameHits("blame your ISPs");
+  if (plural.length) problems.push("false provider blame on blame your ISPs: " + JSON.stringify(plural));
+  const faulty = providerBlameHits("provider is at faulty");
+  if (faulty.length) problems.push("false provider blame on provider is at faulty: " + JSON.stringify(faulty));
+  const located = providerBlameMatches("ok\nBlame  your\nISP today");
+  const locatedOk = located.length === 1
+    && located[0].line === 2
+    && located[0].phrase === "blame your ISP"
+    && located[0].text === "Blame your ISP";
+  if (!locatedOk) problems.push("expected line 2 blame your ISP, got " + JSON.stringify(located));
   return problems;
 }
 
@@ -169,6 +297,9 @@ for (const file of walk(dir)) {
   }
   for (const hit of eveningHits(text)) {
     problems.push(rel + " has " + hit);
+  }
+  for (const hit of providerBlameMatches(text)) {
+    problems.push(rel + ":" + hit.line + ' has provider blame: "' + hit.text + '"');
   }
 }
 
