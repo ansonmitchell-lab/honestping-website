@@ -9,6 +9,11 @@ content values.
 Em dash (U+2014) and en dash (U+2013) fail on those same surfaces. Ordinary
 hyphen-minus (U+002D), as in "7-day" or "work-from-home", stays allowed.
 
+"evidence" and "proof" are whole English words (Legal v2026-10-15h), same
+spirit as verified, certified, and official. A dotted host such as
+proof.ovh.net, a file name such as proof.png, and a code token such as
+isp-proof are not those words.
+
 Does not scan HTML comments, JS comments, CSS class names, file names,
 PAGE-SUMMARY.md, or docs/. Those are not the shipped page.
 
@@ -49,6 +54,15 @@ BANNED_WORDS = ("verified", "certified", "official", "ripped off")
 WORD_PATTERNS = tuple(
     re.compile(r"\b" + re.escape(word) + r"\b", re.I) for word in BANNED_WORDS
 )
+
+# Legal v2026-10-15h. Whole words, any capitalization. "evidently", "proofs",
+# "waterproof", and "proofread" are not these words. A dotted host or file name
+# (proof.ovh.net, proof.png) is a token, not a marketing claim. A hyphenated or
+# underscored token with no spaces (isp-proof, evidence-card) is a class or
+# identifier. "evidence-based results" still fails: the word sits in a sentence.
+EVIDENCE_PROOF_WORDS = ("evidence", "proof")
+EVIDENCE_PROOF_RE = re.compile(r"\b(evidence|proof)\b", re.I)
+CODE_TOKEN = re.compile(r"[.#]?[A-Za-z_][A-Za-z0-9_-]*")
 
 # Standing HonestPing UI rule (app DiagnoseCheck case 299). Em dash and en dash
 # are banned in user-visible copy. Hyphen-minus (U+002D) is not.
@@ -265,8 +279,48 @@ def evening_hits(text):
     return hits
 
 
+def _is_code_token(text):
+    """A class, id, or identifier. The bare words evidence and proof are not."""
+    token = text.strip()
+    if not CODE_TOKEN.fullmatch(token):
+        return False
+    if "-" not in token and "_" not in token and token[:1] not in ".#":
+        return False
+    return True
+
+
+def _in_host_or_filename(text, start, end):
+    """True when the word is a label in a dotted host or file name.
+
+    "proof.ovh.net" and "proof.png" qualify. "the proof." does not: a single
+    trailing period is sentence punctuation.
+    """
+    i = start
+    while i > 0 and (text[i - 1].isalnum() or text[i - 1] in ".-"):
+        i -= 1
+    j = end
+    while j < len(text) and (text[j].isalnum() or text[j] in ".-"):
+        j += 1
+    token = text[i:j]
+    core = token[:-1] if token.endswith(".") else token
+    return "." in core
+
+
+def evidence_proof_hits(text):
+    if _is_code_token(text):
+        return []
+    found = set()
+    for match in EVIDENCE_PROOF_RE.finditer(text):
+        if _in_host_or_filename(text, match.start(), match.end()):
+            continue
+        found.add(match.group(1).lower())
+    return [word for word in EVIDENCE_PROOF_WORDS if word in found]
+
+
 def word_hits(text):
-    return [word for word, pattern in zip(BANNED_WORDS, WORD_PATTERNS) if pattern.search(text)]
+    hits = [word for word, pattern in zip(BANNED_WORDS, WORD_PATTERNS) if pattern.search(text)]
+    hits.extend(evidence_proof_hits(text))
+    return hits
 
 
 def dash_hits(text):
@@ -359,6 +413,27 @@ def self_test():
         ("officially measured", False),
         ("an unofficial note", False),
         ("certification path", False),
+        ("clear evidence", True),
+        ("Solid proof", True),
+        ("EVIDENCE", True),
+        ("the Proof.", True),
+        ("Have the proof that you need.", True),
+        ("evidence-based results", True),
+        ("evidence-based", False),
+        ("proof.ovh.net", False),
+        ("Reach proof.ovh.net from home", False),
+        ("https://proof.ovh.net/status", False),
+        ("See proof.ovh.net.", False),
+        ("waterproof", False),
+        ("proofread the note", False),
+        ("evidently fine", False),
+        ("proofs", False),
+        ("isp-proof", False),
+        (".isp-proof", False),
+        ("evidence-card", False),
+        ("proof.png", False),
+        ("evidence.html", False),
+        ("assets/proof.png", False),
         ("blame your ISP", True),
         ("blame your provider", True),
         ("blame the ISP", True),
@@ -435,9 +510,16 @@ def self_test():
             problems.append(f"combined phrase and dash check missing {needed!r}: {combined!r}")
     if "\u002d" in "7-day" and dash_hits("7-day work-from-home"):
         problems.append("hyphen-minus was treated as a banned dash")
+    both_words = word_hits("EVIDENCE and PROOF")
+    if both_words != ["evidence", "proof"]:
+        problems.append(f"expected evidence and proof, got {both_words!r}")
+    if evidence_proof_hits("Target proof.ovh.net, then clear evidence") != ["evidence"]:
+        problems.append("hostname proof was not ignored beside a real evidence hit")
+    if word_hits("my_proof evidence_card") :
+        problems.append("underscore identifiers were treated as English words")
 
     comment_html = """
-    <!-- lifetime verified official ripped off, blame your ISP, every evening -->
+    <!-- lifetime verified official ripped off, evidence, proof, blame your ISP, every evening -->
     <p>High in the evenings?</p>
     <script>
     // for life
@@ -482,7 +564,7 @@ def self_test():
 
     history_html = """
     <ul>
-      <li><span data-policy-updated>October 11, 2026</span>: We once said lifetime and verified.</li>
+      <li><span data-policy-updated>October 11, 2026</span>: We once said lifetime, verified, evidence, and proof.</li>
       <li>2024-03-01: every evening, blame your ISP</li>
     </ul>
     <p>The current page stays plain.</p>
@@ -502,6 +584,14 @@ def self_test():
     live_dash_hits = [hit for _, piece in pieces_from_html(HISTORY_PAGE, live_dash) for hit in lint_piece(piece)]
     if "banned dash em dash" not in live_dash_hits:
         problems.append(f"undated history dash was not flagged: {live_dash_hits!r}")
+    host_html = '<p>Lab host proof.ovh.net stays.</p><div class="isp-proof evidence-card">Clear results.</div><img alt="proof.png" src="proof.png">'
+    host_hits = [hit for _, piece in pieces_from_html("index.html", host_html) for hit in lint_piece(piece)]
+    if host_hits:
+        problems.append(f"host, file name, or class was flagged: {host_hits!r}")
+    proof_html = "<p>Solid proof.</p>"
+    proof_hits = [hit for _, piece in pieces_from_html("index.html", proof_html) for hit in lint_piece(piece)]
+    if "banned word proof" not in proof_hits:
+        problems.append(f"visible proof was not flagged: {proof_hits!r}")
     return problems
 
 
@@ -543,7 +633,7 @@ def main():
         raise SystemExit(1)
     print(
         f"OK: legal copy check passed on {len(pages())} pages "
-        "(for life / lifetime, evening promises, banned marketing words, provider blame, em/en dashes)"
+        "(for life / lifetime, evening promises, banned marketing words, evidence/proof, provider blame, em/en dashes)"
     )
 
 
