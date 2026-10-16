@@ -2501,7 +2501,7 @@ html.hp-reduce .gamer-sweep { display: none; }
   .verdict-card .verdict-pill::before { animation: none !important; }
 }
 
-/* Evidence report: rows reveal one by one, then Export glows (JS adds .is-ready only when motion is OK) */
+/* Example report: rows reveal one by one, then Export glows (JS adds .is-ready only when motion is OK) */
 .report-card.is-ready.is-revealed .report-row {
   transition: opacity 0.45s ease, transform 0.45s ease;
   transition-delay: calc(var(--i, 0) * 140ms);

@@ -77,7 +77,7 @@
   }
 })();
 
-/* HonestPing marketing: example evidence report, rows reveal one by one, then Export glows */
+/* HonestPing marketing: example report, rows reveal one by one, then Export glows */
 (function () {
   var report = document.querySelector("[data-report-demo]");
   if (!report || !("IntersectionObserver" in window)) return; // content stays fully visible
