@@ -6,7 +6,7 @@
    speeds the same way.
    The app download (lead, Get the app, and the paid line) shows after every
    revealed result. The branch panel does not gate it. */
-import { createEngine } from "./speedtest-engine.js";
+import { createEngine } from "./speedtest-engine.js?v=20261016f";
 import { count } from "./speedtest-counters.js";
 import { BRANCH_HOOKS_ENABLED, BRANCH_COPY, THRESHOLDS, isPoorResult, ratePing, rateJitter, rateBusy, useLine, loadedBusyMs } from "./speedtest-config.js?v=20261015k";
 import { shortfallReport, SHORTFALL_COPY } from "./speedtest-shortfall.js";
@@ -570,6 +570,7 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
     var active = createEngine();
     cancel = active.start(function (sample) {
       if (runId !== runToken) return;
+      if (!running) return;
       if (sample.phase === "done") return;
       showControl(sample.phase, sample.progress);
       setPhase(sample.phase);

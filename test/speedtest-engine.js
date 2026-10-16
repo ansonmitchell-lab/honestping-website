@@ -111,14 +111,23 @@ export function createEngine() {
       var settled = false;
       /* Later bytes of a finished transfer can report after the next stage started. */
       var rankOf = { latency: 1, latencyUnderLoad: 1, download: 2, upload: 3 };
+      function stopEngine() {
+        try { engine.pause(); } catch (e) {}
+        /* onError calls #next afterwards. An empty plan makes that return instead of starting another transfer. */
+        try {
+          if (engine.config && engine.config.measurements) engine.config.measurements = [];
+        } catch (e) {}
+      }
       function finish() {
         if (settled) return;
         settled = true;
         var sample = read(engine, "done");
+        stopEngine();
         onUpdate(sample);
         onDone(sample);
       }
       engine.onResultsChange = function (info) {
+        if (settled) return;
         var next = info && info.type ? info.type : phase;
         var rank = rankOf[next] || 0;
         if (rank && seenRank && rank < seenRank) return;
