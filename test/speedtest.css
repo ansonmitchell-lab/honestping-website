@@ -465,3 +465,7 @@
   color: var(--hp-text);
   background: var(--hp-subtle);
 }
+/* This page has two links and no menu button. Keep them visible on a phone. */
+@media (max-width: 560px) {
+  .site-header .nav a.nav-link { display: inline; }
+}
