@@ -1,5 +1,5 @@
-/* Change this date on merge day. The same words are the initial text of every [data-policy-updated] element. */
-var HONESTPING_POLICY_UPDATED = "October 11, 2026";
+/* Stays <go-live date> until the owner says go. The same words are the initial text of every [data-policy-updated] element. */
+var HONESTPING_POLICY_UPDATED = "<go-live date>";
 
 (function () {
   var nodes = document.querySelectorAll("[data-policy-updated]");

@@ -125,10 +125,10 @@ def main():
             "<td>Feedback service</td>",
             "<td>12 months</td>",
             "Last updated:",
-            "October 11, 2026",
+            "&lt;go-live date&gt;",
             "bug reports you've written but haven't sent yet",
             "an app log, which stays on your PC unless you choose to attach recent lines to a bug report or feature request",
-            "Cloudflare (website hosting, security, and our feedback service's servers and storage)",
+            "Cloudflare (website hosting, security, website analytics, and our feedback service's servers and storage)",
             "Cloudflare, which hosts our website, processes standard connection data such as your IP address and browser type to deliver the site and protect it from attacks.",
             "We don't use this data to identify visitors.",
             "We use your email only to tell you when HonestPing is available.",
@@ -151,7 +151,21 @@ def main():
         check(body.lower().count("hello@honestping.com") >= 4, "expected hello@honestping.com on each contact line")
         check("1500 N Grant" not in body, "/privacy includes the street address")
         check("GitHub" not in body, "/privacy names GitHub")
-        check("Site analytics" not in body, "/privacy still contains the analytics paragraph")
+        privacy_visible = re.sub(r"\s+", " ", visible_text(body))
+        check(
+            "Site analytics. We use Cloudflare Web Analytics to count visits and see which pages are popular. We see only totals. Cloudflare says it doesn't use cookies or local storage and doesn't track you across sites." in privacy_visible,
+            "/privacy is missing the site analytics paragraph",
+        )
+        check(
+            "Cookies and local storage. This site doesn't use cookies. It saves a few display preferences, such as reduced animations or a closed download bar, in your browser's local storage." in privacy_visible,
+            "/privacy is missing the local storage paragraph",
+        )
+        check(
+            "legitimate interests (understanding how our website is used, through total visit counts)" in body,
+            "/privacy is missing the analytics legal basis",
+        )
+        check("beacon.min.js" not in body, "/privacy loads the analytics beacon")
+        check("your theme" not in body, "/privacy still says the preference is your theme")
         check("An AI service" not in body, "/privacy still describes an AI service")
         check("90 days" not in body, "/privacy still states a 90-day retention period")
         check("Two things are sent automatically" not in body, "/privacy still says two things are sent automatically")
@@ -178,7 +192,7 @@ def main():
         updated_js = (ROOT / "privacy-updated.js").read_text(encoding="utf-8")
         date_match = re.search(r'HONESTPING_POLICY_UPDATED = "([^"]+)"', updated_js)
         policy_date = date_match.group(1) if date_match else ""
-        check(policy_date == "October 11, 2026", f"policy date constant is {policy_date!r}")
+        check(policy_date == "<go-live date>", f"policy date constant is {policy_date!r}")
 
         publication_paths = ("/privacy", "/privacy/subprocessors", "/privacy/history")
         for path in publication_paths:
@@ -190,13 +204,13 @@ def main():
             check("[" not in shown, f"{path} has a visible bracket placeholder")
             check("TODO" not in shown, f"{path} has a visible TODO")
             if path != "/privacy/subprocessors":
-                check(policy_date in shown, f"{path} does not show the policy date {policy_date}")
+                check("&lt;go-live date&gt;" in page_body, f"{path} does not keep the go-live date placeholder")
             check(CREDIT in page_body, f"{path} footer credit line does not match")
             check(PRIVACY_HREF in page_body, f"{path} footer is missing the Privacy link")
 
         with urlopen(f"http://127.0.0.1:{port}/privacy/subprocessors") as response:
             sub_body = response.read().decode("utf-8")
-        check("Cloudflare (website hosting, security, and our feedback service's servers and storage)" in sub_body, "subprocessors page is missing Cloudflare")
+        check("Cloudflare (website hosting, security, website analytics, and our feedback service's servers and storage)" in sub_body, "subprocessors page is missing Cloudflare")
         check("Google (email)" in sub_body, "subprocessors page is missing Google")
         check("GitHub" not in sub_body, "subprocessors page names GitHub")
         check(
@@ -207,6 +221,10 @@ def main():
         with urlopen(f"http://127.0.0.1:{port}/privacy/history") as response:
             history_body = response.read().decode("utf-8")
         check("First published." in history_body, "history page is missing the first published entry")
+        check(
+            "&lt;date&gt;: Added Cloudflare Web Analytics to count website visits, and explained display preferences saved in your browser." in history_body,
+            "history page is missing the analytics entry",
+        )
 
         html_pages = pages()
         check(html_pages, "no HTML pages found")
@@ -225,7 +243,8 @@ def main():
         check('id="creators"' in about, "about.html is missing the creators section from main")
 
         planned = (ROOT / "docs" / "privacy-planned.md").read_text(encoding="utf-8")
-        check("Cloudflare Web Analytics" in planned, "planned doc is missing the analytics text")
+        check("Site analytics (not enabled)" not in planned, "planned doc still parks the analytics paragraph")
+        check("count page views and download clicks" not in planned, "planned doc still has the old analytics paragraph")
         check(
             "This ships with enabling auto-send as a policy update with an in-app notice" in planned,
             "planned doc is missing the auto-send heading",
@@ -260,6 +279,9 @@ def main():
             "merchant of record",
         ):
             check(heading in planned, f"planned doc is missing {heading}")
+
+        import check_copy
+        failures.extend(check_copy.collect_failures())
     finally:
         server.shutdown()
 

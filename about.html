@@ -4,30 +4,65 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>About Us · HonestPing</title>
-  <meta name="description" content="About HonestPing, the Windows app that explains network health in plain language. Created by Anson Mitchell and Matt Lewis.">
+  <meta name="description" content="About HonestPing, the app that explains network health in plain language.">
   <meta name="theme-color" content="#07131f">
   <link rel="canonical" href="https://www.honestping.com/about.html">
 
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.honestping.com/about.html">
   <meta property="og:title" content="About Us · HonestPing">
-  <meta property="og:description" content="Plain-language network health for Windows. Clear status, real evidence, and history, filling the gap between Wi-Fi bars and opaque enterprise tools.">
+  <meta property="og:description" content="Plain-language network health. Clear status, real results, and history, filling the gap between Wi-Fi bars and opaque enterprise tools.">
   <meta property="og:image" content="https://www.honestping.com/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HonestPing rabbit on a dark navy card.">
   <meta property="og:site_name" content="HonestPing">
   <meta property="og:locale" content="en_US">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="About Us · HonestPing">
-  <meta name="twitter:description" content="Plain-language network health for Windows. Clear status, real evidence, and history.">
+  <meta name="twitter:description" content="Plain-language network health. Clear status, real results, and history.">
   <meta name="twitter:image" content="https://www.honestping.com/assets/og-image.png">
+  <meta name="twitter:image:alt" content="HonestPing rabbit on a dark navy card.">
 
   <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="stylesheet" href="styles.css?v=20261008a">
+  <link rel="manifest" href="/manifest.json">
+  <script>
+  /* Display choices stay on this device. Nothing here is sent anywhere. */
+  (function () {
+    var reduce = false, barOff = false;
+    try {
+      reduce = localStorage.getItem("hp-reduce-motion") === "1";
+      barOff = localStorage.getItem("hp-free-bar") === "off";
+    } catch (e) {}
+    if (barOff) document.documentElement.classList.add("hp-bar-off");
+    if (reduce) {
+      document.documentElement.classList.add("hp-reduce");
+      var native = window.matchMedia.bind(window);
+      window.matchMedia = function (q) {
+        var m = native(q);
+        if (String(q).indexOf("prefers-reduced-motion") !== -1) {
+          return {
+            matches: true,
+            media: m.media,
+            onchange: null,
+            addEventListener: function () {},
+            removeEventListener: function () {},
+            addListener: function () {},
+            removeListener: function () {},
+            dispatchEvent: function () { return false; }
+          };
+        }
+        return m;
+      };
+    }
+  })();
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20261014n">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -42,13 +77,16 @@
         </div>
       </a>
       <nav class="nav" aria-label="Primary">
-        <a class="nav-link" href="index.html#gamers">For gamers</a>
-        <a class="nav-link" href="index.html#wfh">For work</a>
-        <a class="nav-link" href="index.html#streaming">In-Home Streaming</a>
-        <a class="nav-link" href="index.html#value">What you get</a>
-        <a class="nav-link" href="index.html#gap">The gap</a>
-        <a class="nav-link" href="index.html#preview">Preview</a>
-        <a class="nav-link" href="about.html" aria-current="page">About Us</a>
+        <button type="button" class="nav-menu" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <div class="nav-links" id="nav-links">
+          <a class="nav-link" href="index.html#gamers">For gamers</a>
+          <a class="nav-link" href="index.html#wfh">For work</a>
+          <a class="nav-link" href="index.html#streaming">For streaming</a>
+          <a class="nav-link" href="index.html#isp">7-day report</a>
+          <a class="nav-link" href="index.html#preview">Inside the app</a>
+          <a class="nav-link" href="isp.html">For ISPs</a>
+          <a class="nav-link" href="about.html" aria-current="page">About Us</a>
+        </div>
         <a class="btn btn-primary" href="index.html#waitlist">Join the waitlist</a>
       </nav>
     </div>
@@ -56,40 +94,39 @@
 
   <main id="main">
     <section class="hero about-hero" aria-labelledby="about-heading">
-      <div class="wrap">
+      <div class="wrap about-grid">
+        <div class="about-mascot" data-act="house" tabindex="0" role="img" aria-label="HonestPing rabbit stacking blocks into a small house">
+          <img class="about-still" src="assets/mascot/front-calm-dark.svg?v=20261013c" width="74" height="160" alt="HonestPing rabbit, facing forward">
+          <span class="house-build" aria-hidden="true"><i></i><i></i><i></i><b></b><em>LLC</em></span>
+        </div>
+        <div>
         <span class="section-label">About Us</span>
         <h1 id="about-heading">About HonestPing</h1>
         <p class="tagline">Network health, explained</p>
         <div class="about-copy">
           <p>
-            HonestPing is a Windows app that answers one question: is my internet working right now?
-            It checks real reachability, then tells you what it found in plain language, with the
-            evidence (reply time, jitter, packet loss) and recent history right beside the verdict.
+            HonestPing is an app for two questions: is my internet working right now, and am I getting the speed I pay for?
+            It checks whether the internet is answering, then says what it found, with ping, jitter, packet loss, and recent history beside the verdict.
           </p>
           <p>
-            We built it because the options people actually have are incomplete. Wi-Fi bars show signal,
-            not a working path. Speed tests show a peak number that goes stale in a minute. Enterprise
-            monitors are built for IT desks. HonestPing sits in the middle: clear, continuous, and honest.
+            Wi-Fi bars show signal, not a working path. A speed test shows one moment.
+            IT monitors are built for desks, not a living room. HonestPing sits in the middle: clear, continuous, and honest.
           </p>
+        </div>
         </div>
       </div>
     </section>
 
     <section class="section" id="creators" aria-labelledby="creators-heading">
       <div class="wrap">
-        <span class="section-label">The creators</span>
-        <h2 class="section-title" id="creators-heading">Made by two people</h2>
-        <p class="section-intro">HonestPing is co-created by Anson Mitchell and Matt Lewis.</p>
+        <span class="section-label">The creator</span>
+        <h2 class="section-title" id="creators-heading">Made by Anson Mitchell</h2>
+        <p class="section-intro">HonestPing is created by Anson Mitchell.</p>
         <div class="creators-grid">
           <article class="card creator-card">
             <span class="creator-avatar" aria-hidden="true">AM</span>
             <h3>Anson Mitchell</h3>
-            <span class="creator-role">Co-creator</span>
-          </article>
-          <article class="card creator-card">
-            <span class="creator-avatar" aria-hidden="true">ML</span>
-            <h3>Matt Lewis</h3>
-            <span class="creator-role">Co-creator</span>
+            <span class="creator-role">Creator</span>
           </article>
         </div>
       </div>
@@ -100,10 +137,9 @@
         <div class="card waitlist-panel">
           <h2 id="about-waitlist-heading">Want to try it?</h2>
           <p>
-            There’s no public download yet. Join the waitlist and we’ll let you know when the
-            Windows build is ready.
+            There’s no public download yet. We’ll let you know when the app is ready.
           </p>
-          <p><a class="btn btn-primary btn-lg" href="index.html#waitlist">Join the waitlist</a></p>
+          <p><a class="btn btn-primary btn-lg" href="index.html#waitlist">Get notified</a></p>
         </div>
       </div>
     </section>
@@ -112,11 +148,16 @@
   <footer class="site-footer">
     <div class="wrap">
       <p>© <span id="year">2026</span> Honest Ping LLC</p>
-      <p><a href="about.html">About Us</a> · <a href="/privacy">Privacy</a> · <a href="https://www.honestping.com">www.honestping.com</a></p>
+      <p><a href="about.html">About Us</a> · <a href="isp.html">For ISPs</a> · <a href="/privacy">Privacy</a> · <a href="https://www.honestping.com">www.honestping.com</a></p>
       <p class="footer-privacy">Waitlist mail is only used to notify you when HonestPing is available. No extra newsletters unless you ask.</p>
+      <p class="footer-prefs"><button type="button" class="motion-pref" id="motion-pref" aria-pressed="false">Fewer animations</button></p>
     </div>
   </footer>
 
-  <script src="waitlist.js?v=20261005c" defer></script>
+  <script src="prefs.js?v=20261014g" defer></script>
+  <script src="mascot-turn.js?v=20261013c" defer></script>
+  <script src="rabbit-motion.js?v=20261014i" defer></script>
+  <script src="waitlist.js?v=20261014d" defer></script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"6f00d55b80b34345b83061ebb7dc1a0d"}'></script>
 </body>
 </html>
