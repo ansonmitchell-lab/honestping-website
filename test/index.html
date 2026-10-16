@@ -13,14 +13,31 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="stylesheet" href="/styles.css?v=20261008a">
-  <link rel="stylesheet" href="/test/speedtest.css?v=20261016a">
+  <link rel="stylesheet" href="/test/speedtest.css?v=20261016b">
   <script>
+  /* Nav targets. Home and this page stay relative so production can use the same links.
+     On the speed test preview, Home points at the home preview. */
+  var NAV_LINKS = {
+    home: "/",
+    speedTest: "/test/",
+    homePreview: "https://preview-gaming-7day.honestping.pages.dev/"
+  };
   (function () {
     var search = location.search || "";
     var variant = "";
     if (/(?:^|[?&])variant=waitlist(?:&|$)/.test(search)) variant = "waitlist";
     else if (/(?:^|[?&])variant=app(?:&|$)/.test(search)) variant = "app";
     if (variant) document.documentElement.setAttribute("data-st-variant", variant);
+    function applyNav() {
+      var home = NAV_LINKS.home;
+      if (location.hostname === "preview-web-speedtest.honestping.pages.dev") home = NAV_LINKS.homePreview;
+      var homes = document.querySelectorAll("[data-nav='home']");
+      for (var i = 0; i < homes.length; i++) homes[i].setAttribute("href", home);
+      var speed = document.querySelector("[data-nav='speed-test']");
+      if (speed) speed.setAttribute("href", NAV_LINKS.speedTest);
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", applyNav);
+    else applyNav();
   })();
   </script>
 </head>
@@ -28,7 +45,7 @@
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="wrap">
-      <a class="brand" href="/">
+      <a class="brand" data-nav="home" href="/">
         <img src="/assets/icon-display.png" width="40" height="40" alt="">
         <div>
           <strong>HonestPing</strong>
@@ -36,8 +53,8 @@
         </div>
       </a>
       <nav class="nav" aria-label="Primary">
-        <a class="nav-link" href="/">Home</a>
-        <a class="nav-link" href="/test" aria-current="page">Speed test</a>
+        <a class="nav-link" data-nav="home" href="/">Home</a>
+        <a class="nav-link" data-nav="speed-test" href="/test/" aria-current="page">Speed test</a>
       </nav>
     </div>
   </header>

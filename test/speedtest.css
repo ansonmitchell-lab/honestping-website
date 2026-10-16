@@ -461,3 +461,7 @@
   .st-gauge svg circle { transition: none; }
 }
 .st-gauge svg circle { transition: stroke-dasharray 0.2s ease; }
+.nav a.nav-link[aria-current="page"] {
+  color: var(--hp-text);
+  background: var(--hp-subtle);
+}
