@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Legal banned phrases
+      - name: Legal banned phrases and dashes
         run: python3 tests/check_legal_copy.py
       - name: Privacy page
         run: python3 tests/check_privacy.py

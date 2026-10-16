@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Fail if Legal's standing banned phrases return in marketing-site copy.
+"""Fail if Legal's standing banned phrases, or an em/en dash, return in marketing-site copy.
 
 Scans user-visible strings on this repo's main tree: HTML text nodes, titles,
 meta descriptions, aria-labels, alt text, placeholders, title tooltips, string
 literals in inline scripts and in local scripts those pages load, and CSS
 content values.
+
+Em dash (U+2014) and en dash (U+2013) fail on those same surfaces. Ordinary
+hyphen-minus (U+002D), as in "7-day" or "work-from-home", stays allowed.
 
 Does not scan HTML comments, JS comments, CSS class names, file names,
 PAGE-SUMMARY.md, or docs/. Those are not the shipped page.
@@ -46,6 +49,11 @@ BANNED_WORDS = ("verified", "certified", "official", "ripped off")
 WORD_PATTERNS = tuple(
     re.compile(r"\b" + re.escape(word) + r"\b", re.I) for word in BANNED_WORDS
 )
+
+# Standing HonestPing UI rule (app DiagnoseCheck case 299). Em dash and en dash
+# are banned in user-visible copy. Hyphen-minus (U+002D) is not.
+EM_DASH = "\u2014"
+EN_DASH = "\u2013"
 
 # Same list as website draft PR 35, scripts/check-speedtest-copy.mjs on
 # cursor/speedtest-provider-blame-f5ae (app DiagnoseCheck case 327).
@@ -261,13 +269,27 @@ def word_hits(text):
     return [word for word, pattern in zip(BANNED_WORDS, WORD_PATTERNS) if pattern.search(text)]
 
 
+def dash_hits(text):
+    hits = []
+    if EM_DASH in text:
+        hits.append("em dash")
+    if EN_DASH in text:
+        hits.append("en dash")
+    return hits
+
+
 def lint_piece(text):
     hits = []
     hits.extend(f"banned phrase {phrase}" for phrase in life_hits(text))
     hits.extend(evening_hits(text))
     hits.extend(f"banned word {word}" for word in word_hits(text))
     hits.extend(f"provider blame {phrase}" for phrase in provider_blame_hits(text))
+    hits.extend(f"banned dash {name}" for name in dash_hits(text))
     return hits
+
+
+def css_content_values(source):
+    return [match.group(2) for match in re.finditer(r"content:\s*([\"'])(.*?)\1", source, flags=re.S)]
 
 
 def snippet(text):
@@ -376,6 +398,13 @@ def self_test():
         ("blame your ISPs", False),
         ("provider is at faulty", False),
         ("an outage at home that isn't your provider's fault", False),
+        ("A clear result \u2014 no guesswork", True),
+        ("Days 1\u20137", True),
+        ("em\u2014and en\u2013together", True),
+        ("7-day", False),
+        ("work-from-home", False),
+        ("well-known path", False),
+        ("a spaced - hyphen", False),
     )
     problems = []
     for text, bad in expect:
@@ -398,6 +427,14 @@ def self_test():
         problems.append("provider blame list did not match every phrase")
     if len(PROVIDER_BLAME) != 20:
         problems.append(f"provider blame list length is {len(PROVIDER_BLAME)}, expected 20")
+    if dash_hits("range 1\u20136 \u2014 done") != ["em dash", "en dash"]:
+        problems.append(f"expected both dash types, got {dash_hits('range 1\u20136 \u2014 done')!r}")
+    combined = lint_piece("locked for life \u2014 verified")
+    for needed in ("banned phrase for life", "banned word verified", "banned dash em dash"):
+        if needed not in combined:
+            problems.append(f"combined phrase and dash check missing {needed!r}: {combined!r}")
+    if "\u002d" in "7-day" and dash_hits("7-day work-from-home"):
+        problems.append("hyphen-minus was treated as a banned dash")
 
     comment_html = """
     <!-- lifetime verified official ripped off, blame your ISP, every evening -->
@@ -413,6 +450,35 @@ def self_test():
         problems.append(f"comment or safe copy was flagged: {comment_hits!r}")
     if js_strings('var label = "ok"; // lifetime\n') != ["ok"]:
         problems.append("js comment was treated as a string")
+    if js_strings('var label = "7-day"; // jitter 1\u20136 ms\n/* \u2014 */') != ["7-day"]:
+        problems.append("js comment with a dash was treated as a string")
+
+    dash_html = """
+    <!-- lifetime \u2014 and a range 1\u20133 in a comment -->
+    <p class="work-from-home">7-day trial</p>
+    <p>Plain result &mdash; no guesswork</p>
+    <img alt="Days 1&ndash;7" src="x.png">
+    <span title="still &#x2014; here">ok</span>
+    <script>
+    // jitter 1\u20136 ms
+    var ok = "work-from-home";
+    var bad = "wait \u2014 now";
+    var escaped = "range \\u2013 here";
+    </script>
+    """
+    dash_hits_found = [hit for _, piece in pieces_from_html("index.html", dash_html) for hit in lint_piece(piece)]
+    for needed in ("banned dash em dash", "banned dash en dash"):
+        if needed not in dash_hits_found:
+            problems.append(f"visible dash scan missing {needed!r}: {dash_hits_found!r}")
+    if any(hit for hit in dash_hits_found if "banned dash" not in hit):
+        problems.append(f"dash fixture flagged a non-dash rule: {dash_hits_found!r}")
+    css_hits = [
+        hit
+        for piece in css_content_values('.ok::before { content: "7-day"; } .bad::before { content: "1\u20133"; }')
+        for hit in lint_piece(piece)
+    ]
+    if css_hits != ["banned dash en dash"]:
+        problems.append(f"CSS content dash scan got {css_hits!r}")
 
     history_html = """
     <ul>
@@ -428,6 +494,14 @@ def self_test():
     live_hits = [hit for _, piece in pieces_from_html(HISTORY_PAGE, live_history) for hit in lint_piece(piece)]
     if not any("for life" in hit for hit in live_hits):
         problems.append("undated history copy was not flagged")
+    dated_dash = "<ul><li>October 11, 2026: older line used an em dash \u2014 here.</li></ul><p>7-day note</p>"
+    dated_dash_hits = [hit for _, piece in pieces_from_html(HISTORY_PAGE, dated_dash) for hit in lint_piece(piece)]
+    if dated_dash_hits:
+        problems.append(f"dated history dash was flagged: {dated_dash_hits!r}")
+    live_dash = "<p>Current line \u2014 still live.</p>"
+    live_dash_hits = [hit for _, piece in pieces_from_html(HISTORY_PAGE, live_dash) for hit in lint_piece(piece)]
+    if "banned dash em dash" not in live_dash_hits:
+        problems.append(f"undated history dash was not flagged: {live_dash_hits!r}")
     return problems
 
 
@@ -455,8 +529,7 @@ def collect_failures():
 
     css = ROOT / "styles.css"
     if css.is_file():
-        for match in re.finditer(r"content:\s*([\"'])(.*?)\1", css.read_text(encoding="utf-8"), flags=re.S):
-            piece = match.group(2)
+        for piece in css_content_values(css.read_text(encoding="utf-8")):
             for hit in lint_piece(piece):
                 failures.append(f"styles.css: {hit} in CSS content: {snippet(piece)!r}")
     return list(dict.fromkeys(failures))
@@ -470,7 +543,7 @@ def main():
         raise SystemExit(1)
     print(
         f"OK: legal copy check passed on {len(pages())} pages "
-        "(for life / lifetime, evening promises, banned marketing words, provider blame)"
+        "(for life / lifetime, evening promises, banned marketing words, provider blame, em/en dashes)"
     )
 
 
