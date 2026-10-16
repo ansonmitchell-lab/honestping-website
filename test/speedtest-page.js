@@ -54,8 +54,8 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
   var unclearRuns = 0;
   var revealed = false;
 
-  /* PENDING LEGAL. Start-button lines in review. */
-  var PENDING_LEGAL = {
+  /* Approved v2026-10-16a. */
+  var BUTTON_COPY = {
     start: "Start speed test + snapshot",
     note: "Your snapshot appears right here when the test finishes.",
     ping: "Testing ping",
@@ -200,11 +200,11 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
   }
 
   function phaseText(phase) {
-    if (phase === "download") return PENDING_LEGAL.download;
-    if (phase === "upload") return PENDING_LEGAL.upload;
-    if (phase === "building") return PENDING_LEGAL.building;
-    if (phase === "done") return PENDING_LEGAL.ready;
-    if (phase === "latency" || phase === "latencyUnderLoad") return PENDING_LEGAL.ping;
+    if (phase === "download") return BUTTON_COPY.download;
+    if (phase === "upload") return BUTTON_COPY.upload;
+    if (phase === "building") return BUTTON_COPY.building;
+    if (phase === "done") return BUTTON_COPY.ready;
+    if (phase === "latency" || phase === "latencyUnderLoad") return BUTTON_COPY.ping;
     return "";
   }
 
@@ -248,7 +248,7 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
   function showControl(phase, pct) {
     var text = phaseText(phase);
     var active = testingPhase(phase);
-    setLabels(active ? text : phase === "done" ? PENDING_LEGAL.again : PENDING_LEGAL.start);
+    setLabels(active ? text : phase === "done" ? BUTTON_COPY.again : BUTTON_COPY.start);
     setProgress(active ? pct : 0, active, text);
   }
 
@@ -542,46 +542,21 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
     revealResult();
   }
 
-  function showReady() {
-    showControl("done", 100);
-    setPhase("done");
-  }
-
-  function whenSnapshotShown(done) {
-    var grow = resultCard ? resultCard.querySelector("[data-result-grow]") : null;
-    var called = false;
-    function once() {
-      if (called) return;
-      called = true;
-      done();
-    }
-    if (!grow || !grow.addEventListener) {
-      once();
-      return;
-    }
-    grow.addEventListener("transitionend", function (event) {
-      if (event.target !== grow) return;
-      once();
-    });
-    if (window.setTimeout) window.setTimeout(once, 1200);
-  }
-
   function finish(sample) {
     running = false;
     cancel = null;
     startBtn.disabled = false;
-    showControl("building", 100);
+    var pct = sample && isFinite(sample.progress) ? sample.progress : 0;
+    showControl("building", pct);
     setPhase("building");
     revealed = true;
     var chosen = paintReading(sample);
     var kind = hooksForRealResults() ? hookKind(sample, chosen.kind) : "none";
     showBranch(kind);
-    var wasReady = resultCard && resultCard.classList.contains("is-ready");
     revealResult();
     count("test_completed");
-    var readyNow = !!(resultCard && resultCard.classList.contains("is-ready"));
-    if (reduce || wasReady || !resultCard || readyNow) showReady();
-    else whenSnapshotShown(showReady);
+    showControl("done", pct);
+    setPhase("done");
   }
 
   function start() {
@@ -591,8 +566,6 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
     var runId = ++runToken;
     resetMeters({ keepResult: true });
     startBtn.disabled = false;
-    showControl("latency", 0);
-    setPhase("latency");
     count("test_started");
     var active = createEngine();
     cancel = active.start(function (sample) {
@@ -688,9 +661,9 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
       window.location.href = "mailto:hello@honestping.com?subject=" + subject + "&body=" + body;
     });
   }
-  setLabels(PENDING_LEGAL.start);
+  setLabels(BUTTON_COPY.start);
   var noteEl = root.querySelector("[data-start-note]");
-  if (noteEl) noteEl.textContent = PENDING_LEGAL.note;
+  if (noteEl) noteEl.textContent = BUTTON_COPY.note;
   if (snapshotEl) snapshotEl.textContent = LINES.snapshot;
   if (varyEl) varyEl.textContent = SHORTFALL_COPY.vary;
   loadPlan();

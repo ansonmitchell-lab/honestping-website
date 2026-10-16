@@ -218,9 +218,7 @@
   .st-start { width: 100%; min-width: 0; padding-left: 16px; padding-right: 16px; }
   .st-start-label-on { padding-left: 16px; padding-right: 16px; }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .st-start.is-progress .st-start-fill { transition: width 160ms linear; }
-}
+.st-start-fill { transition: none; }
 .st-phase {
   min-height: 1.4em;
   margin: 12px 0 0;

@@ -45,9 +45,6 @@ for (var mi = 0; mi < MEASUREMENTS.length; mi++) {
   else if (planned.type === "download") PLAN.download += planned.count || 1;
   else if (planned.type === "upload") PLAN.upload += planned.count || 1;
 }
-/* The last slice is the snapshot built from the finished measurements. */
-var BUILD_UNITS = 4;
-
 function unitsDone(engine, type) {
   var raw = engine.results && engine.results.raw;
   var entry = raw && raw[type];
@@ -69,10 +66,9 @@ function unitsDone(engine, type) {
   return n;
 }
 
-function progressOf(engine, includeBuild) {
+function progressOf(engine) {
   var done = unitsDone(engine, "latency") + unitsDone(engine, "download") + unitsDone(engine, "upload");
-  var total = PLAN.latency + PLAN.download + PLAN.upload + BUILD_UNITS;
-  if (includeBuild) done += BUILD_UNITS;
+  var total = PLAN.latency + PLAN.download + PLAN.upload;
   if (total <= 0) return 0;
   var pct = Math.round((100 * done) / total);
   if (pct < 0) pct = 0;
@@ -85,7 +81,7 @@ function read(engine, phase) {
   var jitter = results.getUnloadedJitter();
   return {
     phase: phase,
-    progress: progressOf(engine, phase === "done"),
+    progress: progressOf(engine),
     downloadMbps: mbps(results.getDownloadBandwidth()),
     uploadMbps: mbps(results.getUploadBandwidth()),
     pingMs: whole(results.getUnloadedLatency()),
@@ -111,7 +107,10 @@ export function createEngine() {
         measureUploadLoadedLatency: true
       });
       var phase = "latency";
+      var seenRank = 0;
       var settled = false;
+      /* Later bytes of a finished transfer can report after the next stage started. */
+      var rankOf = { latency: 1, latencyUnderLoad: 1, download: 2, upload: 3 };
       function finish() {
         if (settled) return;
         settled = true;
@@ -120,23 +119,15 @@ export function createEngine() {
         onDone(sample);
       }
       engine.onResultsChange = function (info) {
-        if (info && info.type) phase = info.type;
+        var next = info && info.type ? info.type : phase;
+        var rank = rankOf[next] || 0;
+        if (rank && seenRank && rank < seenRank) return;
+        if (rank > seenRank) seenRank = rank;
+        phase = next;
         onUpdate(read(engine, phase));
       };
-      function paintFrame(fn) {
-        if (typeof requestAnimationFrame === "function") requestAnimationFrame(fn);
-        else fn();
-      }
       engine.onFinish = function () {
-        if (settled) return;
-        settled = true;
-        var building = read(engine, "building");
-        onUpdate(building);
-        paintFrame(function () {
-          var sample = read(engine, "done");
-          onUpdate(sample);
-          onDone(sample);
-        });
+        finish();
       };
       engine.onError = function () {
         finish();
