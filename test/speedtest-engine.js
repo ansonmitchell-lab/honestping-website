@@ -38,11 +38,54 @@ function loadedReading(engine, pointsName, valueName) {
   return whole(engine.results[valueName]());
 }
 
+var PLAN = { latency: 0, download: 0, upload: 0 };
+for (var mi = 0; mi < MEASUREMENTS.length; mi++) {
+  var planned = MEASUREMENTS[mi];
+  if (planned.type === "latency" || planned.type === "latencyUnderLoad") PLAN.latency += planned.numPackets || 1;
+  else if (planned.type === "download") PLAN.download += planned.count || 1;
+  else if (planned.type === "upload") PLAN.upload += planned.count || 1;
+}
+/* The last slice is the snapshot built from the finished measurements. */
+var BUILD_UNITS = 4;
+
+function unitsDone(engine, type) {
+  var raw = engine.results && engine.results.raw;
+  var entry = raw && raw[type];
+  var planned = PLAN[type] || 0;
+  if (!entry || !entry.started) return 0;
+  if (entry.finished) return planned;
+  var results = entry.results || {};
+  var n = 0;
+  if (type === "latency") {
+    n = results.timings && results.timings.length ? results.timings.length : 0;
+  } else {
+    for (var key in results) {
+      if (Object.prototype.hasOwnProperty.call(results, key) && results[key] && results[key].timings) {
+        n += results[key].timings.length;
+      }
+    }
+  }
+  if (n > planned) n = planned;
+  return n;
+}
+
+function progressOf(engine, includeBuild) {
+  var done = unitsDone(engine, "latency") + unitsDone(engine, "download") + unitsDone(engine, "upload");
+  var total = PLAN.latency + PLAN.download + PLAN.upload + BUILD_UNITS;
+  if (includeBuild) done += BUILD_UNITS;
+  if (total <= 0) return 0;
+  var pct = Math.round((100 * done) / total);
+  if (pct < 0) pct = 0;
+  if (pct > 100) pct = 100;
+  return pct;
+}
+
 function read(engine, phase) {
   var results = engine.results;
   var jitter = results.getUnloadedJitter();
   return {
     phase: phase,
+    progress: progressOf(engine, phase === "done"),
     downloadMbps: mbps(results.getDownloadBandwidth()),
     uploadMbps: mbps(results.getUploadBandwidth()),
     pingMs: whole(results.getUnloadedLatency()),
@@ -80,8 +123,20 @@ export function createEngine() {
         if (info && info.type) phase = info.type;
         onUpdate(read(engine, phase));
       };
+      function paintFrame(fn) {
+        if (typeof requestAnimationFrame === "function") requestAnimationFrame(fn);
+        else fn();
+      }
       engine.onFinish = function () {
-        finish();
+        if (settled) return;
+        settled = true;
+        var building = read(engine, "building");
+        onUpdate(building);
+        paintFrame(function () {
+          var sample = read(engine, "done");
+          onUpdate(sample);
+          onDone(sample);
+        });
       };
       engine.onError = function () {
         finish();

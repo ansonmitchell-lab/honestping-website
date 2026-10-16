@@ -20,6 +20,7 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
   var engine = createEngine();
   var cancel = null;
   var running = false;
+  var runToken = 0;
   var scaleDown = 100;
   var scaleUp = 25;
   var planKey = "hp-webtest-plan";
@@ -52,6 +53,18 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
   var appBlock = root.querySelector("[data-variant-app]");
   var unclearRuns = 0;
   var revealed = false;
+
+  /* PENDING LEGAL. Start-button lines in review. */
+  var PENDING_LEGAL = {
+    start: "Start speed test + snapshot",
+    note: "Your snapshot appears right here when the test finishes.",
+    ping: "Testing ping",
+    download: "Testing download",
+    upload: "Testing upload",
+    building: "Building your snapshot",
+    ready: "Snapshot ready",
+    again: "Run again"
+  };
 
   var LINES = {
     snapshot: "One test is a snapshot. Your evenings may differ.",
@@ -187,18 +200,64 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
   }
 
   function phaseText(phase) {
-    if (phase === "download") return "Measuring download";
-    if (phase === "upload") return "Measuring upload";
-    if (phase === "done") return "Snapshot ready";
-    if (phase === "latency" || phase === "latencyUnderLoad") return "Checking delay";
-    return "Ready when you are";
+    if (phase === "download") return PENDING_LEGAL.download;
+    if (phase === "upload") return PENDING_LEGAL.upload;
+    if (phase === "building") return PENDING_LEGAL.building;
+    if (phase === "done") return PENDING_LEGAL.ready;
+    if (phase === "latency" || phase === "latencyUnderLoad") return PENDING_LEGAL.ping;
+    return "";
+  }
+
+  function testingPhase(phase) {
+    return phase === "latency" || phase === "latencyUnderLoad" || phase === "download" || phase === "upload" || phase === "building";
+  }
+
+  function setLabels(text) {
+    var labels = [root.querySelector("[data-start-label]"), root.querySelector("[data-start-label-on]")];
+    for (var i = 0; i < labels.length; i++) {
+      if (labels[i]) labels[i].textContent = text;
+    }
+  }
+
+  function setProgress(pct, active, text) {
+    var fill = root.querySelector("[data-start-fill]");
+    var now = pct == null || !isFinite(pct) ? 0 : Math.round(pct);
+    if (now < 0) now = 0;
+    if (now > 100) now = 100;
+    if (startBtn.style && startBtn.style.setProperty) startBtn.style.setProperty("--st-fill", now + "%");
+    if (fill && fill.style) fill.style.width = now + "%";
+    startBtn.classList.toggle("is-progress", !!active);
+    if (active) {
+      startBtn.setAttribute("role", "progressbar");
+      startBtn.setAttribute("aria-valuemin", "0");
+      startBtn.setAttribute("aria-valuemax", "100");
+      startBtn.setAttribute("aria-valuenow", String(now));
+      startBtn.setAttribute("aria-valuetext", text);
+      startBtn.setAttribute("aria-disabled", "true");
+    } else {
+      startBtn.removeAttribute("role");
+      startBtn.removeAttribute("aria-valuemin");
+      startBtn.removeAttribute("aria-valuemax");
+      startBtn.removeAttribute("aria-valuenow");
+      startBtn.removeAttribute("aria-valuetext");
+      startBtn.removeAttribute("aria-disabled");
+      if (fill && fill.style) fill.style.width = "0";
+    }
+  }
+
+  function showControl(phase, pct) {
+    var text = phaseText(phase);
+    var active = testingPhase(phase);
+    setLabels(active ? text : phase === "done" ? PENDING_LEGAL.again : PENDING_LEGAL.start);
+    setProgress(active ? pct : 0, active, text);
   }
 
   function setPhase(phase) {
     var text = phaseText(phase);
     if (phaseEl) phaseEl.textContent = text;
     if (liveEl && liveEl.textContent !== text) liveEl.textContent = text;
-    if (signal) signal.phase(phase);
+    root.classList.toggle("is-testing", testingPhase(phase));
+    if (signal && phase !== "building") signal.phase(phase);
   }
 
   function bringResult() {
@@ -474,7 +533,7 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
     if ((which === "poor" || which === "good") && !appVariant()) return;
     var sample = which === "poor" ? poorSample() : which === "short" ? ratioSample(0.7) : which === "meet" ? ratioSample(1) : goodSample();
     startBtn.disabled = false;
-    startBtn.textContent = "Run it again";
+    showControl("done", 100);
     setPhase("done");
     revealed = true;
     paintReading(sample);
@@ -483,34 +542,69 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
     revealResult();
   }
 
+  function showReady() {
+    showControl("done", 100);
+    setPhase("done");
+  }
+
+  function whenSnapshotShown(done) {
+    var grow = resultCard ? resultCard.querySelector("[data-result-grow]") : null;
+    var called = false;
+    function once() {
+      if (called) return;
+      called = true;
+      done();
+    }
+    if (!grow || !grow.addEventListener) {
+      once();
+      return;
+    }
+    grow.addEventListener("transitionend", function (event) {
+      if (event.target !== grow) return;
+      once();
+    });
+    if (window.setTimeout) window.setTimeout(once, 1200);
+  }
+
   function finish(sample) {
     running = false;
     cancel = null;
     startBtn.disabled = false;
-    startBtn.textContent = "Run it again";
-    setPhase("done");
+    showControl("building", 100);
+    setPhase("building");
     revealed = true;
     var chosen = paintReading(sample);
     var kind = hooksForRealResults() ? hookKind(sample, chosen.kind) : "none";
     showBranch(kind);
+    var wasReady = resultCard && resultCard.classList.contains("is-ready");
     revealResult();
     count("test_completed");
+    var readyNow = !!(resultCard && resultCard.classList.contains("is-ready"));
+    if (reduce || wasReady || !resultCard || readyNow) showReady();
+    else whenSnapshotShown(showReady);
   }
 
   function start() {
     if (running) return;
     if (cancel) cancel();
     running = true;
+    var runId = ++runToken;
     resetMeters({ keepResult: true });
-    startBtn.disabled = true;
-    startBtn.textContent = "Running";
+    startBtn.disabled = false;
+    showControl("latency", 0);
     setPhase("latency");
     count("test_started");
     var active = createEngine();
     cancel = active.start(function (sample) {
+      if (runId !== runToken) return;
+      if (sample.phase === "done") return;
+      showControl(sample.phase, sample.progress);
       setPhase(sample.phase);
       paint(sample);
-    }, finish);
+    }, function (sample) {
+      if (runId !== runToken) return;
+      finish(sample);
+    });
   }
 
   function loadPlan() {
@@ -594,6 +688,9 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
       window.location.href = "mailto:hello@honestping.com?subject=" + subject + "&body=" + body;
     });
   }
+  setLabels(PENDING_LEGAL.start);
+  var noteEl = root.querySelector("[data-start-note]");
+  if (noteEl) noteEl.textContent = PENDING_LEGAL.note;
   if (snapshotEl) snapshotEl.textContent = LINES.snapshot;
   if (varyEl) varyEl.textContent = SHORTFALL_COPY.vary;
   loadPlan();

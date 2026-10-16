@@ -13,7 +13,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="stylesheet" href="/styles.css?v=20261008a">
-  <link rel="stylesheet" href="/test/speedtest.css?v=20261016c">
+  <link rel="stylesheet" href="/test/speedtest.css?v=20261016d">
   <script>
   /* Nav targets. Home and this page stay relative so production can use the same links.
      On the speed test preview, Home points at the home preview. */
@@ -67,9 +67,14 @@
           <div>
             <h1 id="st-heading">A snapshot of this connection.</h1>
             <p class="st-lede">Download and upload each get their own meter. Neither one is filled from the other.</p>
-            <button class="btn btn-primary st-start" type="button" data-start>Start</button>
+            <button class="btn btn-primary st-start" type="button" data-start aria-describedby="st-start-note">
+              <span class="st-start-fill" data-start-fill aria-hidden="true"></span>
+              <span class="st-start-label" data-start-label>Start speed test + snapshot</span>
+              <span class="st-start-label st-start-label-on" data-start-label-on aria-hidden="true">Start speed test + snapshot</span>
+            </button>
+            <p class="st-start-note" id="st-start-note" data-start-note>Your snapshot appears right here when the test finishes.</p>
             <p class="st-privacy-line">Your results are worked out in your browser and shown only to you. We don't store them. <a href="/privacy">Details in our privacy policy</a>.</p>
-            <p class="st-phase" data-phase>Ready when you are</p>
+            <p class="st-phase" data-phase></p>
           </div>
         </div>
         <p class="st-live" data-live aria-live="polite"></p>
@@ -272,6 +277,6 @@
   <script>
   document.getElementById("year").textContent = String(new Date().getFullYear());
   </script>
-  <script type="module" src="/test/speedtest-page.js?v=20261016a"></script>
+  <script type="module" src="/test/speedtest-page.js?v=20261016d"></script>
 </body>
 </html>
