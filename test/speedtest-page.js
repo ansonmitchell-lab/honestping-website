@@ -30,6 +30,7 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
   var liveEl = root.querySelector("[data-live]");
   var signal = mountRabbit(root);
   var resultCard = root.querySelector("[data-result]");
+  var resultSection = root.querySelector("[data-result-section]");
   var downInput = root.querySelector("[data-plan-down]");
   var upInput = root.querySelector("[data-plan-up]");
   var remember = root.querySelector("[data-remember]");
@@ -211,15 +212,23 @@ import { mountRabbit } from "./speedtest-rabbit.js?v=20261015f";
 
   function revealResult() {
     if (!resultCard) return;
+    if (resultSection) resultSection.classList.add("is-open");
     var first = !resultCard.classList.contains("is-ready");
-    resultCard.classList.add("is-ready");
     var grow = resultCard.querySelector("[data-result-grow]");
     if (grow) {
       grow.removeAttribute("aria-hidden");
       grow.inert = false;
     }
-    if (reduce || !first) bringResult();
-    else window.setTimeout(bringResult, 220);
+    function open() {
+      resultCard.classList.add("is-ready");
+    }
+    if (reduce || !first) {
+      open();
+      bringResult();
+    } else {
+      window.requestAnimationFrame(open);
+      window.setTimeout(bringResult, 220);
+    }
   }
 
   function resetMeters(opts) {

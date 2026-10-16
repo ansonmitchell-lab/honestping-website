@@ -62,11 +62,20 @@
   font-size: 16px;
 }
 .st-hero-row { margin-top: 22px; }
+.st-result-section:not(.is-open) {
+  margin-top: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
 .st-result {
   position: relative;
-  min-height: 72px;
-  padding: 16px 18px;
+  min-height: 0;
+  padding: 0;
   scroll-margin-top: 76px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 .st-result:focus { outline: none; }
 .st-result:focus-visible {
@@ -83,35 +92,42 @@
   grid-template-rows: 1fr;
   opacity: 1;
 }
-.st-result-grow-inner { overflow: hidden; min-height: 0; }
-.st-result:not(.is-ready) .st-result-grow { pointer-events: none; }
-.st-meter-head {
-  display: grid;
-  grid-template-columns: auto minmax(140px, 1fr);
-  align-items: end;
-  gap: 8px 16px;
-  margin: 0 0 8px;
+.st-result.is-ready {
+  background: var(--hp-surface);
+  border: 1px solid var(--hp-line);
+  border-radius: var(--hp-radius);
 }
-.st-meter-head h2 { margin: 0 0 6px; }
-.st-lane {
+.st-result-grow-inner { overflow: hidden; min-height: 0; }
+.st-result.is-ready .st-result-grow-inner { padding: 16px 18px; }
+.st-result:not(.is-ready) .st-result-grow { pointer-events: none; }
+.st-meters-section { position: relative; }
+.st-meter-head {
   position: relative;
-  height: 168px;
-  overflow: hidden;
+  margin: 0 0 12px;
+}
+.st-meter-head h2 { margin: 0; padding-right: 84px; }
+.st-lane {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  width: 132px;
+  height: 148px;
+  overflow: visible;
   pointer-events: none;
   container-type: inline-size;
-  contain: layout paint;
 }
 .st-perch {
   position: absolute;
-  right: 10px;
-  bottom: 0;
+  right: 14px;
+  top: 118px;
   width: 36px;
   height: 16px;
 }
 .st-rabbit {
   position: absolute;
   left: 0;
-  bottom: 2px;
+  top: 0;
   width: 64px;
   height: 136px;
   overflow: visible;
@@ -431,9 +447,10 @@
 }
 @media (max-width: 640px) {
   .st-hero { padding: 20px 16px 16px; }
-  .st-meter-head, .st-meters, .st-plan-grid, .st-uses { grid-template-columns: 1fr; }
+  .st-meters, .st-plan-grid, .st-uses { grid-template-columns: 1fr; }
   .st-quality { grid-template-columns: 1fr 1fr; }
-  .st-lane { height: 148px; }
+  .st-lane { width: 78px; height: 128px; }
+  .st-perch { top: 104px; right: 8px; }
   .st-rabbit { width: 56px; height: 120px; }
   .st-meters .st-gauge { --dial: min(200px, 100%); }
   .st-gauge-sm { --dial: min(128px, 100%); }

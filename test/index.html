@@ -13,7 +13,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="stylesheet" href="/styles.css?v=20261008a">
-  <link rel="stylesheet" href="/test/speedtest.css?v=20261015e">
+  <link rel="stylesheet" href="/test/speedtest.css?v=20261016a">
   <script>
   (function () {
     var search = location.search || "";
@@ -58,11 +58,11 @@
         <p class="st-live" data-live aria-live="polite"></p>
       </section>
 
-      <section class="st-section" aria-labelledby="st-result-h">
-        <h2 id="st-result-h">Your result</h2>
+      <section class="st-section st-result-section" data-result-section aria-labelledby="st-result-h">
         <div class="st-result" data-result tabindex="-1">
           <div class="st-result-grow" data-result-grow aria-hidden="true" inert>
             <div class="st-result-grow-inner">
+              <h2 id="st-result-h">Your result</h2>
               <div class="st-hook" data-hook>
                         <h3 class="st-outcome-head" data-headline hidden></h3>
                         <div class="st-shortfall" data-shortfall hidden>
@@ -103,7 +103,7 @@
         </div>
       </section>
 
-      <section class="st-section" aria-labelledby="st-meters-h">
+      <section class="st-section st-meters-section" aria-labelledby="st-meters-h">
         <div class="st-meter-head">
           <h2 id="st-meters-h">Download and upload</h2>
           <div class="st-lane" data-lane>
@@ -255,6 +255,6 @@
   <script>
   document.getElementById("year").textContent = String(new Date().getFullYear());
   </script>
-  <script type="module" src="/test/speedtest-page.js?v=20261015l"></script>
+  <script type="module" src="/test/speedtest-page.js?v=20261016a"></script>
 </body>
 </html>
