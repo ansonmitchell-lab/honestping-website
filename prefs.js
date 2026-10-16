@@ -1,5 +1,13 @@
 /* UI preferences stay on this device. localStorage only.
-   Nothing here is sent to analytics or any other server. */
+   Nothing here is sent to analytics or any other server.
+
+   Nav targets. The speed test page is /test/ once it is published.
+   This home preview has no /test/ page, so that host uses the speed test preview. */
+var NAV_LINKS = {
+  speedTest: "/test/",
+  speedTestPreview: "https://preview-web-speedtest.honestping.pages.dev/test/?variant=app"
+};
+
 (function () {
   function reduceOn() {
     return document.documentElement.classList.contains("hp-reduce");
@@ -32,6 +40,12 @@
         try { localStorage.setItem("hp-free-bar", "off"); } catch (e) {}
         document.documentElement.classList.add("hp-bar-off");
       });
+    }
+    var speed = document.querySelector("[data-nav='speed-test']");
+    if (speed) {
+      var href = NAV_LINKS.speedTest;
+      if (location.hostname === "preview-gaming-7day.honestping.pages.dev") href = NAV_LINKS.speedTestPreview;
+      speed.setAttribute("href", href);
     }
     var menu = document.querySelector(".nav-menu");
     var nav = document.querySelector(".nav");
