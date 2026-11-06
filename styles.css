@@ -3031,7 +3031,7 @@ html.hp-reduce .gamer-sweep { display: none; }
 .week-demo-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
 .week-demo-note { margin: 0; font-size: 13px; color: var(--hp-muted); }
 
-/* Two ways you could be overpaying (index #isp) */
+/* Two ways your plan may not fit (index #isp) */
 .overpay-ways { display: grid; gap: 12px; min-width: 0; }
 .overpay-ways h3 { font-size: 18px; font-weight: 600; }
 .overpay-grid { display: grid; gap: 12px; }
