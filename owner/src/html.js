@@ -1,4 +1,5 @@
 import { formatCell, formatCount, suppressSmallGroups } from "./kanon.js";
+import { REQUESTS_CSS, requestsBody } from "./requests-html.js";
 import { STATUSES } from "./queries.js";
 
 export const CANT_SEE = "This dashboard can't see: IP addresses, who is behind an install, Wi-Fi names, devices on home networks, individual test results, precise location, browsing";
@@ -12,6 +13,7 @@ const TABS = [
   ["isp", "/isp", "ISP"],
   ["traffic", "/traffic", "Traffic"],
   ["downloads", "/downloads", "Downloads"],
+  ["requests", "/requests", "Requests and reports"],
   ["access", "/access", "Access log"],
 ];
 
@@ -177,6 +179,8 @@ function layout(tab, email, body, warning) {
     }
     .btn:hover { border-color: var(--hp-cyan); text-decoration: none; }
     .denied { width: min(36rem, calc(100% - 2rem)); margin: 12vh auto; }
+    footer { margin: 0; padding: 8px 22px 28px; color: var(--hp-muted); font-size: 12px; }
+    ${REQUESTS_CSS}
   </style>
 </head>
 <body>
@@ -193,6 +197,7 @@ function layout(tab, email, body, warning) {
     ${banner}
     ${body}
   </main>
+  <footer>© <span id="year">2026</span> Honest Ping LLC</footer>
 </body>
 </html>`;
 }
@@ -221,6 +226,14 @@ function groupTable(caption, groups) {
 
 function placeholder(title, line) {
   return card(title, NOT_CONNECTED_YET, line);
+}
+
+function reportsCard(feedback) {
+  if (!feedback || !feedback.ready) {
+    return card("Requests and reports", "Migration needed", "Apply migrations 0004 and 0005 before reports can load.");
+  }
+  const note = `${feedback.features} features, ${feedback.bugs} bugs, ${feedback.crashes} crashes.`;
+  return `<section class="card"><h2>Requests and reports</h2><p class="metric">${escapeHtml(String(feedback.total))}</p><p class="note">${escapeHtml(note)} <a href="/requests">Open the review queue.</a></p></section>`;
 }
 
 function trafficCards(traffic) {
@@ -256,8 +269,7 @@ function overviewBody(model) {
       ${card("ISP inquiries", formatCount(data.ispTotal), "Partnership notes sent from the site.")}
       ${trafficCards(data.traffic)}
       ${downloadCard(data.downloads)}
-      ${placeholder("Bug reports", "Reports people send from the app will be listed here.")}
-      ${placeholder("Crash reports", "Crash counts from the app will appear here.")}
+      ${reportsCard(data.feedback)}
       ${placeholder("Sales", "Purchases and plan totals will appear here.")}
     </div>
     <div class="panels">
@@ -382,6 +394,7 @@ function detailText(detail) {
     isp: "ISP",
     traffic: "Traffic",
     downloads: "Downloads",
+    requests: "Requests and reports",
     access: "Access log",
   };
   return labels[detail] || detail;
@@ -397,7 +410,7 @@ function accessBody(model) {
     : `<tr><td colspan="4">No dashboard activity yet.</td></tr>`;
   return `
     <h1>Access log</h1>
-    <p class="lead">Each view, CSV export, and ISP status change, with the Access email and the time.</p>
+    <p class="lead">Each view, CSV export, and status change, with the Access email and the time.</p>
     <section class="panel">${listTable(["When", "Access email", "Action", "Detail"], body)}</section>`;
 }
 
@@ -411,6 +424,7 @@ function tabBody(model) {
   if (model.tab === "isp") return ispBody(model);
   if (model.tab === "traffic") return trafficBody(model);
   if (model.tab === "downloads") return downloadsBody(model);
+  if (model.tab === "requests") return requestsBody(model);
   if (model.tab === "access") return accessBody(model);
   return messageBody(model.title || "Notice", model.message || "");
 }
@@ -432,7 +446,8 @@ export function renderDenied() {
     body { margin: 0; background: #07131f; color: #edf5fa; font: 16px/1.5 "Segoe UI", system-ui, sans-serif; }
     main { width: min(36rem, calc(100% - 2rem)); margin: 12vh auto; }
     h1 { font-size: 1.4rem; font-weight: 650; }
-    p { color: #abc0ce; }
+    p, footer { color: #abc0ce; }
+    footer { margin: 24px; font-size: 12px; }
   </style>
 </head>
 <body>
@@ -441,6 +456,7 @@ export function renderDenied() {
     <p>Cloudflare Access did not accept this request.</p>
     <p>${escapeHtml(CANT_SEE)}</p>
   </main>
+  <footer>© <span id="year">2026</span> Honest Ping LLC</footer>
 </body>
 </html>`;
 }

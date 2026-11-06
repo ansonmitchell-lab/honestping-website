@@ -1,4 +1,7 @@
+import { handleFeedback } from "../functions/lib/feedback.js";
+import { FEEDBACK_RETENTION_CRON, retainFeedback } from "../functions/lib/retention.js";
 import { handleSubmit, retryUnsent } from "../functions/lib/submit.js";
+import { isIspPreviewPath, ispPreviewResponse } from "../isp-preview/render.js";
 
 const DEFAULT_ORIGIN = "https://raw.githubusercontent.com/ansonmitchell-lab/honestping-website/main";
 const TYPES = {
@@ -80,10 +83,20 @@ async function proxy(request, env) {
 export default {
   async fetch(request, env) {
     const path = new URL(request.url).pathname;
+    if (path === "/api/feedback") return handleFeedback(request, env);
+    if (isIspPreviewPath(path)) return ispPreviewResponse(env);
     if (path === "/api/waitlist" || path === "/api/isp") return handleSubmit(request, env);
     return proxy(request, env);
   },
-  async scheduled(_controller, env, ctx) {
+  async scheduled(controller, env, ctx) {
+    if (controller && controller.cron === FEEDBACK_RETENTION_CRON) {
+      const job = retainFeedback(env).catch(() => {
+        console.log(JSON.stringify({ service: "honestping-web", event: "feedback_retention_failed" }));
+      });
+      if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(job);
+      await job;
+      return;
+    }
     const pending = retryUnsent(env);
     if (ctx && typeof ctx.waitUntil === "function") ctx.waitUntil(pending);
     await pending;

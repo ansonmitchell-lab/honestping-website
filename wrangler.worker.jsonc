@@ -24,22 +24,42 @@
       "migrations_dir": "migrations"
     }
   ],
+  // Screenshots are private objects. The row stores the key only.
+  // honestping-feedback is the production bucket. This change does not create it.
+  "r2_buckets": [
+    {
+      "binding": "SCREENSHOTS",
+      "bucket_name": "honestping-feedback",
+      "preview_bucket_name": "honestping-feedback-preview"
+    }
+  ],
   "send_email": [
     {
       "name": "EMAIL",
       "destination_address": "hello@honestping.com",
-      "allowed_sender_addresses": ["waitlist@honestping.com"]
+      "allowed_sender_addresses": ["hello@honestping.com"]
     }
   ],
   "vars": {
-    "TURNSTILE_HOSTNAMES": "www.honestping.com,honestping.com"
+    "TURNSTILE_HOSTNAMES": "www.honestping.com,honestping.com",
+    "K_MIN": "10"
   },
   "secrets": {
-    "required": ["TURNSTILE_SECRET"]
+    "required": ["TURNSTILE_SECRET", "FEEDBACK_IP_SALT"]
   },
-  // env.preview sets the same cron again so a preview deploy does not depend on inheritance.
+  // Placeholder ids. This change does not create the namespace.
+  // Replace them with `wrangler kv namespace create` output before a deploy.
+  "kv_namespaces": [
+    {
+      "binding": "FEEDBACK_LIMITS",
+      "id": "00000000000000000000000000000000",
+      "preview_id": "00000000000000000000000000000000"
+    }
+  ],
+  // */15 retries unsent mail. 15 3 * * * is 03:15 UTC feedback retention.
+  // env.preview sets the same crons again so a preview deploy does not depend on inheritance.
   "triggers": {
-    "crons": ["*/15 * * * *"]
+    "crons": ["*/15 * * * *", "15 3 * * *"]
   },
   "previews": {
     "d1_databases": [
@@ -50,17 +70,30 @@
         "migrations_dir": "migrations"
       }
     ],
+    "r2_buckets": [
+      {
+        "binding": "SCREENSHOTS",
+        "bucket_name": "honestping-feedback-preview"
+      }
+    ],
     "send_email": [
       {
         "name": "EMAIL",
         "destination_address": "hello@honestping.com",
-        "allowed_sender_addresses": ["waitlist@honestping.com"]
+        "allowed_sender_addresses": ["hello@honestping.com"]
       }
     ],
     "vars": {
       "TURNSTILE_HOSTNAMES": "honestping-web-preview.honestping.workers.dev",
-      "ORIGIN_BASE": "https://raw.githubusercontent.com/ansonmitchell-lab/honestping-website/cursor/waitlist-d1-bbe4"
-    }
+      "ORIGIN_BASE": "https://raw.githubusercontent.com/ansonmitchell-lab/honestping-website/cursor/waitlist-d1-bbe4",
+      "K_MIN": "10"
+    },
+    "kv_namespaces": [
+      {
+        "binding": "FEEDBACK_LIMITS",
+        "id": "00000000000000000000000000000000"
+      }
+    ]
   },
   // Deploy with: wrangler deploy --config wrangler.worker.jsonc --env preview
   // Wrangler names this script honestping-web-preview (top-level name plus the env).
@@ -78,22 +111,35 @@
           "migrations_dir": "migrations"
         }
       ],
+      "r2_buckets": [
+        {
+          "binding": "SCREENSHOTS",
+          "bucket_name": "honestping-feedback-preview"
+        }
+      ],
       "send_email": [
         {
           "name": "EMAIL",
           "destination_address": "hello@honestping.com",
-          "allowed_sender_addresses": ["waitlist@honestping.com"]
+          "allowed_sender_addresses": ["hello@honestping.com"]
         }
       ],
       "vars": {
         "TURNSTILE_HOSTNAMES": "honestping-web-preview.honestping.workers.dev",
-        "ORIGIN_BASE": "https://raw.githubusercontent.com/ansonmitchell-lab/honestping-website/cursor/waitlist-d1-bbe4"
+        "ORIGIN_BASE": "https://raw.githubusercontent.com/ansonmitchell-lab/honestping-website/cursor/waitlist-d1-bbe4",
+        "K_MIN": "10"
       },
       "secrets": {
-        "required": ["TURNSTILE_SECRET"]
+        "required": ["TURNSTILE_SECRET", "FEEDBACK_IP_SALT"]
       },
+      "kv_namespaces": [
+        {
+          "binding": "FEEDBACK_LIMITS",
+          "id": "00000000000000000000000000000000"
+        }
+      ],
       "triggers": {
-        "crons": ["*/15 * * * *"]
+        "crons": ["*/15 * * * *", "15 3 * * *"]
       }
     }
   }

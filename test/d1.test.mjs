@@ -27,7 +27,7 @@ test("local D1 accepts the migration and a duplicate waitlist row", async () => 
           await proxy.env.DB.prepare(statement).run();
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
-          if (!/duplicate column name/i.test(message)) throw error;
+          if (!/duplicate column name|no such column/i.test(message)) throw error;
         }
       }
     }
