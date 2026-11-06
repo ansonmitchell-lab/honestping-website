@@ -1,0 +1,54 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "honestping-owner",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-08",
+  "account_id": "4e7e5db788ca85b49af0442d922ebc6e",
+  // Production is not on workers.dev. Preview sets workers_dev and clears routes.
+  // Do not deploy this top level config until Anson approves go-live.
+  "workers_dev": false,
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "head_sampling_rate": 1 },
+    "traces": { "enabled": true, "head_sampling_rate": 1 }
+  },
+  "routes": [
+    { "pattern": "owner.honestping.com", "custom_domain": true, "enabled": true, "previews_enabled": false }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "honestping-waitlist",
+      "database_id": "c732d15a-f4c9-4f7d-8588-41f7774d41d1",
+      "preview_database_id": "834af7c2-165f-4fb4-92b9-49b1aa0b3eb6",
+      "migrations_dir": "migrations"
+    }
+  ],
+  // ACCESS_TEAM_DOMAIN, ACCESS_AUD, ZONE_ID, GITHUB_REPO, and CF_ANALYTICS_TOKEN
+  // are set with `wrangler secret put`. They are not written here.
+  // CF_ANALYTICS_TOKEN is optional. Without it the traffic tab says Connect site analytics.
+  // GITHUB_REPO is optional. Without it the downloads tab says not connected.
+  "secrets": {
+    "required": ["ACCESS_TEAM_DOMAIN", "ACCESS_AUD"]
+  },
+  // Deploy with: wrangler deploy --config owner/wrangler.jsonc --env preview
+  // Wrangler names that script honestping-owner-preview. Do not set "name" in the env.
+  // routes must stay empty here so a preview deploy cannot take owner.honestping.com.
+  "env": {
+    "preview": {
+      "workers_dev": true,
+      "routes": [],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "honestping-waitlist-preview",
+          "database_id": "834af7c2-165f-4fb4-92b9-49b1aa0b3eb6",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "secrets": {
+        "required": ["ACCESS_TEAM_DOMAIN", "ACCESS_AUD"]
+      }
+    }
+  }
+}
